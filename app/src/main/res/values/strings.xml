@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">yuMovee</string>
+    <string name="title_movie">Judul Film</string>
+    <string name="lorem">lorem ipsum dolor sit amet</string>
+    <string name="change_language_settings">Ubah Pengaturan Bahasa</string>
+    <string name="tab_1">Film</string>
+    <string name="tab_2">Acara Tv</string>
+    <string name="image_poster">image poster</string>
+    <string name="description">Description</string>
+</resources>

@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.utils.DataDummy
 import org.junit.Before
 import org.junit.Test
 

@@ -1,35 +1,26 @@
 package com.sstudio.submissionbajetpackpro.ui.detail
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.sstudio.submissionbajetpackpro.data.MovieTvEntity
-import com.sstudio.submissionbajetpackpro.utils.DataDummy
+import com.sstudio.submissionbajetpackpro.data.MovieTvRepository
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
 
-class DetailViewModel : ViewModel() {
+class DetailViewModel(private val movieTvRepository: MovieTvRepository) : ViewModel() {
+
     private var movieTvId: Int = 0
+    var detailMovie: LiveData<MovieEntity>? = null
+    var detailTv: LiveData<TvEntity>? = null
 
     fun setSelectedMovieTv(courseId: Int) {
         this.movieTvId = courseId
     }
 
-    fun getMovie(): MovieTvEntity {
-        lateinit var movie: MovieTvEntity
-        val moviesEntities = DataDummy.generateDummyMovies()
-        for (movieEntity in moviesEntities) {
-            if (movieEntity.id == movieTvId) {
-                movie = movieEntity
-            }
-        }
-        return movie
+    fun getMovie() {
+        detailMovie = movieTvRepository.getMovieDetail(movieTvId)
     }
 
-    fun getTv(): MovieTvEntity {
-        lateinit var tv: MovieTvEntity
-        val tvEntities = DataDummy.generateDummyTv()
-        for (tvEntity in tvEntities) {
-            if (tvEntity.id == movieTvId) {
-                tv = tvEntity
-            }
-        }
-        return tv
+    fun getTv() {
+        detailTv = movieTvRepository.getTvShowDetail(movieTvId)
     }
 }

@@ -1,6 +1,5 @@
 package com.sstudio.submissionbajetpackpro.ui.detail
 
-import com.sstudio.submissionbajetpackpro.utils.DataDummy
 import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.Before
@@ -24,9 +23,9 @@ class DetailViewModelTest {
         val movieEntity = viewModel.getMovie()
         Assert.assertNotNull(movieEntity)
         assertEquals(dummyMovie.id, movieEntity.id)
-        assertEquals(dummyMovie.title, movieEntity.title)
+        assertEquals(dummyMovie.title, movieEntity.originalTitle)
         assertEquals(dummyMovie.overview, movieEntity.overview)
-        assertEquals(dummyMovie.poster, movieEntity.poster)
+        assertEquals(dummyMovie.poster, movieEntity.posterPath)
 
     }
 
@@ -36,8 +35,8 @@ class DetailViewModelTest {
         val tvEntity = viewModel.getTv()
         Assert.assertNotNull(tvEntity)
         assertEquals(dummyTv.id, tvEntity.id)
-        assertEquals(dummyTv.title, tvEntity.title)
+        assertEquals(dummyTv.title, tvEntity.originalTitle)
         assertEquals(dummyTv.overview, tvEntity.overview)
-        assertEquals(dummyTv.poster, tvEntity.poster)
+        assertEquals(dummyTv.poster, tvEntity.posterPath)
     }
 }

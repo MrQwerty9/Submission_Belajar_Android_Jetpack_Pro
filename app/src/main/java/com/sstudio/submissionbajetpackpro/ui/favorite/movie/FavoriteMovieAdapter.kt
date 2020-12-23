@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.ui.movie
+package com.sstudio.submissionbajetpackpro.ui.favorite.movie
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +8,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class MovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class FavoriteMovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<FavoriteMovieAdapter.ViewHolder>() {
 
-    var movies: ArrayList<MovieEntity> = ArrayList()
+    var movies: ArrayList<MovieFavorite> = ArrayList()
 
-    fun setMovies(movies: List<MovieEntity>){
+    fun setMovies(movies: List<MovieFavorite>){
         this.movies.clear()
         this.movies.addAll(movies)
         notifyDataSetChanged()
@@ -36,26 +36,26 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(movie: MovieEntity) {
+        fun bind(favorite: MovieFavorite) {
             with(itemView) {
-                txt_title.text = movie.originalTitle
-                txt_overview.text = movie.overview
+                txt_title.text = favorite.movie.originalTitle
+                txt_overview.text = favorite.movie.overview
 //                ContextCompat.getDrawable(itemView.context, movie.poster)
                 Glide.with(itemView.context)
-                    .load(BuildConfig.POSTER_THUMBNAIL + movie.posterPath)
+                    .load(BuildConfig.POSTER_THUMBNAIL + favorite.movie.posterPath)
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)
                     )
                     .into(img_poster)
                 itemView.setOnClickListener {
-                    adapterCallback.itemMovieOnclick(movie)
+                    adapterCallback.itemMovieOnclick(favorite)
                 }
             }
         }
     }
 
     interface AdapterCallback{
-        fun itemMovieOnclick(movie: MovieEntity)
+        fun itemMovieOnclick(favorite: MovieFavorite)
     }
 }

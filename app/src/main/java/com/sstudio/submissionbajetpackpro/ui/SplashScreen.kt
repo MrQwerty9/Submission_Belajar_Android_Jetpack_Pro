@@ -8,6 +8,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.ui.home.HomeActivity
 
 class SplashScreen : AppCompatActivity() {
+    private val delayMillis: Long = 2000
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_screen)
@@ -16,6 +17,6 @@ class SplashScreen : AppCompatActivity() {
             val intent = Intent(this@SplashScreen, HomeActivity::class.java)
             startActivity(intent)
             finish()
-        }, 2000)
+        }, delayMillis)
     }
 }

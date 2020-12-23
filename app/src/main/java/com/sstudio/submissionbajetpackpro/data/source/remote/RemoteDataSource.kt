@@ -9,6 +9,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.remote.api.ApiService
 import com.sstudio.submissionbajetpackpro.data.source.remote.response.MovieResponse
 import com.sstudio.submissionbajetpackpro.data.source.remote.response.TvResponse
+import com.sstudio.submissionbajetpackpro.utils.EspressoIdlingResource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,8 +27,9 @@ class RemoteDataSource private constructor(private val apiService: ApiService, c
     }
     private val language = context.getString(R.string.language)
 
-    fun getAllMovie(): LiveData<MovieResponse> {
-        val movies = MutableLiveData<MovieResponse>()
+    fun getAllMovie(): LiveData<ApiResponse<MovieResponse>> {
+        EspressoIdlingResource.increment()
+        val resultMovie = MutableLiveData<ApiResponse<MovieResponse>>()
         apiService.getPopularMovies(BuildConfig.TMDB_API_KEY, language)
             .enqueue(object : Callback<MovieResponse> {
             override fun onResponse(
@@ -35,22 +37,24 @@ class RemoteDataSource private constructor(private val apiService: ApiService, c
                 response: Response<MovieResponse>
             ) {
                 if (response.isSuccessful) {
-                    movies.postValue(response.body())
+                    response.body()?.let { resultMovie.value = ApiResponse.success(it) }
                 } else {
                     Log.e("RemoteDataSource", "onFailure: ${response.message()}")
                 }
-
+                EspressoIdlingResource.decrement()
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable?) {
                 Log.e("RemoteDataSource", "onFailure: ${t?.message.toString()}")
+                EspressoIdlingResource.decrement()
             }
         })
-        return movies
+        return resultMovie
     }
 
-    fun getAllTvShows(): LiveData<TvResponse> {
-        val tvShows = MutableLiveData<TvResponse>()
+    fun getAllTvShows(): LiveData<ApiResponse<TvResponse>> {
+        EspressoIdlingResource.increment()
+        val resultTv = MutableLiveData<ApiResponse<TvResponse>>()
         apiService.getPopularTv(BuildConfig.TMDB_API_KEY, language)
             .enqueue(object : Callback<TvResponse> {
                 override fun onResponse(
@@ -58,21 +62,24 @@ class RemoteDataSource private constructor(private val apiService: ApiService, c
                     response: Response<TvResponse>
                 ) {
                     if (response.isSuccessful) {
-                        tvShows.postValue(response.body())
+                        response.body()?.let { resultTv.value = ApiResponse.success(it) }
                     } else {
                         Log.e("RemoteDataSource", "onFailure: ${response.message()}")
                     }
+                    EspressoIdlingResource.decrement()
                 }
 
                 override fun onFailure(call: Call<TvResponse>, t: Throwable?) {
                     Log.e("RemoteDataSource", "onFailure: ${t?.message.toString()}")
+                    EspressoIdlingResource.decrement()
                 }
             })
-        return tvShows
+        return resultTv
     }
 
-    fun getMovieDetail(movieId: Int): LiveData<MovieResponse.Result> {
-        val movieDetail = MutableLiveData<MovieResponse.Result>()
+    fun getMovieDetail(movieId: Int): LiveData<ApiResponse<MovieResponse.Result>> {
+        EspressoIdlingResource.increment()
+        val resultDetailMovie = MutableLiveData<ApiResponse<MovieResponse.Result>>()
         apiService.getMovieDetail(movieId, BuildConfig.TMDB_API_KEY, language)
             .enqueue(object : Callback<MovieResponse.Result> {
                 override fun onResponse(
@@ -80,21 +87,24 @@ class RemoteDataSource private constructor(private val apiService: ApiService, c
                     response: Response<MovieResponse.Result>
                 ) {
                     if (response.isSuccessful) {
-                        movieDetail.postValue(response.body())
+                        response.body()?.let { resultDetailMovie.value = ApiResponse.success(it) }
                     } else {
                         Log.e("RemoteDataSource", "onFailure: ${response.message()}")
                     }
+                    EspressoIdlingResource.decrement()
                 }
 
                 override fun onFailure(call: Call<MovieResponse.Result>, t: Throwable?) {
                     Log.e("RemoteDataSource", "onFailure: ${t?.message.toString()}")
+                    EspressoIdlingResource.decrement()
                 }
             })
-        return movieDetail
+        return resultDetailMovie
     }
 
-    fun getTvShowDetail(tvShowId: Int): LiveData<TvResponse.Result> {
-        val tvShowDetail = MutableLiveData<TvResponse.Result>()
+    fun getTvShowDetail(tvShowId: Int): LiveData<ApiResponse<TvResponse.Result>> {
+        EspressoIdlingResource.increment()
+        val resultDetailTv = MutableLiveData<ApiResponse<TvResponse.Result>>()
         apiService.getTvDetail(tvShowId, BuildConfig.TMDB_API_KEY, language)
             .enqueue(object : Callback<TvResponse.Result> {
                 override fun onResponse(
@@ -102,23 +112,19 @@ class RemoteDataSource private constructor(private val apiService: ApiService, c
                     response: Response<TvResponse.Result>
                 ) {
                     if (response.isSuccessful) {
-                        tvShowDetail.postValue(response.body())
+                        response.body()?.let { resultDetailTv.value = ApiResponse.success(it) }
                     } else {
                         Log.e("RemoteDataSource", "onFailure: ${response.message()}")
                     }
+                    EspressoIdlingResource.decrement()
                 }
 
                 override fun onFailure(call: Call<TvResponse.Result>, t: Throwable?) {
                     Log.e("RemoteDataSource", "onFailure: ${t?.message.toString()}")
+                    EspressoIdlingResource.decrement()
                 }
             })
-        return tvShowDetail
+        return resultDetailTv
     }
-
-
-//    fun getModules(courseId: String): List<ModuleResponse> = jsonHelper.loadModule(courseId)
-//
-//    fun getContent(moduleId: String): ContentResponse = jsonHelper.loadContent(moduleId)
-
 }
 

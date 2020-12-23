@@ -13,22 +13,12 @@ import com.sstudio.submissionbajetpackpro.data.source.remote.response.TvResponse
 import com.sstudio.submissionbajetpackpro.utils.AppExecutors
 import com.sstudio.submissionbajetpackpro.vo.Resource
 
-class MovieTvRepository private constructor(
+class FakeMovieTvRepository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val appExecutors: AppExecutors
 ) :
     MovieDataSource {
-
-    companion object {
-        @Volatile
-        private var instance: MovieTvRepository? = null
-
-        fun getInstance(remoteData: RemoteDataSource, localData: LocalDataSource, appExecutors: AppExecutors): MovieTvRepository =
-            instance ?: synchronized(this) {
-                instance ?: MovieTvRepository(remoteData, localData, appExecutors)
-            }
-    }
 
     override fun getAllMovie(): LiveData<Resource<List<MovieEntity>>> {
         return object :
@@ -70,16 +60,18 @@ class MovieTvRepository private constructor(
 
             override fun saveCallResult(data: MovieResponse.Result) {
                 if (data.id == movieId) {
-                    localDataSource.insertMovieDetail(MovieEntity(
-                        data.backdropPath,
-                        data.genreIds?.joinToString(separator = ",") ?: "",
-                        data.id,
-                        data.originalTitle,
-                        data.overview,
-                        data.posterPath,
-                        data.releaseDate,
-                        data.voteAverage
-                    ))
+                    localDataSource.insertMovieDetail(
+                        MovieEntity(
+                            data.backdropPath,
+                            data.genreIds?.joinToString(separator = ",") ?: "",
+                            data.id,
+                            data.originalTitle,
+                            data.overview,
+                            data.posterPath,
+                            data.releaseDate,
+                            data.voteAverage
+                        )
+                    )
                 }
             }
 
@@ -90,12 +82,12 @@ class MovieTvRepository private constructor(
         localDataSource.getAllFavoriteMovie()
 
     override fun setFavoriteMovie(movieEntity: MovieEntity) {
-        appExecutors.diskIO().execute{ localDataSource.insertFavoriteMovie(movieEntity) }
+        appExecutors.diskIO().execute { localDataSource.insertFavoriteMovie(movieEntity) }
     }
 
     override fun getAllTvShows(): LiveData<Resource<List<TvEntity>>> {
         return object :
-            NetworkBoundResource<List<TvEntity>, TvResponse>(appExecutors){
+            NetworkBoundResource<List<TvEntity>, TvResponse>(appExecutors) {
             override fun loadFromDB(): LiveData<List<TvEntity>> =
                 localDataSource.getAllTv()
 
@@ -134,15 +126,18 @@ class MovieTvRepository private constructor(
 
             override fun saveCallResult(data: TvResponse.Result) {
                 if (data.id == tvShowId) {
-                    localDataSource.insertTvDetail(TvEntity(
-                        data.backdropPath,
-                        data.firstAirDate,
-                        data.genreIds?.joinToString(separator = ",") ?: "",
-                        data.id,
-                        data.originalName,
-                        data.overview,
-                        data.posterPath,
-                        data.voteAverage))
+                    localDataSource.insertTvDetail(
+                        TvEntity(
+                            data.backdropPath,
+                            data.firstAirDate,
+                            data.genreIds?.joinToString(separator = ",") ?: "",
+                            data.id,
+                            data.originalName,
+                            data.overview,
+                            data.posterPath,
+                            data.voteAverage
+                        )
+                    )
                 }
             }
         }.asLiveData()
@@ -152,6 +147,6 @@ class MovieTvRepository private constructor(
         localDataSource.getAllFavoriteTv()
 
     override fun setFavoriteTv(tvEntity: TvEntity) {
-        appExecutors.diskIO().execute{ localDataSource.insertFavoriteTv(tvEntity) }
+        appExecutors.diskIO().execute { localDataSource.insertFavoriteTv(tvEntity) }
     }
 }

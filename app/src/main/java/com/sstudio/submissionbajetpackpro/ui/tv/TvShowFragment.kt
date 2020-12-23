@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
+import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_tvshow.*
 
 class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
@@ -27,12 +29,20 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
             val viewModel = ViewModelProvider(this, factory)[TvViewModel::class.java]
             val tvAdapter = TvAdapter(this)
 
-            if (viewModel.listTvShow == null) {
-                viewModel.getAllTvShows()
-            }
-            viewModel.listTvShow?.observe(this, { listMovie ->
-                tvAdapter.setTv(listMovie)
-                progress_bar.visibility = View.GONE
+            viewModel.listTvShow?.observe(this, { listTv ->
+                if (listTv != null) {
+                    when (listTv.status) {
+                        Status.LOADING -> progress_bar.visibility = View.VISIBLE
+                        Status.SUCCESS -> {
+                            progress_bar.visibility = View.GONE
+                            listTv.data?.let { tvAdapter.setTv(it) }
+                        }
+                        Status.ERROR -> {
+                            progress_bar.visibility = View.GONE
+                            Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             })
             with(rv_list_tv_show) {
                 layoutManager = LinearLayoutManager(context)

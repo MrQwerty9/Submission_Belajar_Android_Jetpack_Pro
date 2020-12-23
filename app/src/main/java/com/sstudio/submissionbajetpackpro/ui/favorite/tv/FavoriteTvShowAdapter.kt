@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.ui.movie
+package com.sstudio.submissionbajetpackpro.ui.favorite.tv
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,16 +8,16 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvFavorite
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class MovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class FavoriteTvShowAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<FavoriteTvShowAdapter.ViewHolder>() {
 
-    var movies: ArrayList<MovieEntity> = ArrayList()
+    var tvShows: ArrayList<TvFavorite> = ArrayList()
 
-    fun setMovies(movies: List<MovieEntity>){
-        this.movies.clear()
-        this.movies.addAll(movies)
+    fun setTvShows(tv: List<TvFavorite>){
+        this.tvShows.clear()
+        this.tvShows.addAll(tv)
         notifyDataSetChanged()
     }
 
@@ -27,35 +27,35 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<
     }
 
     override fun getItemCount(): Int {
-        return movies.size
+        return tvShows.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = movies[position]
+        val movie = tvShows[position]
         holder.bind(movie)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(movie: MovieEntity) {
+        fun bind(favorite: TvFavorite) {
             with(itemView) {
-                txt_title.text = movie.originalTitle
-                txt_overview.text = movie.overview
+                txt_title.text = favorite.tv.originalName
+                txt_overview.text = favorite.tv.overview
 //                ContextCompat.getDrawable(itemView.context, movie.poster)
                 Glide.with(itemView.context)
-                    .load(BuildConfig.POSTER_THUMBNAIL + movie.posterPath)
+                    .load(BuildConfig.POSTER_THUMBNAIL + favorite.tv.posterPath)
                     .apply(
                         RequestOptions.placeholderOf(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)
                     )
                     .into(img_poster)
                 itemView.setOnClickListener {
-                    adapterCallback.itemMovieOnclick(movie)
+                    adapterCallback.itemMovieOnclick(favorite)
                 }
             }
         }
     }
 
     interface AdapterCallback{
-        fun itemMovieOnclick(movie: MovieEntity)
+        fun itemMovieOnclick(favorite: TvFavorite)
     }
 }

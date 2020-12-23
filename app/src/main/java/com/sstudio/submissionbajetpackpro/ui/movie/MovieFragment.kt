@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
+import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_movie.*
 
 class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
@@ -30,14 +32,23 @@ class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
             movieAdapter = MovieAdapter(this)
-            progress_bar.visibility = View.VISIBLE
 
-            if (viewModel.listMovie == null){
-                viewModel.getAllMovies()
-            }
             viewModel.listMovie?.observe(this, { listMovie ->
-                movieAdapter.setMovies(listMovie)
-                progress_bar.visibility = View.GONE
+                if (listMovie != null) {
+                    when (listMovie.status) {
+                        Status.LOADING -> progress_bar.visibility = View.VISIBLE
+                        Status.SUCCESS -> {
+                            progress_bar.visibility = View.GONE
+                            listMovie.data?.let { movieAdapter.setMovies(it) }
+                        }
+                        Status.ERROR -> {
+                            progress_bar.visibility = View.GONE
+                            Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+
             })
 
             with(rv_list_movie) {

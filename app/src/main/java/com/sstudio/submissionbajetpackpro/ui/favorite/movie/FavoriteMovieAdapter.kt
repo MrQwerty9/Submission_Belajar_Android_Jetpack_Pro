@@ -39,7 +39,7 @@ class FavoriteMovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.
         fun bind(favorite: MovieFavorite) {
             with(itemView) {
                 txt_title.text = favorite.movie.originalTitle
-                txt_overview.text = favorite.movie.overview
+                tv_overview.text = favorite.movie.overview
 //                ContextCompat.getDrawable(itemView.context, movie.poster)
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + favorite.movie.posterPath)

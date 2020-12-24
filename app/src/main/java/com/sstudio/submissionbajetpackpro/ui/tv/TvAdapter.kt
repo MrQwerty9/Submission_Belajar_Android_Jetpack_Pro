@@ -39,7 +39,7 @@ class TvAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<TvA
         fun bind(tv: TvEntity) {
             with(itemView) {
                 txt_title.text = tv.originalName
-                txt_overview.text = tv.overview
+                tv_overview.text = tv.overview
 //                ContextCompat.getDrawable(itemView.context, movie.poster)
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + tv.posterPath)

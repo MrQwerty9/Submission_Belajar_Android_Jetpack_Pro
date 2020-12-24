@@ -82,7 +82,7 @@ class FakeMovieTvRepository(
         localDataSource.getAllFavoriteMovie()
 
     override fun setFavoriteMovie(movieEntity: MovieEntity) {
-        appExecutors.diskIO().execute { localDataSource.insertFavoriteMovie(movieEntity) }
+        appExecutors.diskIO().execute { localDataSource.insertFavorite(movieEntity) }
     }
 
     override fun getAllTvShows(): LiveData<Resource<List<TvEntity>>> {
@@ -146,7 +146,7 @@ class FakeMovieTvRepository(
     override fun getAllFavoriteTv(): LiveData<List<TvFavorite>> =
         localDataSource.getAllFavoriteTv()
 
-    override fun setFavoriteTv(tvEntity: TvEntity) {
-        appExecutors.diskIO().execute { localDataSource.insertFavoriteTv(tvEntity) }
+    override fun setFavorite(tvEntity: TvEntity) {
+        appExecutors.diskIO().execute { localDataSource.insertFavorite(tvEntity) }
     }
 }

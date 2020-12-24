@@ -300,13 +300,13 @@ object DataDummy {
         favMovie.add(
             MovieFavorite(
                 generateDummyMovies()[0],
-                FavoriteEntity(0, generateDummyMovies()[0].id)
+                FavoriteEntity(generateDummyMovies()[0].id)
             )
         )
         favMovie.add(
             MovieFavorite(
                 generateDummyMovies()[1],
-                FavoriteEntity(1, generateDummyMovies()[1].id)
+                FavoriteEntity(generateDummyMovies()[1].id)
             )
         )
         return favMovie
@@ -317,13 +317,13 @@ object DataDummy {
         favTv.add(
             TvFavorite(
                 generateDummyTvShow()[0],
-                FavoriteEntity(0, generateDummyTvShow()[0].id)
+                FavoriteEntity(generateDummyTvShow()[0].id)
             )
         )
         favTv.add(
             TvFavorite(
                 generateDummyTvShow()[1],
-                FavoriteEntity(1, generateDummyTvShow()[1].id)
+                FavoriteEntity(generateDummyTvShow()[1].id)
             )
         )
         return favTv

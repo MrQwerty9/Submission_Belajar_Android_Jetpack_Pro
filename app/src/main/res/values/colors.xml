@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="colorTextSecondary">#6D767E</color>
     <color name="colorTextTertiary">#EFEFEF</color>
+    <color name="grey">#424242</color>
+    <color name="defaultBg">#FBEFD1</color>
+    <color name="whiteGrey">#7C7C7C</color>
 </resources>

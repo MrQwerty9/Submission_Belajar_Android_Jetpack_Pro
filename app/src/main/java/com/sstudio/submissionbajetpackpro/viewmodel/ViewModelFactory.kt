@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.sstudio.submissionbajetpackpro.data.MovieTvRepository
 import com.sstudio.submissionbajetpackpro.di.Injection
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailViewModel
+import com.sstudio.submissionbajetpackpro.ui.favorite.movie.FavoriteMovieViewModel
+import com.sstudio.submissionbajetpackpro.ui.favorite.tv.FavoriteTvShowViewModel
 import com.sstudio.submissionbajetpackpro.ui.movie.MovieViewModel
 import com.sstudio.submissionbajetpackpro.ui.tv.TvViewModel
 
@@ -32,6 +34,12 @@ class ViewModelFactory private constructor(private val mMovieTvRepository: Movie
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(mMovieTvRepository) as T
+            }
+            modelClass.isAssignableFrom(FavoriteMovieViewModel::class.java) -> {
+                FavoriteMovieViewModel(mMovieTvRepository) as T
+            }
+            modelClass.isAssignableFrom(FavoriteTvShowViewModel::class.java) -> {
+                FavoriteTvShowViewModel(mMovieTvRepository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }

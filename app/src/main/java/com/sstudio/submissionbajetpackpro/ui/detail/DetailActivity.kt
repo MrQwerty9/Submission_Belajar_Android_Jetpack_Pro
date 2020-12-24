@@ -14,6 +14,8 @@ import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.content_detail.*
+import kotlinx.android.synthetic.main.movie_wrapper.*
 
 class DetailActivity : AppCompatActivity() {
 
@@ -23,6 +25,7 @@ class DetailActivity : AppCompatActivity() {
         const val IS_MOVIE = "is_movie"
         const val IS_TV = "is_tv"
     }
+    var isFavorite: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +39,12 @@ class DetailActivity : AppCompatActivity() {
             val movieOrTv = extras.getString(EXTRA_MOVIE_TV)
             if (movieTvId != 0) {
                 viewModel.setSelectedMovieTv(movieTvId)
+                viewModel.getFavoriteStatus(movieTvId).observe(this, {
+                        isFavorite = it.isNotEmpty()
+                    favoriteOnChange()
+                })
                 if (movieOrTv == IS_MOVIE) {
+                    viewModel.needFetch = false
                     viewModel.detailMovie.observe(this, { movie ->
                         when (movie.status) {
                             Status.LOADING -> progress_bar.visibility = View.VISIBLE
@@ -73,13 +81,41 @@ class DetailActivity : AppCompatActivity() {
                         }
                     })
                 }
+                btn_favorite.setOnClickListener {
+                    isFavorite?.let { isFavorite->
+                        if (isFavorite) {
+                            viewModel.deleteFavorite(movieTvId)
+                        }
+                        else{
+                            viewModel.setFavorite(movieTvId)
+                        }
+                        favoriteOnChange()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun favoriteOnChange() {
+        isFavorite?.let { isFavorite ->
+            if (isFavorite) {
+                btn_favorite.setImageResource(R.drawable.ic_favorite_border_white)
+            } else {
+                btn_favorite.setImageResource(R.drawable.ic_favorite_pink)
             }
         }
     }
 
     private fun populateMovie(movie: MovieEntity) {
-        txt_title.text = movie.originalTitle
-        txt_overview.text = movie.overview
+        tv_title.text = movie.originalTitle
+        tv_overview.text = movie.overview
+        Glide.with(this)
+            .load(BuildConfig.POSTER + movie.backdropPath)
+            .apply(
+                RequestOptions.placeholderOf(R.drawable.ic_loading)
+                    .error(R.drawable.ic_error)
+            )
+            .into(img_backdrop)
         Glide.with(this)
             .load(BuildConfig.POSTER + movie.posterPath)
             .apply(
@@ -90,8 +126,15 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun populateTv(tvShow: TvEntity) {
-        txt_title.text = tvShow.originalName
-        txt_overview.text = tvShow.overview
+        tv_title.text = tvShow.originalName
+        tv_overview.text = tvShow.overview
+        Glide.with(this)
+            .load(BuildConfig.POSTER + tvShow.backdropPath)
+            .apply(
+                RequestOptions.placeholderOf(R.drawable.ic_loading)
+                    .error(R.drawable.ic_error)
+            )
+            .into(img_backdrop)
         Glide.with(this)
             .load(BuildConfig.POSTER + tvShow.posterPath)
             .apply(

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
 import com.sstudio.submissionbajetpackpro.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
 import com.sstudio.submissionbajetpackpro.data.source.remote.RemoteDataSource
 import com.sstudio.submissionbajetpackpro.utils.AppExecutors
@@ -50,18 +51,6 @@ class MovieTvRepositoryTest : TestCase() {
     }
 
     @Test
-    fun testGetAllTvShows() {
-        val dummyTvShows = MutableLiveData<List<TvEntity>>()
-        dummyTvShows.value = DataDummy.generateDummyTvShow()
-        `when`(local.getAllTv()).thenReturn(dummyTvShows)
-
-        val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getAllTvShows())
-        verify(local).getAllTv()
-        assertNotNull(tvShowEntities.data)
-        assertEquals(tvShowResponses.results.size.toLong(), tvShowEntities.data?.size?.toLong())
-    }
-
-    @Test
     fun testGetMovieDetail() {
         val dummyMovie = MutableLiveData<MovieEntity>()
         dummyMovie.value = DataDummy.generateDummyMovies()[0]
@@ -71,6 +60,30 @@ class MovieTvRepositoryTest : TestCase() {
         verify(local).getMovieById(movieId)
         Assert.assertNotNull(movieEntities)
         assertEquals(detailMovieResponses.originalTitle, movieEntities.data?.originalTitle)
+    }
+
+    @Test
+    fun testGetAllFavoriteMovie(){
+        val dummyMovie = MutableLiveData<List<MovieFavorite>>()
+        dummyMovie.value = DataDummy.generateDummyFavMovie()
+        `when`(local.getAllFavoriteMovie()).thenReturn(dummyMovie)
+
+        val movieEntities = LiveDataTestUtil.getValue(movieTvRepository.getAllFavoriteMovie())
+        verify(local).getAllFavoriteMovie()
+        assertNotNull(movieEntities)
+        assertEquals(movieResponses.results.size.toLong(), movieEntities.size.toLong())
+    }
+
+    @Test
+    fun testGetAllTvShows() {
+        val dummyTvShows = MutableLiveData<List<TvEntity>>()
+        dummyTvShows.value = DataDummy.generateDummyTvShow()
+        `when`(local.getAllTv()).thenReturn(dummyTvShows)
+
+        val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getAllTvShows())
+        verify(local).getAllTv()
+        assertNotNull(tvShowEntities.data)
+        assertEquals(tvShowResponses.results.size.toLong(), tvShowEntities.data?.size?.toLong())
     }
 
     @Test

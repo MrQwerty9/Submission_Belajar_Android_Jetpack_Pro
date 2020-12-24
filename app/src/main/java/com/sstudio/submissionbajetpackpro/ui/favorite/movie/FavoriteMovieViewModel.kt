@@ -13,6 +13,7 @@ class FavoriteMovieViewModel(private val movieTvRepository: MovieTvRepository) :
             if (field == null) {
                 field = MutableLiveData()
                 field = movieTvRepository.getAllFavoriteMovie()
+
             }
             return field
         }

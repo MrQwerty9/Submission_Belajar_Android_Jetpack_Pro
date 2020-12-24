@@ -1,11 +1,9 @@
 package com.sstudio.submissionbajetpackpro.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.sstudio.submissionbajetpackpro.data.source.local.LocalDataSource
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvFavorite
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.*
 import com.sstudio.submissionbajetpackpro.data.source.remote.ApiResponse
 import com.sstudio.submissionbajetpackpro.data.source.remote.RemoteDataSource
 import com.sstudio.submissionbajetpackpro.data.source.remote.response.MovieResponse
@@ -30,14 +28,14 @@ class MovieTvRepository private constructor(
             }
     }
 
-    override fun getAllMovie(): LiveData<Resource<List<MovieEntity>>> {
+    override fun getAllMovie(needFetch: Boolean): LiveData<Resource<List<MovieEntity>>> {
         return object :
             NetworkBoundResource<List<MovieEntity>, MovieResponse>(appExecutors) {
             override fun loadFromDB(): LiveData<List<MovieEntity>> =
                 localDataSource.getAllMovie()
 
             override fun shouldFetch(data: List<MovieEntity>?): Boolean =
-                data == null || data.isEmpty()
+                needFetch
 
             override fun createCall(): LiveData<ApiResponse<MovieResponse>> =
                 remoteDataSource.getAllMovie()
@@ -45,11 +43,16 @@ class MovieTvRepository private constructor(
             override fun saveCallResult(data: MovieResponse) {
                 val movieList = ArrayList<MovieEntity>()
                 for (response in data.results) {
-                    val movie = MovieEntity()
-                    movie.id = response.id
-                    movie.originalTitle = response.originalTitle
-                    movie.overview = response.overview
-                    movie.posterPath = response.posterPath
+                    val movie = MovieEntity(
+                        response.backdropPath,
+                        response.genreIds?.joinToString(separator = ",") ?: "",
+                        response.id,
+                        response.originalTitle,
+                        response.overview,
+                        response.posterPath,
+                        response.releaseDate,
+                        response.voteAverage
+                    )
                     movieList.add(movie)
                 }
                 localDataSource.insertAllMovie(movieList)
@@ -57,13 +60,13 @@ class MovieTvRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getMovieDetail(movieId: Int): LiveData<Resource<MovieEntity>> {
+    override fun getMovieDetail(needFetch: Boolean, movieId: Int): LiveData<Resource<MovieEntity>> {
         return object : NetworkBoundResource<MovieEntity, MovieResponse.Result>(appExecutors) {
             override fun loadFromDB(): LiveData<MovieEntity> =
                 localDataSource.getMovieById(movieId)
 
             override fun shouldFetch(data: MovieEntity?): Boolean =
-                data == null
+                data == null || needFetch
 
             override fun createCall(): LiveData<ApiResponse<MovieResponse.Result>> =
                 remoteDataSource.getMovieDetail(movieId)
@@ -86,21 +89,26 @@ class MovieTvRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getAllFavoriteMovie(): LiveData<List<MovieFavorite>> =
-        localDataSource.getAllFavoriteMovie()
-
-    override fun setFavoriteMovie(movieEntity: MovieEntity) {
-        appExecutors.diskIO().execute{ localDataSource.insertFavoriteMovie(movieEntity) }
+    override fun getAllFavoriteMovie(): LiveData<List<MovieFavorite>> {
+        return Transformations.map(localDataSource.getAllFavoriteMovie()) { movie ->
+            val movieFavorite = ArrayList<MovieFavorite>()
+            movie.forEach {
+                if (it.favoriteEntity != null) {
+                    movieFavorite.add(MovieFavorite(it.movie, it.favoriteEntity))
+                }
+            }
+            return@map movieFavorite
+        }
     }
 
-    override fun getAllTvShows(): LiveData<Resource<List<TvEntity>>> {
+    override fun getAllTvShows(needFetch: Boolean): LiveData<Resource<List<TvEntity>>> {
         return object :
             NetworkBoundResource<List<TvEntity>, TvResponse>(appExecutors){
             override fun loadFromDB(): LiveData<List<TvEntity>> =
                 localDataSource.getAllTv()
 
             override fun shouldFetch(data: List<TvEntity>?): Boolean =
-                data == null || data.isEmpty()
+                data == null || data.isEmpty() || needFetch
 
             override fun createCall(): LiveData<ApiResponse<TvResponse>> =
                 remoteDataSource.getAllTvShows()
@@ -108,12 +116,17 @@ class MovieTvRepository private constructor(
             override fun saveCallResult(data: TvResponse) {
                 val tvList = ArrayList<TvEntity>()
                 for (response in data.results) {
-                    val movie = TvEntity()
-                    movie.id = response.id
-                    movie.originalName = response.originalName
-                    movie.overview = response.overview
-                    movie.posterPath = response.posterPath
-                    tvList.add(movie)
+                    val tvEntity = TvEntity(
+                        response.backdropPath,
+                        response.firstAirDate,
+                        response.genreIds?.joinToString(separator = ",") ?: "",
+                        response.id,
+                        response.originalName,
+                        response.overview,
+                        response.posterPath,
+                        response.voteAverage
+                    )
+                    tvList.add(tvEntity)
                 }
                 localDataSource.insertAllTv(tvList)
             }
@@ -121,13 +134,13 @@ class MovieTvRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvEntity>> {
+    override fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): LiveData<Resource<TvEntity>> {
         return object : NetworkBoundResource<TvEntity, TvResponse.Result>(appExecutors) {
             override fun loadFromDB(): LiveData<TvEntity> =
                 localDataSource.getTvById(tvShowId)
 
             override fun shouldFetch(data: TvEntity?): Boolean =
-                data == null
+                data == null || needFetch
 
             override fun createCall(): LiveData<ApiResponse<TvResponse.Result>> =
                 remoteDataSource.getTvShowDetail(tvShowId)
@@ -148,10 +161,25 @@ class MovieTvRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getAllFavoriteTv(): LiveData<List<TvFavorite>> =
-        localDataSource.getAllFavoriteTv()
+    override fun getAllFavoriteTv(): LiveData<List<TvFavorite>> {
+        return Transformations.map(localDataSource.getAllFavoriteTv()) { tvShow ->
+            val tvFavorite = ArrayList<TvFavorite>()
+            tvShow.forEach {
+                if (it.favoriteEntity != null) {
+                    tvFavorite.add(TvFavorite(it.tv, it.favoriteEntity))
+                }
+            }
+            return@map tvFavorite
+        }
+    }
 
-    override fun setFavoriteTv(tvEntity: TvEntity) {
-        appExecutors.diskIO().execute{ localDataSource.insertFavoriteTv(tvEntity) }
+    override fun setFavorite(id: Int) {
+        appExecutors.diskIO().execute{ localDataSource.insertFavorite(FavoriteEntity(id)) }
+    }
+
+    override fun getFavoriteById(id: Int): LiveData<List<FavoriteEntity>> = localDataSource.getFavoriteById(id)
+
+    override fun deleteFavoriteTv(id: Int) {
+        appExecutors.diskIO().execute{localDataSource.deleteFavoriteTv(id)}
     }
 }

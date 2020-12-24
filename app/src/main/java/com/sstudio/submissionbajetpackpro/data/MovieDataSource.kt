@@ -1,21 +1,20 @@
 package com.sstudio.submissionbajetpackpro.data
 
 import androidx.lifecycle.LiveData
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvFavorite
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.*
 import com.sstudio.submissionbajetpackpro.vo.Resource
 
 interface MovieDataSource {
 
-    fun getAllMovie(): LiveData<Resource<List<MovieEntity>>>
-    fun getMovieDetail(movieId: Int): LiveData<Resource<MovieEntity>>
+    fun getAllMovie(needFetch: Boolean): LiveData<Resource<List<MovieEntity>>>
+    fun getMovieDetail(needFetch: Boolean, movieId: Int): LiveData<Resource<MovieEntity>>
     fun getAllFavoriteMovie(): LiveData<List<MovieFavorite>>
-    fun setFavoriteMovie(movieEntity: MovieEntity)
 
-    fun getAllTvShows(): LiveData<Resource<List<TvEntity>>>
-    fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvEntity>>
+    fun getAllTvShows(needFetch: Boolean): LiveData<Resource<List<TvEntity>>>
+    fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): LiveData<Resource<TvEntity>>
     fun getAllFavoriteTv(): LiveData<List<TvFavorite>>
-    fun setFavoriteTv(tvEntity: TvEntity)
+
+    fun setFavorite(id: Int)
+    fun getFavoriteById(id: Int): LiveData<List<FavoriteEntity>>
+    fun deleteFavoriteTv(id: Int)
 }

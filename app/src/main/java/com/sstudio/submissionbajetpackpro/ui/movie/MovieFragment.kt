@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_movie.*
 class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
 
     private lateinit var movieAdapter: MovieAdapter
+    private lateinit var viewModel: MovieViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_movie, container, false)
@@ -27,36 +28,40 @@ class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-
             val factory = ViewModelFactory.getInstance(requireActivity())
-            val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
-
+            viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             movieAdapter = MovieAdapter(this)
+            observeData()
 
-            viewModel.listMovie?.observe(this, { listMovie ->
-                if (listMovie != null) {
-                    when (listMovie.status) {
-                        Status.LOADING -> progress_bar.visibility = View.VISIBLE
-                        Status.SUCCESS -> {
-                            progress_bar.visibility = View.GONE
-                            listMovie.data?.let { movieAdapter.setMovies(it) }
-                        }
-                        Status.ERROR -> {
-                            progress_bar.visibility = View.GONE
-                            Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-
-
-            })
-
+            swipe_layout.setOnRefreshListener {
+                viewModel.fetchListMovie()
+                observeData()
+                swipe_layout.isRefreshing = false
+            }
             with(rv_list_movie) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
                 adapter = movieAdapter
             }
         }
+    }
+
+    private fun observeData() {
+        viewModel.listMovie?.observe(this, { listMovie ->
+            if (listMovie != null) {
+                when (listMovie.status) {
+                    Status.LOADING -> progress_bar.visibility = View.VISIBLE
+                    Status.SUCCESS -> {
+                        progress_bar.visibility = View.GONE
+                        listMovie.data?.let { movieAdapter.setMovies(it) }
+                    }
+                    Status.ERROR -> {
+                        progress_bar.visibility = View.GONE
+                        Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
     }
 
     override fun itemMovieOnclick(movie: MovieEntity) {

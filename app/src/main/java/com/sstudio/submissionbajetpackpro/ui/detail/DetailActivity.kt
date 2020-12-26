@@ -109,6 +109,7 @@ class DetailActivity : AppCompatActivity() {
     private fun populateMovie(movie: MovieEntity) {
         tv_title.text = movie.originalTitle
         tv_overview.text = movie.overview
+        tv_release_date.text = movie.releaseDate
         Glide.with(this)
             .load(BuildConfig.POSTER + movie.backdropPath)
             .apply(
@@ -128,6 +129,7 @@ class DetailActivity : AppCompatActivity() {
     private fun populateTv(tvShow: TvEntity) {
         tv_title.text = tvShow.originalName
         tv_overview.text = tvShow.overview
+        tv_release_date.text = tvShow.firstAirDate
         Glide.with(this)
             .load(BuildConfig.POSTER + tvShow.backdropPath)
             .apply(

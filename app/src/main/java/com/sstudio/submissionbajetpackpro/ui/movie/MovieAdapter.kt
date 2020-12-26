@@ -41,7 +41,7 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<
                 txt_title.text = movie.originalTitle
                 tv_overview.text = movie.overview
                 tv_rating_item.text = movie.voteAverage.toString()
-                txt_release_date.text = movie.releaseDate
+                tv_release_date.text = movie.releaseDate
 //                ContextCompat.getDrawable(itemView.context, movie.poster)
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + movie.posterPath)

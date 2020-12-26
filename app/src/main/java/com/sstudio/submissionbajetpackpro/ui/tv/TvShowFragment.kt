@@ -17,6 +17,8 @@ import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_tvshow.*
 
 class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
+    private lateinit var tvAdapter: TvAdapter
+    private lateinit var viewModel: TvViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_tvshow, container, false)
@@ -25,31 +27,39 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
+            tvAdapter = TvAdapter(this)
             val factory = ViewModelFactory.getInstance(requireActivity())
-            val viewModel = ViewModelProvider(this, factory)[TvViewModel::class.java]
-            val tvAdapter = TvAdapter(this)
-
-            viewModel.listTvShow?.observe(this, { listTv ->
-                if (listTv != null) {
-                    when (listTv.status) {
-                        Status.LOADING -> progress_bar.visibility = View.VISIBLE
-                        Status.SUCCESS -> {
-                            progress_bar.visibility = View.GONE
-                            listTv.data?.let { tvAdapter.setTv(it) }
-                        }
-                        Status.ERROR -> {
-                            progress_bar.visibility = View.GONE
-                            Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            })
+            viewModel = ViewModelProvider(this, factory)[TvViewModel::class.java]
+            observeData()
+            swipe_layout.setOnRefreshListener {
+                viewModel.fetchListMovie()
+                observeData()
+                swipe_layout.isRefreshing = false
+            }
             with(rv_list_tv_show) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
                 adapter = tvAdapter
             }
         }
+    }
+
+    private fun observeData() {
+        viewModel.listTvShow?.observe(this, { listTv ->
+            if (listTv != null) {
+                when (listTv.status) {
+                    Status.LOADING -> progress_bar.visibility = View.VISIBLE
+                    Status.SUCCESS -> {
+                        progress_bar.visibility = View.GONE
+                        listTv.data?.let { tvAdapter.setTv(it) }
+                    }
+                    Status.ERROR -> {
+                        progress_bar.visibility = View.GONE
+                        Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
     }
 
     override fun itemTvOnclick(tv: TvEntity) {

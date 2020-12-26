@@ -13,9 +13,13 @@ class TvViewModel(private val movieTvRepository: MovieTvRepository) : ViewModel(
         get() {
             if (field == null) {
                 field = MutableLiveData()
-                field = movieTvRepository.getAllTvShows()
+                field = movieTvRepository.getAllTvShows(false)
             }
             return field
         }
         private set
+
+    fun fetchListMovie(){
+        listTvShow = movieTvRepository.getAllTvShows(true)
+    }
 }

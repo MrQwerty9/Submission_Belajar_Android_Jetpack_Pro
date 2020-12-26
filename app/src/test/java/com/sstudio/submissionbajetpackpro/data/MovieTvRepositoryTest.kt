@@ -7,6 +7,7 @@ import com.sstudio.submissionbajetpackpro.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvFavorite
 import com.sstudio.submissionbajetpackpro.data.source.remote.RemoteDataSource
 import com.sstudio.submissionbajetpackpro.utils.AppExecutors
 import com.sstudio.submissionbajetpackpro.utils.DataDummy
@@ -44,7 +45,7 @@ class MovieTvRepositoryTest : TestCase() {
         dummyMovie.value = DataDummy.generateDummyMovies()
         `when`(local.getAllMovie()).thenReturn(dummyMovie)
 
-        val courseEntities = LiveDataTestUtil.getValue(movieTvRepository.getAllMovie())
+        val courseEntities = LiveDataTestUtil.getValue(movieTvRepository.getAllMovie(false))
         verify(local).getAllMovie()
         assertNotNull(courseEntities.data)
         assertEquals(movieResponses.results.size.toLong(), courseEntities.data?.size?.toLong())
@@ -56,7 +57,7 @@ class MovieTvRepositoryTest : TestCase() {
         dummyMovie.value = DataDummy.generateDummyMovies()[0]
         `when`(local.getMovieById(movieId)).thenReturn(dummyMovie)
 
-        val movieEntities = LiveDataTestUtil.getValue(movieTvRepository.getMovieDetail(movieId))
+        val movieEntities = LiveDataTestUtil.getValue(movieTvRepository.getMovieDetail(false, movieId))
         verify(local).getMovieById(movieId)
         Assert.assertNotNull(movieEntities)
         assertEquals(detailMovieResponses.originalTitle, movieEntities.data?.originalTitle)
@@ -80,7 +81,7 @@ class MovieTvRepositoryTest : TestCase() {
         dummyTvShows.value = DataDummy.generateDummyTvShow()
         `when`(local.getAllTv()).thenReturn(dummyTvShows)
 
-        val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getAllTvShows())
+        val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getAllTvShows(false))
         verify(local).getAllTv()
         assertNotNull(tvShowEntities.data)
         assertEquals(tvShowResponses.results.size.toLong(), tvShowEntities.data?.size?.toLong())
@@ -92,9 +93,21 @@ class MovieTvRepositoryTest : TestCase() {
         dummyTv.value = DataDummy.generateDummyTvShow()[0]
         `when`(local.getTvById(tvId)).thenReturn(dummyTv)
 
-        val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getTvShowDetail(tvId))
+        val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getTvShowDetail(false, tvId))
         verify(local).getTvById(tvId)
         Assert.assertNotNull(tvShowEntities)
         assertEquals(detailTvShowResponses.originalName, tvShowEntities.data?.originalName)
+    }
+
+    @Test
+    fun testGetAllFavoriteTvShow(){
+        val dummyMovie = MutableLiveData<List<TvFavorite>>()
+        dummyMovie.value = DataDummy.generateDummyFavTv()
+        `when`(local.getAllFavoriteTv()).thenReturn(dummyMovie)
+
+        val favoriteEntities = LiveDataTestUtil.getValue(movieTvRepository.getAllFavoriteTv())
+        verify(local).getAllFavoriteTv()
+        assertNotNull(favoriteEntities)
+        assertEquals(movieResponses.results.size.toLong(), favoriteEntities.size.toLong())
     }
 }

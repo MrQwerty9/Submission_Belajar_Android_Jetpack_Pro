@@ -13,9 +13,13 @@ class MovieViewModel(private val movieTvRepository: MovieTvRepository) : ViewMod
         get() {
             if (field == null) {
                 field = MutableLiveData()
-                field = movieTvRepository.getAllMovie()
+                field = movieTvRepository.getAllMovie(false)
             }
             return field
         }
         private set
+
+    fun fetchListMovie(){
+        listMovie = movieTvRepository.getAllMovie(true)
+    }
 }

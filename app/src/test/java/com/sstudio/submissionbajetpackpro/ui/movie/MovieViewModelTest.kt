@@ -41,9 +41,9 @@ class MovieViewModelTest {
         val movies = MutableLiveData<Resource<List<MovieEntity>>>()
         movies.value = dataMovies
 
-        Mockito.`when`(movieTvRepository.getAllMovie()).thenReturn(movies)
+        Mockito.`when`(movieTvRepository.getAllMovie(false)).thenReturn(movies)
         val movieEntities = viewModel.listMovie?.value?.data
-        Mockito.verify(movieTvRepository).getAllMovie()
+        Mockito.verify(movieTvRepository).getAllMovie(false)
         Assert.assertNotNull(movieEntities)
         Assert.assertEquals(5, movieEntities?.size)
 

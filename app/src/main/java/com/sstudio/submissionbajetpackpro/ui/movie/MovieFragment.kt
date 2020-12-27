@@ -41,7 +41,7 @@ class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
             with(rv_list_movie) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-                adapter = movieAdapter
+//                adapter = movieAdapter
             }
         }
     }
@@ -53,7 +53,8 @@ class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
                     Status.LOADING -> progress_bar.visibility = View.VISIBLE
                     Status.SUCCESS -> {
                         progress_bar.visibility = View.GONE
-                        listMovie.data?.let { movieAdapter.setMovies(it) }
+                        movieAdapter.submitList(listMovie.data)
+                        rv_list_movie.adapter = movieAdapter //why??
                     }
                     Status.ERROR -> {
                         progress_bar.visibility = View.GONE

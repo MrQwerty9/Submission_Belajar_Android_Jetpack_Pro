@@ -32,15 +32,17 @@ class FavoriteTvShowFragment : Fragment(), FavoriteTvShowAdapter.AdapterCallback
             favoriteTvShowAdapter = FavoriteTvShowAdapter(this)
 
             progress_bar.visibility = View.VISIBLE
-            viewModel.listTv?.observe(this, { listMovie ->
-                listMovie?.let { favoriteTvShowAdapter.setTvShows(it) }
+            viewModel.listTv?.observe(this, { listTv ->
+                favoriteTvShowAdapter.submitList(listTv)
+//                favoriteTvShowAdapter.notifyDataSetChanged()
+                rv_list_tv_show.adapter = favoriteTvShowAdapter
                 progress_bar.visibility = View.GONE
             })
 
             with(rv_list_tv_show) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-                adapter = favoriteTvShowAdapter
+//                adapter = favoriteTvShowAdapter
             }
         }
     }

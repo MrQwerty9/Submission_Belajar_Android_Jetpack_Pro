@@ -2,6 +2,8 @@ package com.sstudio.submissionbajetpackpro.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.*
 import com.sstudio.submissionbajetpackpro.data.source.remote.ApiResponse
@@ -18,14 +20,20 @@ class FakeMovieTvRepository constructor(
 ) :
     MovieDataSource {
 
-    override fun getAllMovie(needFetch: Boolean): LiveData<Resource<List<MovieEntity>>> {
+    override fun getAllMovie(needFetch: Boolean): LiveData<Resource<PagedList<MovieEntity>>> {
         return object :
-            NetworkBoundResource<List<MovieEntity>, MovieResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<MovieEntity>> =
-                localDataSource.getAllMovie()
+            NetworkBoundResource<PagedList<MovieEntity>, MovieResponse>(appExecutors) {
+            override fun loadFromDB(): LiveData<PagedList<MovieEntity>> {
+                val config = PagedList.Config.Builder()
+                    .setEnablePlaceholders(false)
+                    .setInitialLoadSizeHint(4)
+                    .setPageSize(4)
+                    .build()
+                return LivePagedListBuilder(localDataSource.getAllMovie(), config).build()
+            }
 
-            override fun shouldFetch(data: List<MovieEntity>?): Boolean =
-                needFetch
+            override fun shouldFetch(data: PagedList<MovieEntity>?): Boolean =
+                data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<MovieResponse>> =
                 remoteDataSource.getAllMovie()
@@ -79,25 +87,28 @@ class FakeMovieTvRepository constructor(
         }.asLiveData()
     }
 
-    override fun getAllFavoriteMovie(): LiveData<List<MovieFavorite>> {
-        return Transformations.map(localDataSource.getAllFavoriteMovie()) { movie ->
-            val movieFavorite = ArrayList<MovieFavorite>()
-            movie.forEach {
-                if (it.favoriteEntity != null) {
-                    movieFavorite.add(MovieFavorite(it.movie, it.favoriteEntity))
-                }
-            }
-            return@map movieFavorite
-        }
+    override fun getAllFavoriteMovie(): LiveData<PagedList<MovieFavorite>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(4)
+            .setPageSize(4)
+            .build()
+        return LivePagedListBuilder(localDataSource.getAllFavoriteMovie(), config).build()
     }
 
-    override fun getAllTvShows(needFetch: Boolean): LiveData<Resource<List<TvEntity>>> {
+    override fun getAllTvShows(needFetch: Boolean): LiveData<Resource<PagedList<TvEntity>>> {
         return object :
-            NetworkBoundResource<List<TvEntity>, TvResponse>(appExecutors){
-            override fun loadFromDB(): LiveData<List<TvEntity>> =
-                localDataSource.getAllTv()
+            NetworkBoundResource<PagedList<TvEntity>, TvResponse>(appExecutors){
+            override fun loadFromDB(): LiveData<PagedList<TvEntity>> {
+                val config = PagedList.Config.Builder()
+                    .setEnablePlaceholders(false)
+                    .setInitialLoadSizeHint(4)
+                    .setPageSize(4)
+                    .build()
+                return LivePagedListBuilder(localDataSource.getAllTv(), config).build()
+            }
 
-            override fun shouldFetch(data: List<TvEntity>?): Boolean =
+            override fun shouldFetch(data: PagedList<TvEntity>?): Boolean =
                 data == null || data.isEmpty() || needFetch
 
             override fun createCall(): LiveData<ApiResponse<TvResponse>> =
@@ -151,16 +162,13 @@ class FakeMovieTvRepository constructor(
         }.asLiveData()
     }
 
-    override fun getAllFavoriteTv(): LiveData<List<TvFavorite>> {
-        return Transformations.map(localDataSource.getAllFavoriteTv()) { tvShow ->
-            val tvFavorite = ArrayList<TvFavorite>()
-            tvShow.forEach {
-                if (it.favoriteEntity != null) {
-                    tvFavorite.add(TvFavorite(it.tv, it.favoriteEntity))
-                }
-            }
-            return@map tvFavorite
-        }
+    override fun getAllFavoriteTv(): LiveData<PagedList<TvFavorite>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(4)
+            .setPageSize(4)
+            .build()
+        return LivePagedListBuilder(localDataSource.getAllFavoriteTv(), config).build()
     }
 
     override fun setFavorite(id: Int) {

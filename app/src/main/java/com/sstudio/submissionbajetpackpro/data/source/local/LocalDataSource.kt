@@ -1,6 +1,7 @@
 package com.sstudio.submissionbajetpackpro.data.source.local
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.*
 import com.sstudio.submissionbajetpackpro.data.source.local.room.MovieTvDao
 
@@ -13,15 +14,15 @@ class LocalDataSource private constructor(private val mMovieDao: MovieTvDao) {
             INSTANCE ?: LocalDataSource(movieTvDao)
     }
 
-    fun getAllMovie(): LiveData<List<MovieEntity>> = mMovieDao.getAllMovie()
-    fun getAllFavoriteMovie(): LiveData<List<MovieFavorite>> = mMovieDao.getAllFavoriteMovie()
+    fun getAllMovie(): DataSource.Factory<Int, MovieEntity> = mMovieDao.getAllMovie()
+    fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite> = mMovieDao.getAllFavoriteMovie()
     fun getMovieById(movieId: Int): LiveData<MovieEntity> = mMovieDao.getMovieById(movieId)
 
     fun insertAllMovie(movie: List<MovieEntity>) = mMovieDao.insertAllMovie(movie)
     fun insertMovieDetail(data: MovieEntity) = mMovieDao.insertMovieDetail(data)
 
-    fun getAllTv(): LiveData<List<TvEntity>> = mMovieDao.getAllTv()
-    fun getAllFavoriteTv(): LiveData<List<TvFavorite>> = mMovieDao.getAllFavoriteTv()
+    fun getAllTv(): DataSource.Factory<Int, TvEntity> = mMovieDao.getAllTv()
+    fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite> = mMovieDao.getAllFavoriteTv()
     fun getTvById(tvShowId: Int): LiveData<TvEntity> = mMovieDao.getTvById(tvShowId)
 
     fun insertAllTv(tv: List<TvEntity>) = mMovieDao.insertAllTv(tv)

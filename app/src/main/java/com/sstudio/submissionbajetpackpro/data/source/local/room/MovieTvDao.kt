@@ -1,18 +1,24 @@
 package com.sstudio.submissionbajetpackpro.data.source.local.room
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.paging.DataSource
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.*
 
 @Dao
 interface MovieTvDao {
 
     @Query("SELECT * FROM MovieEntity")
-    fun getAllMovie(): LiveData<List<MovieEntity>>
+    fun getAllMovie(): DataSource.Factory<Int, MovieEntity>
 
-    @Transaction
-    @Query("SELECT * FROM MovieEntity")
-    fun getAllFavoriteMovie(): LiveData<List<MovieFavorite>>
+
+    @Query(
+        "SELECT MovieEntity.*, FavoriteEntity.* FROM MovieEntity, FavoriteEntity WHERE MovieEntity.id = favoriteEntity.idMovieTv"
+    )
+    fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite>
 
     @Query("SELECT * FROM MovieEntity where id = :movieId")
     fun getMovieById(movieId: Int): LiveData<MovieEntity>
@@ -24,11 +30,12 @@ interface MovieTvDao {
     fun insertMovieDetail(data: MovieEntity)
 
     @Query("SELECT * FROM TvEntity")
-    fun getAllTv(): LiveData<List<TvEntity>>
+    fun getAllTv(): DataSource.Factory<Int, TvEntity>
 
-    @Transaction
-    @Query("SELECT * FROM TvEntity")
-    fun getAllFavoriteTv(): LiveData<List<TvFavorite>>
+    @Query(
+        "SELECT *, * FROM TvEntity, FavoriteEntity WHERE TvEntity.id = favoriteEntity.idMovieTv"
+    )
+    fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite>
 
     @Query("SELECT * FROM TvEntity where id = :tvId")
     fun getTvById(tvId: Int): LiveData<TvEntity>

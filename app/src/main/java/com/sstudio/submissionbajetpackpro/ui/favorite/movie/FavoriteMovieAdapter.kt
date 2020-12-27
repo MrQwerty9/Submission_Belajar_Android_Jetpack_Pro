@@ -3,6 +3,8 @@ package com.sstudio.submissionbajetpackpro.ui.favorite.movie
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -11,14 +13,18 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class FavoriteMovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<FavoriteMovieAdapter.ViewHolder>() {
+class FavoriteMovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<MovieFavorite, FavoriteMovieAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    var movies: ArrayList<MovieFavorite> = ArrayList()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieFavorite>() {
+            override fun areItemsTheSame(oldItem: MovieFavorite, newItem: MovieFavorite): Boolean {
+                return oldItem.movie.id == newItem.movie.id
+            }
 
-    fun setMovies(movies: List<MovieFavorite>){
-        this.movies.clear()
-        this.movies.addAll(movies)
-        notifyDataSetChanged()
+            override fun areContentsTheSame(oldItem: MovieFavorite, newItem: MovieFavorite): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,13 +32,9 @@ class FavoriteMovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return movies.size
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = movies[position]
-        holder.bind(movie)
+        val movie = getItem(position)
+        movie?.let { holder.bind(it) }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -54,6 +56,8 @@ class FavoriteMovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.
             }
         }
     }
+
+    fun getSwipedData(swipedPosition: Int): MovieFavorite? = getItem(swipedPosition)
 
     interface AdapterCallback{
         fun itemMovieOnclick(favorite: MovieFavorite)

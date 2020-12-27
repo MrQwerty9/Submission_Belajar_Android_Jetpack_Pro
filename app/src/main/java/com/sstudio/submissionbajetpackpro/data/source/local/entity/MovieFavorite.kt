@@ -1,5 +1,6 @@
 package com.sstudio.submissionbajetpackpro.data.source.local.entity
 
+import androidx.annotation.NonNull
 import androidx.room.Embedded
 import androidx.room.Relation
 
@@ -8,5 +9,6 @@ data class MovieFavorite (
     var movie: MovieEntity,
 
     @Relation(parentColumn = "id", entityColumn = "idMovieTv")
-    var favoriteEntity: FavoriteEntity?
+    @NonNull
+    var favoriteEntity: FavoriteEntity
 )

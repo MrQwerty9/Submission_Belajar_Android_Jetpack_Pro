@@ -3,6 +3,8 @@ package com.sstudio.submissionbajetpackpro.ui.movie
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -11,14 +13,18 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class MovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<MovieEntity, MovieAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    var movies: ArrayList<MovieEntity> = ArrayList()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieEntity>() {
+            override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-    fun setMovies(movies: List<MovieEntity>){
-        this.movies.clear()
-        this.movies.addAll(movies)
-        notifyDataSetChanged()
+            override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,13 +32,9 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return movies.size
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = movies[position]
-        holder.bind(movie)
+        val movie = getItem(position)
+        movie?.let { holder.bind(it) }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

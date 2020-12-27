@@ -39,7 +39,7 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
             with(rv_list_tv_show) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-                adapter = tvAdapter
+//                adapter = tvAdapter
             }
         }
     }
@@ -51,7 +51,8 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
                     Status.LOADING -> progress_bar.visibility = View.VISIBLE
                     Status.SUCCESS -> {
                         progress_bar.visibility = View.GONE
-                        listTv.data?.let { tvAdapter.setTv(it) }
+                        tvAdapter.submitList(listTv.data)
+                        rv_list_tv_show.adapter  = tvAdapter
                     }
                     Status.ERROR -> {
                         progress_bar.visibility = View.GONE

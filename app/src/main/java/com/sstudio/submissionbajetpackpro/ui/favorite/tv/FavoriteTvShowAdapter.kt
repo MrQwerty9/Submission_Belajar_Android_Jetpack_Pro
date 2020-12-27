@@ -3,6 +3,8 @@ package com.sstudio.submissionbajetpackpro.ui.favorite.tv
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -11,14 +13,18 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvFavorite
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class FavoriteTvShowAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<FavoriteTvShowAdapter.ViewHolder>() {
+class FavoriteTvShowAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvFavorite, FavoriteTvShowAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    var tvShows: ArrayList<TvFavorite> = ArrayList()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvFavorite>() {
+            override fun areItemsTheSame(oldItem: TvFavorite, newItem: TvFavorite): Boolean {
+                return oldItem.tv.id == newItem.tv.id
+            }
 
-    fun setTvShows(tv: List<TvFavorite>){
-        this.tvShows.clear()
-        this.tvShows.addAll(tv)
-        notifyDataSetChanged()
+            override fun areContentsTheSame(oldItem: TvFavorite, newItem: TvFavorite): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,13 +32,10 @@ class FavoriteTvShowAdapter(val adapterCallback: AdapterCallback) : RecyclerView
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return tvShows.size
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = tvShows[position]
-        holder.bind(movie)
+        val movie = getItem(position)
+        movie?.let { holder.bind(it) }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

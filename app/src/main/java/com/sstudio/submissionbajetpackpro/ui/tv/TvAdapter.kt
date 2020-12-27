@@ -3,6 +3,8 @@ package com.sstudio.submissionbajetpackpro.ui.tv
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -11,14 +13,18 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class TvAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<TvAdapter.ViewHolder>() {
+class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntity, TvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    var tv: ArrayList<TvEntity> = ArrayList()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvEntity>() {
+            override fun areItemsTheSame(oldItem: TvEntity, newItem: TvEntity): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-    fun setTv(movies: List<TvEntity>){
-        this.tv.clear()
-        this.tv.addAll(movies)
-        notifyDataSetChanged()
+            override fun areContentsTheSame(oldItem: TvEntity, newItem: TvEntity): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,13 +32,9 @@ class TvAdapter(val adapterCallback: AdapterCallback) : RecyclerView.Adapter<TvA
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return tv.size
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val tv = tv[position]
-        holder.bind(tv)
+        val tv = getItem(position)
+        tv?.let { holder.bind(it) }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

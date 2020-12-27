@@ -18,4 +18,6 @@
     <string name="cast">Cast</string>
     <string name="trailer">Trailer</string>
     <string name="similar">Similar</string>
+    <string name="message_undo">Batal</string>
+    <string name="message_ok">ok</string>
 </resources>

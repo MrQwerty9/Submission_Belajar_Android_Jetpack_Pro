@@ -49,7 +49,7 @@ class DetailViewModelTest {
         val movie = MutableLiveData<Resource<MovieEntity>>()
         movie.value = dummyMovies
 
-        Mockito.`when`(movieTvRepository.getMovieDetail(movieId)).thenReturn(movie)
+        Mockito.`when`(movieTvRepository.getMovieDetail(false, movieId)).thenReturn(movie)
 //        val movieEntity = viewModel.detailMovie.value?.data
 //        Mockito.verify(movieTvRepository).getMovieDetail(movieId)
 
@@ -74,7 +74,7 @@ class DetailViewModelTest {
         val tvShow = MutableLiveData<Resource<TvEntity>>()
         tvShow.value = dummyTvShows
 
-        Mockito.`when`(movieTvRepository.getTvShowDetail(tvId)).thenReturn(tvShow)
+        Mockito.`when`(movieTvRepository.getTvShowDetail(false, tvId)).thenReturn(tvShow)
 //        val tvShowEntity = viewModel.detailTv.value?.data
 //        Mockito.verify(movieTvRepository).getTvShowDetail(tvId)
 //        Assert.assertNotNull(tvShowEntity)

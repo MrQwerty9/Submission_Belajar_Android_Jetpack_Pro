@@ -14,10 +14,7 @@ interface MovieTvDao {
     @Query("SELECT * FROM MovieEntity")
     fun getAllMovie(): DataSource.Factory<Int, MovieEntity>
 
-
-    @Query(
-        "SELECT MovieEntity.*, FavoriteEntity.* FROM MovieEntity, FavoriteEntity WHERE MovieEntity.id = favoriteEntity.idMovieTv"
-    )
+    @Query("SELECT MovieEntity.*, FavoriteEntity.* FROM MovieEntity, FavoriteEntity WHERE MovieEntity.id = favoriteEntity.idMovieTv")
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite>
 
     @Query("SELECT * FROM MovieEntity where id = :movieId")

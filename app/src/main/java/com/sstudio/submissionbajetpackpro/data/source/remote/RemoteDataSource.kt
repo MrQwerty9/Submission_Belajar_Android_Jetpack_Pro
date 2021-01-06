@@ -14,17 +14,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RemoteDataSource private constructor(private val apiService: ApiService, context: Context) {
+class RemoteDataSource(private val apiService: ApiService, context: Context) {
 
-    companion object {
-        @Volatile
-        private var instance: RemoteDataSource? = null
-
-        fun getInstance(apiService: ApiService, context: Context): RemoteDataSource =
-                instance ?: synchronized(this) {
-                    instance ?: RemoteDataSource(apiService, context)
-                }
-    }
     private val language = context.getString(R.string.language)
 
     fun getAllMovie(): LiveData<ApiResponse<MovieResponse>> {

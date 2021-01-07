@@ -13,7 +13,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<MovieEntity, MovieAdapter.ViewHolder>(DIFF_CALLBACK) {
+class MovieAdapter : PagedListAdapter<MovieEntity, MovieAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieEntity>() {
@@ -26,6 +26,8 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<Movi
             }
         }
     }
+
+    var onItemClick: ((MovieEntity) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie, parent, false)
@@ -44,7 +46,6 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<Movi
                 tv_overview.text = movie.overview
                 tv_rating_item.text = movie.voteAverage.toString()
                 tv_release_date.text = movie.releaseDate
-//                ContextCompat.getDrawable(itemView.context, movie.poster)
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + movie.posterPath)
                     .apply(
@@ -52,8 +53,8 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<Movi
                             .error(R.drawable.ic_error)
                     )
                     .into(img_poster)
-                itemView.setOnClickListener {
-                    adapterCallback.itemMovieOnclick(movie)
+                setOnClickListener {
+                    onItemClick?.invoke(movie)
                 }
             }
         }

@@ -10,10 +10,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
+import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntity, TvAdapter.ViewHolder>(DIFF_CALLBACK) {
+class TvAdapter : PagedListAdapter<TvEntity, TvAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvEntity>() {
@@ -26,6 +27,8 @@ class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntit
             }
         }
     }
+
+    var onItemClick: ((TvEntity) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie, parent, false)
@@ -50,13 +53,10 @@ class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntit
                             .error(R.drawable.ic_error)
                     )
                     .into(img_poster)
-                itemView.setOnClickListener {
-                    adapterCallback.itemTvOnclick(tv)
+                setOnClickListener {
+                    onItemClick?.invoke(tv)
                 }
             }
         }
-    }
-    interface AdapterCallback{
-        fun itemTvOnclick(tv: TvEntity)
     }
 }

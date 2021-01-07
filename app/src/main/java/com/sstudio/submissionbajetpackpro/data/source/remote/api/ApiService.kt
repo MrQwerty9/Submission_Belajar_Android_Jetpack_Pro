@@ -1,5 +1,6 @@
 package com.sstudio.submissionbajetpackpro.data.source.remote.api
 
+import androidx.paging.DataSource
 import com.sstudio.submissionbajetpackpro.data.source.remote.response.MovieResponse
 import com.sstudio.submissionbajetpackpro.data.source.remote.response.TvResponse
 import retrofit2.Call
@@ -33,4 +34,18 @@ interface ApiService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ): Call<TvResponse.Result>
+
+    @GET("search/movie/{query}")
+    fun getSearchMovie(
+        @Path("query") id: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<DataSource<Int, MovieResponse>>
+
+    @GET("search/tv/{query}")
+    fun getSearchTv(
+        @Path("query") id: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Call<TvResponse>
 }

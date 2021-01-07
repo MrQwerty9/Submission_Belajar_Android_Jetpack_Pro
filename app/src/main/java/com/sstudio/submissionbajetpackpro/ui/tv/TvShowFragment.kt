@@ -15,7 +15,7 @@ import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_tvshow.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
+class TvShowFragment : Fragment() {
     private lateinit var tvAdapter: TvAdapter
     private val viewModel: TvViewModel by viewModel()
 
@@ -26,7 +26,7 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-            tvAdapter = TvAdapter(this)
+            tvAdapter = TvAdapter()
             observeData()
             swipe_layout.setOnRefreshListener {
                 viewModel.fetchListMovie()
@@ -36,7 +36,12 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
             with(rv_list_tv_show) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-//                adapter = tvAdapter
+            }
+            tvAdapter.onItemClick = {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                startActivity(intent)
             }
         }
     }
@@ -58,12 +63,5 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
                 }
             }
         })
-    }
-
-    override fun itemTvOnclick(tv: TvEntity) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
-        intent.putExtra(DetailActivity.EXTRA_DETAIL, tv.id)
-        startActivity(intent)
     }
 }

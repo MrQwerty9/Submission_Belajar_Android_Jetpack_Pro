@@ -1,6 +1,7 @@
 package com.sstudio.submissionbajetpackpro.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.data.source.local.LocalDataSource
@@ -70,16 +71,18 @@ class MovieTvRepository(
 
             override fun saveCallResult(data: MovieResponse.Result) {
                 if (data.id == movieId) {
-                    localDataSource.insertMovieDetail(MovieEntity(
-                        data.backdropPath,
-                        data.genreIds?.joinToString(separator = ",") ?: "",
-                        data.id,
-                        data.originalTitle,
-                        data.overview,
-                        data.posterPath,
-                        data.releaseDate,
-                        data.voteAverage
-                    ))
+                    localDataSource.insertMovieDetail(
+                        MovieEntity(
+                            data.backdropPath,
+                            data.genreIds?.joinToString(separator = ",") ?: "",
+                            data.id,
+                            data.originalTitle,
+                            data.overview,
+                            data.posterPath,
+                            data.releaseDate,
+                            data.voteAverage
+                        )
+                    )
                 }
             }
 
@@ -93,20 +96,29 @@ class MovieTvRepository(
             .setPageSize(4)
             .build()
         return LivePagedListBuilder(localDataSource.getAllFavoriteMovie(), config).build()
-//        return Transformations.map(localDataSource.getAllFavoriteMovie()) { movie ->
-//            val movieFavorite = ArrayList<MovieFavorite>()
-//            movie.forEach {
-//                if (it.favoriteEntity != null) {
-//                    movieFavorite.add(MovieFavorite(it.movie, it.favoriteEntity))
-//                }
-//            }
-//            return@map movieFavorite
-//        }
+    }
+
+    override fun getSearchMovie(query: String): LiveData<List<MovieEntity>> {
+        return Transformations.map(remoteDataSource.getSearchMovie(query)) { movieResponse ->
+            movieResponse.results.map {
+                MovieEntity(
+                    backdropPath = it.backdropPath,
+                    genreIds = it.genreIds.toString(),
+                    id = it.id,
+                    originalTitle = it.originalTitle,
+                    overview = it.overview,
+                    posterPath = it.posterPath,
+                    releaseDate = it.releaseDate,
+                    voteAverage = it.voteAverage
+                )
+            }
+        }
+
     }
 
     override fun getAllTvShows(needFetch: Boolean): LiveData<Resource<PagedList<TvEntity>>> {
         return object :
-            NetworkBoundResource<PagedList<TvEntity>, TvResponse>(appExecutors){
+            NetworkBoundResource<PagedList<TvEntity>, TvResponse>(appExecutors) {
             override fun loadFromDB(): LiveData<PagedList<TvEntity>> {
                 val config = PagedList.Config.Builder()
                     .setEnablePlaceholders(false)
@@ -156,15 +168,18 @@ class MovieTvRepository(
 
             override fun saveCallResult(data: TvResponse.Result) {
                 if (data.id == tvShowId) {
-                    localDataSource.insertTvDetail(TvEntity(
-                        data.backdropPath,
-                        data.firstAirDate,
-                        data.genreIds?.joinToString(separator = ",") ?: "",
-                        data.id,
-                        data.originalName,
-                        data.overview,
-                        data.posterPath,
-                        data.voteAverage))
+                    localDataSource.insertTvDetail(
+                        TvEntity(
+                            data.backdropPath,
+                            data.firstAirDate,
+                            data.genreIds?.joinToString(separator = ",") ?: "",
+                            data.id,
+                            data.originalName,
+                            data.overview,
+                            data.posterPath,
+                            data.voteAverage
+                        )
+                    )
                 }
             }
         }.asLiveData()
@@ -177,24 +192,34 @@ class MovieTvRepository(
             .setPageSize(4)
             .build()
         return LivePagedListBuilder(localDataSource.getAllFavoriteTv(), config).build()
-//        return Transformations.map(result) { tvShow ->
-//            val tvFavorite = ArrayList<TvFavorite>()
-//            tvShow.forEach {
-//                if (it.favoriteEntity != null) {
-//                    tvFavorite.add(TvFavorite(it.tv, it.favoriteEntity))
-//                }
-//            }
-//            return@map tvFavorite
-//        }
+    }
+
+    override fun getSearchTv(query: String): LiveData<List<TvEntity>> {
+        return Transformations.map(remoteDataSource.getSearchTv(query)) { movieResponse ->
+            movieResponse.results.map {
+                TvEntity(
+                    backdropPath = it.backdropPath,
+                    genreIds = it.genreIds.toString(),
+                    id = it.id,
+                    originalName = it.originalName,
+                    overview = it.overview,
+                    posterPath = it.posterPath,
+                    firstAirDate = it.firstAirDate,
+                    voteAverage = it.voteAverage
+                )
+            }
+        }
+
     }
 
     override fun setFavorite(id: Int) {
-        appExecutors.diskIO().execute{ localDataSource.insertFavorite(FavoriteEntity(id)) }
+        appExecutors.diskIO().execute { localDataSource.insertFavorite(FavoriteEntity(id)) }
     }
 
-    override fun getFavoriteById(id: Int): LiveData<List<FavoriteEntity>> = localDataSource.getFavoriteById(id)
+    override fun getFavoriteById(id: Int): LiveData<List<FavoriteEntity>> =
+        localDataSource.getFavoriteById(id)
 
     override fun deleteFavoriteTv(id: Int) {
-        appExecutors.diskIO().execute{localDataSource.deleteFavoriteTv(id)}
+        appExecutors.diskIO().execute { localDataSource.deleteFavoriteTv(id) }
     }
 }

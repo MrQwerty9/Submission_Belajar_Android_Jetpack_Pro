@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.remote.api.ApiService
@@ -116,6 +117,56 @@ class RemoteDataSource(private val apiService: ApiService, context: Context) {
                 }
             })
         return resultDetailTv
+    }
+
+    fun getSearchMovie(query: String): DataSource<Int, MovieResponse>?{
+        EspressoIdlingResource.increment()
+        var resultSearch: DataSource<Int, MovieResponse>? = null
+        apiService.getSearchMovie(query, BuildConfig.TMDB_API_KEY, language)
+            .enqueue(object : Callback<DataSource<Int, MovieResponse>> {
+                override fun onResponse(
+                    call: Call<DataSource<Int, MovieResponse>>,
+                    response: Response<DataSource<Int, MovieResponse>>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { resultSearch = it }
+                    } else {
+                        Log.e("RemoteDataSource", "onFailure: ${response.message()}")
+                    }
+                    EspressoIdlingResource.decrement()
+                }
+
+                override fun onFailure(call: Call<DataSource<Int, MovieResponse>>, t: Throwable?) {
+                    Log.e("RemoteDataSource", "onFailure: ${t?.message.toString()}")
+                    EspressoIdlingResource.decrement()
+                }
+            })
+        return resultSearch
+    }
+
+    fun getSearchTv(query: String): LiveData<TvResponse>{
+        EspressoIdlingResource.increment()
+        val resultSearch = MutableLiveData<TvResponse>()
+        apiService.getSearchTv(query, BuildConfig.TMDB_API_KEY, language)
+            .enqueue(object : Callback<TvResponse> {
+                override fun onResponse(
+                    call: Call<TvResponse>,
+                    response: Response<TvResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { resultSearch.value = it }
+                    } else {
+                        Log.e("RemoteDataSource", "onFailure: ${response.message()}")
+                    }
+                    EspressoIdlingResource.decrement()
+                }
+
+                override fun onFailure(call: Call<TvResponse>, t: Throwable?) {
+                    Log.e("RemoteDataSource", "onFailure: ${t?.message.toString()}")
+                    EspressoIdlingResource.decrement()
+                }
+            })
+        return resultSearch
     }
 }
 

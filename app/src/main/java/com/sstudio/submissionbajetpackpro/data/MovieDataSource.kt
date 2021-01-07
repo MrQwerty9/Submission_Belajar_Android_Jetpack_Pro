@@ -10,10 +10,12 @@ interface MovieDataSource {
     fun getAllMovie(needFetch: Boolean): LiveData<Resource<PagedList<MovieEntity>>>
     fun getMovieDetail(needFetch: Boolean, movieId: Int): LiveData<Resource<MovieEntity>>
     fun getAllFavoriteMovie(): LiveData<PagedList<MovieFavorite>>
+    fun getSearchMovie(query: String): LiveData<List<MovieEntity>>
 
     fun getAllTvShows(needFetch: Boolean): LiveData<Resource<PagedList<TvEntity>>>
     fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): LiveData<Resource<TvEntity>>
     fun getAllFavoriteTv(): LiveData<PagedList<TvFavorite>>
+    fun getSearchTv(query: String): LiveData<List<TvEntity>>
 
     fun setFavorite(id: Int)
     fun getFavoriteById(id: Int): LiveData<List<FavoriteEntity>>

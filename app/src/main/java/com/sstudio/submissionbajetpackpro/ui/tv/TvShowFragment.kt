@@ -7,18 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
-import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_tvshow.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
     private lateinit var tvAdapter: TvAdapter
-    private lateinit var viewModel: TvViewModel
+    private val viewModel: TvViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_tvshow, container, false)
@@ -28,8 +27,6 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
             tvAdapter = TvAdapter(this)
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            viewModel = ViewModelProvider(this, factory)[TvViewModel::class.java]
             observeData()
             swipe_layout.setOnRefreshListener {
                 viewModel.fetchListMovie()

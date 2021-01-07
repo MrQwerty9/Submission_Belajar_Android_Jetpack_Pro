@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,13 +13,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
-import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_movie.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class FavoriteMovieFragment : Fragment(), FavoriteMovieAdapter.AdapterCallback {
 
     private lateinit var favoriteMovieAdapter: FavoriteMovieAdapter
-    private lateinit var viewModel: FavoriteMovieViewModel
+    private val viewModel: FavoriteMovieViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorite_movie, container, false)
@@ -30,9 +29,6 @@ class FavoriteMovieFragment : Fragment(), FavoriteMovieAdapter.AdapterCallback {
         super.onActivityCreated(savedInstanceState)
         itemTouchHelper.attachToRecyclerView(rv_list_movie)
         if (activity != null) {
-
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            viewModel = ViewModelProvider(this, factory)[FavoriteMovieViewModel::class.java]
 
             favoriteMovieAdapter = FavoriteMovieAdapter(this)
 

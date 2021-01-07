@@ -7,19 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
-import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_movie.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
 
     private lateinit var movieAdapter: MovieAdapter
-    private lateinit var viewModel: MovieViewModel
+    private val viewModel: MovieViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_movie, container, false)
@@ -28,8 +27,7 @@ class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
+
             movieAdapter = MovieAdapter(this)
             observeData()
 

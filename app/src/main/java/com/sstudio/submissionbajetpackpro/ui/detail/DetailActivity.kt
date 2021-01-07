@@ -4,18 +4,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
-import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.content_detail.*
 import kotlinx.android.synthetic.main.movie_wrapper.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class DetailActivity : AppCompatActivity() {
 
@@ -26,13 +25,12 @@ class DetailActivity : AppCompatActivity() {
         const val IS_TV = "is_tv"
     }
     var isFavorite: Boolean? = null
+    private val viewModel: DetailViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
         val extras = intent.extras
         if (extras != null) {
             val movieTvId = extras.getInt(EXTRA_DETAIL, 0)

@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvFavorite
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
-import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_tv_show.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class FavoriteTvShowFragment : Fragment(), FavoriteTvShowAdapter.AdapterCallback {
 
     private lateinit var favoriteTvShowAdapter: FavoriteTvShowAdapter
+    private val viewModel: FavoriteTvShowViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorite_tv_show, container, false)
@@ -25,9 +25,6 @@ class FavoriteTvShowFragment : Fragment(), FavoriteTvShowAdapter.AdapterCallback
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-
-            val factory = ViewModelFactory.getInstance(requireActivity())
-            val viewModel = ViewModelProvider(this, factory)[FavoriteTvShowViewModel::class.java]
 
             favoriteTvShowAdapter = FavoriteTvShowAdapter(this)
 

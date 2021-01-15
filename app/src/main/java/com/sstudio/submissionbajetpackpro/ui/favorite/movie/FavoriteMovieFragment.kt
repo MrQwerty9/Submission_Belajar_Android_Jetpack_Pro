@@ -36,14 +36,12 @@ class FavoriteMovieFragment : Fragment(), FavoriteMovieAdapter.AdapterCallback {
             viewModel.listMovie?.observe(this, { listMovie ->
                 favoriteMovieAdapter.submitList(listMovie)
                 rv_list_movie.adapter = favoriteMovieAdapter
-                //favoriteMovieAdapter.notifyDataSetChanged()
                 progress_bar.visibility = View.GONE
             })
 
             with(rv_list_movie) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-//                adapter = favoriteMovieAdapter
             }
         }
     }

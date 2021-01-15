@@ -42,7 +42,7 @@ class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntit
             with(itemView) {
                 txt_title.text = tv.originalName
                 tv_overview.text = tv.overview
-//                ContextCompat.getDrawable(itemView.context, movie.poster)
+                tv_rating_item.text = tv.voteAverage.toString()
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + tv.posterPath)
                     .apply(
@@ -50,7 +50,7 @@ class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntit
                             .error(R.drawable.ic_error)
                     )
                     .into(img_poster)
-                itemView.setOnClickListener {
+                setOnClickListener {
                     adapterCallback.itemTvOnclick(tv)
                 }
             }

@@ -52,7 +52,7 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<Movi
                             .error(R.drawable.ic_error)
                     )
                     .into(img_poster)
-                itemView.setOnClickListener {
+                setOnClickListener {
                     adapterCallback.itemMovieOnclick(movie)
                 }
             }

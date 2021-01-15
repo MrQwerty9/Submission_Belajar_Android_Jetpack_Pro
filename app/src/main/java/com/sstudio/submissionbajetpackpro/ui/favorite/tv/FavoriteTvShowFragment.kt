@@ -46,7 +46,7 @@ class FavoriteTvShowFragment : Fragment(), FavoriteTvShowAdapter.AdapterCallback
 
     override fun itemMovieOnclick(favorite: TvFavorite) {
         val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
+        intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
         intent.putExtra(DetailActivity.EXTRA_DETAIL, favorite.tv.id)
         startActivity(intent)
     }

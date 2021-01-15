@@ -24,7 +24,7 @@ class DetailActivity : AppCompatActivity() {
         const val IS_MOVIE = "is_movie"
         const val IS_TV = "is_tv"
     }
-    var isFavorite: Boolean? = null
+    private var isFavorite: Boolean? = null
     private val viewModel: DetailViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {

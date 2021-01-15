@@ -42,7 +42,7 @@ class FavoriteMovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdap
             with(itemView) {
                 txt_title.text = favorite.movie.originalTitle
                 tv_overview.text = favorite.movie.overview
-//                ContextCompat.getDrawable(itemView.context, movie.poster)
+                tv_rating_item.text = favorite.movie.voteAverage.toString()
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + favorite.movie.posterPath)
                     .apply(

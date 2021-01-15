@@ -12,7 +12,7 @@ import com.sstudio.submissionbajetpackpro.vo.Resource
 
 class DetailViewModel(private val movieTvRepository: MovieTvRepository) : ViewModel() {
 
-    val movieTvId = MutableLiveData<Int>()
+    private val movieTvId = MutableLiveData<Int>()
     var needFetch = false
 
     fun setSelectedMovieTv(courseId: Int) {

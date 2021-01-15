@@ -7,6 +7,7 @@ import com.sstudio.submissionbajetpackpro.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.data.source.local.room.MovieTvDatabase
 import com.sstudio.submissionbajetpackpro.data.source.remote.RemoteDataSource
 import com.sstudio.submissionbajetpackpro.data.source.remote.api.ApiService
+import com.sstudio.submissionbajetpackpro.ui.detail.DetailViewModel
 import com.sstudio.submissionbajetpackpro.ui.favorite.movie.FavoriteMovieViewModel
 import com.sstudio.submissionbajetpackpro.ui.favorite.tv.FavoriteTvShowViewModel
 import com.sstudio.submissionbajetpackpro.ui.movie.MovieViewModel
@@ -57,13 +58,10 @@ val repositoryModule = module {
     single { MovieTvRepository(get(), get(), get()) }
 }
 
-//    val useCaseModule = module {
-//        factory<TourismUseCase> { TourismInteractor(get()) }
-//    }
-
 val viewModelModule = module {
     viewModel { MovieViewModel(get()) }
     viewModel { TvViewModel(get()) }
     viewModel { FavoriteMovieViewModel(get()) }
     viewModel { FavoriteTvShowViewModel(get()) }
+    viewModel { DetailViewModel(get()) }
 }

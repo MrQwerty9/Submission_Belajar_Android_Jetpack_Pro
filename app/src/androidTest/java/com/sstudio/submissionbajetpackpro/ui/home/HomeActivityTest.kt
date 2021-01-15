@@ -21,8 +21,6 @@ import org.junit.Test
 
 
 class HomeActivityTest {
-    private val dummyMovie = DataDummy.generateDummyMovies()
-    private val dummyTv = DataDummy.generateDummyTvShow()
 
     @Before
     fun setup() {
@@ -40,7 +38,7 @@ class HomeActivityTest {
         onView(withId(R.id.rv_list_movie)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_list_movie)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
-                dummyMovie.size
+                10
             )
         )
     }
@@ -53,10 +51,8 @@ class HomeActivityTest {
                 click()
             )
         )
-        onView(withId(R.id.txt_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.txt_title)).check(matches(withText(dummyMovie[0].originalTitle)))
+        onView(withId(R.id.tv_title)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_overview)).check(matches(withText(dummyMovie[0].overview)))
     }
 
     @Test
@@ -72,24 +68,29 @@ class HomeActivityTest {
         onView(withId(R.id.rv_list_tv_show)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_list_tv_show)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
-                dummyTv.size
+                10
             )
         )
     }
 
     @Test
     fun loadDetailTv() {
-        onView(withText("Acara Tv")).perform(click())
+        onView(
+            Matchers.allOf(
+                withText(R.string.tab_tv),
+                isDescendantOfA(withId(R.id.navigation_tv)),
+                isDisplayed()
+            )
+        )
+            .perform(click())
         onView(withId(R.id.rv_list_tv_show)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
                 click()
             )
         )
-        onView(withId(R.id.txt_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.txt_title)).check(matches(withText(dummyTv[0].originalName)))
+        onView(withId(R.id.tv_title)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.tv_overview)).check(matches(withText(dummyTv[0].overview)))
     }
 
     @Test

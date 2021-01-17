@@ -15,11 +15,14 @@ import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_movie.*
+import javax.inject.Inject
 
 class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
 
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var viewModel: MovieViewModel
+    @Inject
+    lateinit var factory: ViewModelFactory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_movie, container, false)
@@ -28,7 +31,6 @@ class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance(requireActivity())
             viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             movieAdapter = MovieAdapter(this)
             observeData()

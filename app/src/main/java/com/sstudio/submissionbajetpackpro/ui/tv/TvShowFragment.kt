@@ -15,10 +15,13 @@ import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_tvshow.*
+import javax.inject.Inject
 
 class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
     private lateinit var tvAdapter: TvAdapter
     private lateinit var viewModel: TvViewModel
+    @Inject
+    lateinit var factory: ViewModelFactory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_tvshow, container, false)
@@ -28,7 +31,6 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
             tvAdapter = TvAdapter(this)
-            val factory = ViewModelFactory.getInstance(requireActivity())
             viewModel = ViewModelProvider(this, factory)[TvViewModel::class.java]
             observeData()
             swipe_layout.setOnRefreshListener {

@@ -16,11 +16,14 @@ import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_movie.*
+import javax.inject.Inject
 
 class FavoriteMovieFragment : Fragment(), FavoriteMovieAdapter.AdapterCallback {
 
     private lateinit var favoriteMovieAdapter: FavoriteMovieAdapter
     private lateinit var viewModel: FavoriteMovieViewModel
+    @Inject
+    lateinit var factory: ViewModelFactory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorite_movie, container, false)
@@ -31,13 +34,12 @@ class FavoriteMovieFragment : Fragment(), FavoriteMovieAdapter.AdapterCallback {
         itemTouchHelper.attachToRecyclerView(rv_list_movie)
         if (activity != null) {
 
-            val factory = ViewModelFactory.getInstance(requireActivity())
             viewModel = ViewModelProvider(this, factory)[FavoriteMovieViewModel::class.java]
 
             favoriteMovieAdapter = FavoriteMovieAdapter(this)
 
             progress_bar.visibility = View.VISIBLE
-            viewModel.listMovie?.observe(this, { listMovie ->
+            viewModel.listMovie?.observe(viewLifecycleOwner, { listMovie ->
                 favoriteMovieAdapter.submitList(listMovie)
                 rv_list_movie.adapter = favoriteMovieAdapter
                 //favoriteMovieAdapter.notifyDataSetChanged()

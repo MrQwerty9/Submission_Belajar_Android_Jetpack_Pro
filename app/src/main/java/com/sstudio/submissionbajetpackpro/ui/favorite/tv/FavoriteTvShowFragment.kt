@@ -13,10 +13,13 @@ import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvFavorite
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_tv_show.*
+import javax.inject.Inject
 
 class FavoriteTvShowFragment : Fragment(), FavoriteTvShowAdapter.AdapterCallback {
 
     private lateinit var favoriteTvShowAdapter: FavoriteTvShowAdapter
+    @Inject
+    lateinit var factory: ViewModelFactory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorite_tv_show, container, false)
@@ -26,13 +29,12 @@ class FavoriteTvShowFragment : Fragment(), FavoriteTvShowAdapter.AdapterCallback
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
 
-            val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[FavoriteTvShowViewModel::class.java]
 
             favoriteTvShowAdapter = FavoriteTvShowAdapter(this)
 
             progress_bar.visibility = View.VISIBLE
-            viewModel.listTv?.observe(this, { listTv ->
+            viewModel.listTv?.observe(viewLifecycleOwner, { listTv ->
                 favoriteTvShowAdapter.submitList(listTv)
 //                favoriteTvShowAdapter.notifyDataSetChanged()
                 rv_list_tv_show.adapter = favoriteTvShowAdapter

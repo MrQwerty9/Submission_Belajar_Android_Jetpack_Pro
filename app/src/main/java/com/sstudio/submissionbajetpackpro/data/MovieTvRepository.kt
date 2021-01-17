@@ -11,23 +11,16 @@ import com.sstudio.submissionbajetpackpro.data.source.remote.response.MovieRespo
 import com.sstudio.submissionbajetpackpro.data.source.remote.response.TvResponse
 import com.sstudio.submissionbajetpackpro.utils.AppExecutors
 import com.sstudio.submissionbajetpackpro.vo.Resource
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieTvRepository private constructor(
+@Singleton
+class MovieTvRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val appExecutors: AppExecutors
 ) :
     MovieDataSource {
-
-    companion object {
-        @Volatile
-        private var instance: MovieTvRepository? = null
-
-        fun getInstance(remoteData: RemoteDataSource, localData: LocalDataSource, appExecutors: AppExecutors): MovieTvRepository =
-            instance ?: synchronized(this) {
-                instance ?: MovieTvRepository(remoteData, localData, appExecutors)
-            }
-    }
 
     override fun getAllMovie(needFetch: Boolean): LiveData<Resource<PagedList<MovieEntity>>> {
         return object :

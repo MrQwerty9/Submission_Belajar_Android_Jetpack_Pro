@@ -80,6 +80,13 @@ dependencies {
     //room
     implementation "androidx.room:room-runtime:$roomRuntimeVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
+
+    //dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    //by viewModels di Activity dan Fragment
+    implementation "androidx.activity:activity-ktx:$activity_ktx_version"
+    implementation "androidx.fragment:fragment-ktx:$fragment_ktx_version"
 }
 repositories {
     mavenCentral()

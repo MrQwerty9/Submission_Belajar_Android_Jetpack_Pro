@@ -4,15 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import com.sstudio.submissionbajetpackpro.data.source.local.entity.*
 import com.sstudio.submissionbajetpackpro.data.source.local.room.MovieTvDao
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class LocalDataSource private constructor(private val mMovieDao: MovieTvDao) {
-
-    companion object {
-        private var INSTANCE: LocalDataSource? = null
-
-        fun getInstance(movieTvDao: MovieTvDao): LocalDataSource =
-            INSTANCE ?: LocalDataSource(movieTvDao)
-    }
+@Singleton
+class LocalDataSource @Inject constructor(private val mMovieDao: MovieTvDao) {
 
     fun getAllMovie(): DataSource.Factory<Int, MovieEntity> = mMovieDao.getAllMovie()
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite> = mMovieDao.getAllFavoriteMovie()

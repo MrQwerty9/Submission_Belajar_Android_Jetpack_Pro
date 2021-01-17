@@ -1,27 +1,18 @@
 package com.sstudio.submissionbajetpackpro.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sstudio.submissionbajetpackpro.data.MovieTvRepository
-import com.sstudio.submissionbajetpackpro.di.Injection
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailViewModel
 import com.sstudio.submissionbajetpackpro.ui.favorite.movie.FavoriteMovieViewModel
 import com.sstudio.submissionbajetpackpro.ui.favorite.tv.FavoriteTvShowViewModel
 import com.sstudio.submissionbajetpackpro.ui.movie.MovieViewModel
 import com.sstudio.submissionbajetpackpro.ui.tv.TvViewModel
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ViewModelFactory private constructor(private val mMovieTvRepository: MovieTvRepository) : ViewModelProvider.NewInstanceFactory() {
-
-    companion object {
-        @Volatile
-        private var instance: ViewModelFactory? = null
-
-        fun getInstance(context: Context): ViewModelFactory =
-                instance ?: synchronized(this) {
-                    instance ?: ViewModelFactory(Injection.provideRepository(context))
-                }
-    }
+@Singleton
+class ViewModelFactory @Inject constructor(private val mMovieTvRepository: MovieTvRepository) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

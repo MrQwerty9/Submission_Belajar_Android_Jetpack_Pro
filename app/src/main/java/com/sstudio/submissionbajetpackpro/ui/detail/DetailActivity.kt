@@ -16,6 +16,7 @@ import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.content_detail.*
 import kotlinx.android.synthetic.main.movie_wrapper.*
+import javax.inject.Inject
 
 class DetailActivity : AppCompatActivity() {
 
@@ -26,12 +27,13 @@ class DetailActivity : AppCompatActivity() {
         const val IS_TV = "is_tv"
     }
     var isFavorite: Boolean? = null
+    @Inject
+    lateinit var factory: ViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        val factory = ViewModelFactory.getInstance(this)
         val viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
         val extras = intent.extras
         if (extras != null) {

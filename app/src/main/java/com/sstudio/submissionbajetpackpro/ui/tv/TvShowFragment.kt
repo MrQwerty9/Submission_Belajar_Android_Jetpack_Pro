@@ -10,13 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_tvshow.*
 
-class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
+class TvShowFragment : Fragment() {
     private lateinit var tvAdapter: TvAdapter
     private lateinit var viewModel: TvViewModel
 
@@ -27,7 +26,7 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-            tvAdapter = TvAdapter(this)
+            tvAdapter = TvAdapter()
             val factory = ViewModelFactory.getInstance(requireActivity())
             viewModel = ViewModelProvider(this, factory)[TvViewModel::class.java]
             observeData()
@@ -41,17 +40,23 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
                 setHasFixedSize(true)
 //                adapter = tvAdapter
             }
+            tvAdapter.onItemClick = {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                startActivity(intent)
+            }
         }
     }
 
     private fun observeData() {
-        viewModel.listTvShow?.observe(this, { listTv ->
-            if (listTv != null) {
-                when (listTv.status) {
+        viewModel.listTvShow?.observe(viewLifecycleOwner, { resource ->
+            if (resource != null) {
+                when (resource.status) {
                     Status.LOADING -> progress_bar.visibility = View.VISIBLE
                     Status.SUCCESS -> {
                         progress_bar.visibility = View.GONE
-                        tvAdapter.submitList(listTv.data)
+                        tvAdapter.submitList(resource.data)
                         rv_list_tv_show.adapter  = tvAdapter
                     }
                     Status.ERROR -> {
@@ -61,12 +66,5 @@ class TvShowFragment : Fragment(), TvAdapter.AdapterCallback {
                 }
             }
         })
-    }
-
-    override fun itemTvOnclick(tv: TvEntity) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
-        intent.putExtra(DetailActivity.EXTRA_DETAIL, tv.id)
-        startActivity(intent)
     }
 }

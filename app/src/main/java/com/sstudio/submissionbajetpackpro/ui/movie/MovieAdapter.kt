@@ -10,18 +10,20 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
+import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<MovieEntity, MovieAdapter.ViewHolder>(DIFF_CALLBACK) {
+class MovieAdapter : PagedListAdapter<Movie, MovieAdapter.ViewHolder>(DIFF_CALLBACK) {
+
+    var onItemClick: ((Movie) -> Unit)? = null
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieEntity>() {
-            override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem == newItem
             }
         }
@@ -37,14 +39,15 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<Movi
         movie?.let { holder.bind(it) }
     }
 
+    fun getSwipedData(swipedPosition: Int): Movie? = getItem(swipedPosition)
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(movie: MovieEntity) {
+        fun bind(movie: Movie) {
             with(itemView) {
                 txt_title.text = movie.originalTitle
                 tv_overview.text = movie.overview
                 tv_rating_item.text = movie.voteAverage.toString()
                 tv_release_date.text = movie.releaseDate
-//                ContextCompat.getDrawable(itemView.context, movie.poster)
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + movie.posterPath)
                     .apply(
@@ -52,14 +55,10 @@ class MovieAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<Movi
                             .error(R.drawable.ic_error)
                     )
                     .into(img_poster)
-                itemView.setOnClickListener {
-                    adapterCallback.itemMovieOnclick(movie)
+                setOnClickListener {
+                    onItemClick?.invoke(movie)
                 }
             }
         }
-    }
-
-    interface AdapterCallback{
-        fun itemMovieOnclick(movie: MovieEntity)
     }
 }

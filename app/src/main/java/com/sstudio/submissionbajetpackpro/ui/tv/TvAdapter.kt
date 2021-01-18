@@ -10,18 +10,20 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
+import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntity, TvAdapter.ViewHolder>(DIFF_CALLBACK) {
+class TvAdapter : PagedListAdapter<Tv, TvAdapter.ViewHolder>(DIFF_CALLBACK) {
+
+    var onItemClick: ((Tv) -> Unit)? = null
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvEntity>() {
-            override fun areItemsTheSame(oldItem: TvEntity, newItem: TvEntity): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Tv>() {
+            override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: TvEntity, newItem: TvEntity): Boolean {
+            override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
                 return oldItem == newItem
             }
         }
@@ -37,12 +39,13 @@ class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntit
         tv?.let { holder.bind(it) }
     }
 
+    fun getSwipedData(swipedPosition: Int): Tv? = getItem(swipedPosition)
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(tv: TvEntity) {
+        fun bind(tv: Tv) {
             with(itemView) {
                 txt_title.text = tv.originalName
                 tv_overview.text = tv.overview
-//                ContextCompat.getDrawable(itemView.context, movie.poster)
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + tv.posterPath)
                     .apply(
@@ -50,13 +53,10 @@ class TvAdapter(val adapterCallback: AdapterCallback) : PagedListAdapter<TvEntit
                             .error(R.drawable.ic_error)
                     )
                     .into(img_poster)
-                itemView.setOnClickListener {
-                    adapterCallback.itemTvOnclick(tv)
+                setOnClickListener {
+                    onItemClick?.invoke(tv)
                 }
             }
         }
-    }
-    interface AdapterCallback{
-        fun itemTvOnclick(tv: TvEntity)
     }
 }

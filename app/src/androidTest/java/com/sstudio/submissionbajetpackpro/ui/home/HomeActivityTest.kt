@@ -7,13 +7,11 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.DrawerActions.open
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.utils.DataDummy
-import com.sstudio.submissionbajetpackpro.utils.EspressoIdlingResource
+import com.sstudio.submissionbajetpackpro.core.utils.DataDummy
+import com.sstudio.submissionbajetpackpro.core.utils.EspressoIdlingResource
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before

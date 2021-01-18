@@ -3,15 +3,15 @@ package com.sstudio.submissionbajetpackpro.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sstudio.submissionbajetpackpro.data.MovieTvRepository
-import com.sstudio.submissionbajetpackpro.di.Injection
+import com.sstudio.submissionbajetpackpro.core.di.Injection
+import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailViewModel
 import com.sstudio.submissionbajetpackpro.ui.favorite.movie.FavoriteMovieViewModel
 import com.sstudio.submissionbajetpackpro.ui.favorite.tv.FavoriteTvShowViewModel
 import com.sstudio.submissionbajetpackpro.ui.movie.MovieViewModel
 import com.sstudio.submissionbajetpackpro.ui.tv.TvViewModel
 
-class ViewModelFactory private constructor(private val mMovieTvRepository: MovieTvRepository) : ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory private constructor(private val movieTvUseCase: MovieTvUseCase) : ViewModelProvider.NewInstanceFactory() {
 
     companion object {
         @Volatile
@@ -19,7 +19,7 @@ class ViewModelFactory private constructor(private val mMovieTvRepository: Movie
 
         fun getInstance(context: Context): ViewModelFactory =
                 instance ?: synchronized(this) {
-                    instance ?: ViewModelFactory(Injection.provideRepository(context))
+                    instance ?: ViewModelFactory(Injection.provideMovieTvUseCase(context))
                 }
     }
 
@@ -27,19 +27,19 @@ class ViewModelFactory private constructor(private val mMovieTvRepository: Movie
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(MovieViewModel::class.java) -> {
-                MovieViewModel(mMovieTvRepository) as T
+                MovieViewModel(movieTvUseCase) as T
             }
             modelClass.isAssignableFrom(TvViewModel::class.java) -> {
-                TvViewModel(mMovieTvRepository) as T
+                TvViewModel(movieTvUseCase) as T
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
-                DetailViewModel(mMovieTvRepository) as T
+                DetailViewModel(movieTvUseCase) as T
             }
             modelClass.isAssignableFrom(FavoriteMovieViewModel::class.java) -> {
-                FavoriteMovieViewModel(mMovieTvRepository) as T
+                FavoriteMovieViewModel(movieTvUseCase) as T
             }
             modelClass.isAssignableFrom(FavoriteTvShowViewModel::class.java) -> {
-                FavoriteTvShowViewModel(mMovieTvRepository) as T
+                FavoriteTvShowViewModel(movieTvUseCase) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }

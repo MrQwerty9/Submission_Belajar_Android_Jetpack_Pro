@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
-import com.sstudio.submissionbajetpackpro.data.MovieTvRepository
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
+import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
+import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
 
-class FavoriteMovieViewModel(private val movieTvRepository: MovieTvRepository) : ViewModel() {
+class FavoriteMovieViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
 
-    var listMovie: LiveData<PagedList<MovieFavorite>>? = null
+    var listMovie: LiveData<PagedList<Movie>>? = null
         get() {
             if (field == null) {
                 field = MutableLiveData()
-                field = movieTvRepository.getAllFavoriteMovie()
+                field = movieTvUseCase.getAllFavoriteMovie()
 
             }
             return field
@@ -21,10 +21,10 @@ class FavoriteMovieViewModel(private val movieTvRepository: MovieTvRepository) :
         private set
 
     fun deleteFavorite(idMovieTv: Int){
-        movieTvRepository.deleteFavoriteTv(idMovieTv)
+        movieTvUseCase.deleteFavorite(idMovieTv)
     }
 
     fun addFavorite(idMovieTv: Int) {
-        movieTvRepository.setFavorite(idMovieTv)
+        movieTvUseCase.setFavorite(idMovieTv)
     }
 }

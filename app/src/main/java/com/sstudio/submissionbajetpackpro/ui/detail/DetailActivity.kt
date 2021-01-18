@@ -9,8 +9,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
+import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
+import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -106,7 +106,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun populateMovie(movie: MovieEntity) {
+    private fun populateMovie(movie: Movie) {
         tv_title.text = movie.originalTitle
         tv_overview.text = movie.overview
         tv_release_date.text = movie.releaseDate
@@ -126,7 +126,7 @@ class DetailActivity : AppCompatActivity() {
             .into(img_poster)
     }
 
-    private fun populateTv(tvShow: TvEntity) {
+    private fun populateTv(tvShow: Tv) {
         tv_title.text = tvShow.originalName
         tv_overview.text = tvShow.overview
         tv_release_date.text = tvShow.firstAirDate

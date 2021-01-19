@@ -3,15 +3,17 @@ package com.sstudio.submissionbajetpackpro.ui.favorite.movie
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.FakeMovieTvRepository
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.*
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -23,6 +25,7 @@ class FavoriteMovieViewModelTest {
 
     private lateinit var viewModel: FavoriteMovieViewModel
     private lateinit var movieTvUseCase: MovieTvUseCase
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -38,8 +41,15 @@ class FavoriteMovieViewModelTest {
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(mainThreadSurrogate)
         movieTvUseCase = FakeMovieTvInteractor(movieTvRepository)
         viewModel = FavoriteMovieViewModel(movieTvUseCase)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
+        mainThreadSurrogate.close()
     }
 
     @Test
@@ -49,14 +59,14 @@ class FavoriteMovieViewModelTest {
         val movies = MutableLiveData<PagedList<Movie>>()
         movies.value = dataMovies
 
-        `when`(movieTvRepository.getAllFavoriteMovie()).thenReturn(movies)
-        val movieEntities = viewModel.listMovie?.value
-        Mockito.verify(movieTvRepository).getAllFavoriteMovie()
-        Assert.assertNotNull(movieEntities)
-        Assert.assertEquals(2, movieEntities?.size)
+        `when`(movieTvRepository.getAllFavoriteMovie()).thenReturn(movies.asFlow())
 
         viewModel.listMovie?.observeForever(observer)
+        Mockito.verify(movieTvRepository).getAllFavoriteMovie()
+        Thread.sleep(2000)
         Mockito.verify(observer).onChanged(dataMovies)
-
+        val movieEntities = viewModel.listMovie?.value
+        Assert.assertNotNull(movieEntities)
+        Assert.assertEquals(2, movieEntities?.size)
     }
 }

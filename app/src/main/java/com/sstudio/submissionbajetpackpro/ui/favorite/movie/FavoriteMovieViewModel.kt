@@ -3,6 +3,7 @@ package com.sstudio.submissionbajetpackpro.ui.favorite.movie
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
@@ -13,7 +14,7 @@ class FavoriteMovieViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewM
         get() {
             if (field == null) {
                 field = MutableLiveData()
-                field = movieTvUseCase.getAllFavoriteMovie()
+                field = movieTvUseCase.getAllFavoriteMovie().asLiveData()
 
             }
             return field

@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.core.domain.usecase
+package com.sstudio.submissionbajetpackpro.core.domain.repository
 
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
@@ -7,7 +7,8 @@ import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.vo.Resource
 import kotlinx.coroutines.flow.Flow
 
-interface MovieTvUseCase {
+interface IMovieTvRepository {
+
     fun getAllMovie(needFetch: Boolean): Flow<Resource<PagedList<Movie>>>
     fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>>
     fun getAllFavoriteMovie(): Flow<PagedList<Movie>>

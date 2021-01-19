@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.data.source.remote.api
+package com.sstudio.submissionbajetpackpro.core.data.source.remote.api
 
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import okhttp3.OkHttpClient

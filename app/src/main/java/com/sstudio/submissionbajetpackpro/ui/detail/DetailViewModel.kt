@@ -1,9 +1,6 @@
 package com.sstudio.submissionbajetpackpro.ui.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
@@ -20,18 +17,18 @@ class DetailViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() 
     }
 
     var detailMovie: LiveData<Resource<Movie>> = Transformations.switchMap(movieTvId) { mMovieTvId ->
-        movieTvUseCase.getMovieDetail(needFetch, mMovieTvId)
+        movieTvUseCase.getMovieDetail(needFetch, mMovieTvId).asLiveData()
     }
 
     var detailTv: LiveData<Resource<Tv>> = Transformations.switchMap(movieTvId) { mMovieTvId ->
-        movieTvUseCase.getTvShowDetail(needFetch, mMovieTvId)
+        movieTvUseCase.getTvShowDetail(needFetch, mMovieTvId).asLiveData()
     }
 
     fun setFavorite(id: Int) =
         movieTvUseCase.setFavorite(id)
 
     fun getFavoriteStatus(id: Int): LiveData<List<FavoriteEntity>> =
-        movieTvUseCase.getFavoriteById(id)
+        movieTvUseCase.getFavoriteById(id).asLiveData()
 
     fun deleteFavorite(id: Int){
         movieTvUseCase.deleteFavorite(id)

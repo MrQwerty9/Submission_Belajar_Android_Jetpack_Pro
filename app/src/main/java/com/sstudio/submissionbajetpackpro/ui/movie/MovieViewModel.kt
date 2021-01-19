@@ -3,6 +3,7 @@ package com.sstudio.submissionbajetpackpro.ui.movie
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
@@ -14,13 +15,13 @@ class MovieViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
         get() {
             if (field == null) {
                 field = MutableLiveData()
-                field = movieTvUseCase.getAllMovie(false)
+                field = movieTvUseCase.getAllMovie(false).asLiveData()
             }
             return field
         }
         private set
 
     fun fetchListMovie(){
-        listMovie = movieTvUseCase.getAllMovie(true)
+        listMovie = movieTvUseCase.getAllMovie(true).asLiveData()
     }
 }

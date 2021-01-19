@@ -11,14 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieFavorite
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
+import com.sstudio.submissionbajetpackpro.ui.movie.MovieAdapter
+import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_movie.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class FavoriteMovieFragment : Fragment(), FavoriteMovieAdapter.AdapterCallback {
+class FavoriteMovieFragment : Fragment() {
 
-    private lateinit var favoriteMovieAdapter: FavoriteMovieAdapter
+    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var viewModel: FavoriteMovieViewModel
     private val viewModel: FavoriteMovieViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -30,18 +32,24 @@ class FavoriteMovieFragment : Fragment(), FavoriteMovieAdapter.AdapterCallback {
         itemTouchHelper.attachToRecyclerView(rv_list_movie)
         if (activity != null) {
 
-            favoriteMovieAdapter = FavoriteMovieAdapter(this)
+            movieAdapter = MovieAdapter()
 
             progress_bar.visibility = View.VISIBLE
-            viewModel.listMovie?.observe(this, { listMovie ->
-                favoriteMovieAdapter.submitList(listMovie)
-                rv_list_movie.adapter = favoriteMovieAdapter
+            viewModel.listMovie?.observe(viewLifecycleOwner, { listMovie ->
+                movieAdapter.submitList(listMovie)
+                rv_list_movie.adapter = movieAdapter
                 progress_bar.visibility = View.GONE
             })
 
             with(rv_list_movie) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
+            }
+            movieAdapter.onItemClick = {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                startActivity(intent)
             }
         }
     }
@@ -55,12 +63,12 @@ class FavoriteMovieFragment : Fragment(), FavoriteMovieAdapter.AdapterCallback {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             if (view != null) {
                 val swipedPosition = viewHolder.adapterPosition
-                val courseEntity = favoriteMovieAdapter.getSwipedData(swipedPosition)
-                courseEntity?.let { viewModel.deleteFavorite(it.favoriteEntity.idMovieTv) }
+                val courseEntity = movieAdapter.getSwipedData(swipedPosition)
+                courseEntity?.let { viewModel.deleteFavorite(it.id) }
 
                 val snackbar = Snackbar.make(view as View, R.string.message_undo, Snackbar.LENGTH_LONG)
                 snackbar.setAction(R.string.message_ok) { v ->
-                    courseEntity?.let { viewModel.addFavorite(it.favoriteEntity.idMovieTv) }
+                    courseEntity?.let { viewModel.addFavorite(it.id) }
                 }
                 snackbar.show()
             }

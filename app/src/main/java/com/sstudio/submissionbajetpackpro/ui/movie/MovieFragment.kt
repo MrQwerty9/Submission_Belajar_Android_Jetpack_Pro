@@ -9,13 +9,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_movie.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
+class MovieFragment : Fragment() {
 
     private lateinit var movieAdapter: MovieAdapter
     private val viewModel: MovieViewModel by viewModel()
@@ -41,17 +40,23 @@ class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
                 setHasFixedSize(true)
 //                adapter = movieAdapter
             }
+            movieAdapter.onItemClick = {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                startActivity(intent)
+            }
         }
     }
 
     private fun observeData() {
-        viewModel.listMovie?.observe(this, { listMovie ->
-            if (listMovie != null) {
-                when (listMovie.status) {
+        viewModel.listMovie?.observe(viewLifecycleOwner, { resource ->
+            if (resource != null) {
+                when (resource.status) {
                     Status.LOADING -> progress_bar.visibility = View.VISIBLE
                     Status.SUCCESS -> {
                         progress_bar.visibility = View.GONE
-                        movieAdapter.submitList(listMovie.data)
+                        movieAdapter.submitList(resource.data)
                         rv_list_movie.adapter = movieAdapter //why??
                     }
                     Status.ERROR -> {
@@ -61,12 +66,5 @@ class MovieFragment : Fragment(), MovieAdapter.AdapterCallback {
                 }
             }
         })
-    }
-
-    override fun itemMovieOnclick(movie: MovieEntity) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
-        intent.putExtra(DetailActivity.EXTRA_DETAIL, movie.id)
-        startActivity(intent)
     }
 }

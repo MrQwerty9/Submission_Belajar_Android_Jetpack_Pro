@@ -12,14 +12,14 @@ object DataMapper {
     fun mapMovieResponseToEntities(input: List<MovieResponse.Result>): List<MovieEntity> =
         input.map { response ->
             MovieEntity(
-                response.backdropPath,
+                response.backdropPath ?: "",
                 response.genreIds?.joinToString(separator = ",") ?: "",
                 response.id,
-                response.originalTitle,
-                response.overview,
-                response.posterPath,
-                response.releaseDate,
-                response.voteAverage
+                response.originalTitle ?: "",
+                response.overview ?: "",
+                response.posterPath ?: "",
+                response.releaseDate ?: "",
+                response.voteAverage ?: 0.0
             )
         }
 
@@ -37,14 +37,14 @@ object DataMapper {
 
     fun mapTvResponseToEntities(response: TvResponse.Result): TvEntity =
             TvEntity(
-                backdropPath = response.backdropPath,
+                backdropPath = response.backdropPath ?: "",
                 genreIds = response.genreIds?.joinToString(separator = ",") ?: "",
                 id = response.id,
-                originalName = response.originalName,
-                overview = response.overview,
-                posterPath = response.posterPath,
-                firstAirDate = response.firstAirDate,
-                voteAverage = response.voteAverage
+                originalName = response.originalName ?: "",
+                overview = response.overview ?: "",
+                posterPath = response.posterPath ?: "",
+                firstAirDate = response.firstAirDate ?: "",
+                voteAverage = response.voteAverage ?: 0.0
             )
 
     fun mapTvEntitiesPagingToDomain(input: DataSource.Factory<Int, Tv>): DataSource.Factory<Int, Tv> =

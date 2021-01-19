@@ -18,26 +18,12 @@ import com.sstudio.submissionbajetpackpro.vo.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class MovieTvRepository private constructor(
+class MovieTvRepository constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val appExecutors: AppExecutors
 ) :
     IMovieTvRepository {
-
-    companion object {
-        @Volatile
-        private var instance: MovieTvRepository? = null
-
-        fun getInstance(
-            remoteData: RemoteDataSource,
-            localData: LocalDataSource,
-            appExecutors: AppExecutors
-        ): MovieTvRepository =
-            instance ?: synchronized(this) {
-                instance ?: MovieTvRepository(remoteData, localData, appExecutors)
-            }
-    }
 
     override fun getAllMovie(needFetch: Boolean): Flow<Resource<PagedList<Movie>>> {
         return object :

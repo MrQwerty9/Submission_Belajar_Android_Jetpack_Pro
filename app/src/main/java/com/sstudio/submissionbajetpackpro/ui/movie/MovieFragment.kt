@@ -27,7 +27,7 @@ class MovieFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
 
-            movieAdapter = MovieAdapter(this)
+            movieAdapter = MovieAdapter()
             observeData()
 
             swipe_layout.setOnRefreshListener {

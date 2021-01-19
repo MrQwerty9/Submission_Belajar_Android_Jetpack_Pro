@@ -13,14 +13,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.ui.movie.MovieAdapter
-import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_movie.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class FavoriteMovieFragment : Fragment() {
 
     private lateinit var movieAdapter: MovieAdapter
-    private lateinit var viewModel: FavoriteMovieViewModel
     private val viewModel: FavoriteMovieViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -67,18 +65,11 @@ class FavoriteMovieFragment : Fragment() {
                 courseEntity?.let { viewModel.deleteFavorite(it.id) }
 
                 val snackbar = Snackbar.make(view as View, R.string.message_undo, Snackbar.LENGTH_LONG)
-                snackbar.setAction(R.string.message_ok) { v ->
+                snackbar.setAction(R.string.message_ok) { _ ->
                     courseEntity?.let { viewModel.addFavorite(it.id) }
                 }
                 snackbar.show()
             }
         }
     })
-
-    override fun itemMovieOnclick(favorite: MovieFavorite) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
-        intent.putExtra(DetailActivity.EXTRA_DETAIL, favorite.movie.id)
-        startActivity(intent)
-    }
 }

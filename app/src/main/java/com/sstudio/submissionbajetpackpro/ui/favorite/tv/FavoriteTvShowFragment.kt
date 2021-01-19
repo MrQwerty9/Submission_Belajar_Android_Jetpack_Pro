@@ -14,7 +14,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.ui.tv.TvAdapter
-import com.sstudio.submissionbajetpackpro.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_favorite_tv_show.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -22,7 +21,6 @@ class FavoriteTvShowFragment : Fragment() {
 
     private val viewModel: FavoriteTvShowViewModel by viewModel()
     private lateinit var tvAdapter: TvAdapter
-    private lateinit var viewModel: FavoriteTvShowViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favorite_tv_show, container, false)
@@ -67,7 +65,7 @@ class FavoriteTvShowFragment : Fragment() {
                 courseEntity?.let { viewModel.deleteFavorite(it.id) }
 
                 val snackbar = Snackbar.make(view as View, R.string.message_undo, Snackbar.LENGTH_LONG)
-                snackbar.setAction(R.string.message_ok) { v ->
+                snackbar.setAction(R.string.message_ok) { _ ->
                     courseEntity?.let { viewModel.addFavorite(it.id) }
                 }
                 snackbar.show()

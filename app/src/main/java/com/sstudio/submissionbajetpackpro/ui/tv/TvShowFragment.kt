@@ -25,7 +25,7 @@ class TvShowFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-            tvAdapter = TvAdapter(this)
+            tvAdapter = TvAdapter()
             observeData()
             swipe_layout.setOnRefreshListener {
                 viewModel.fetchListMovie()

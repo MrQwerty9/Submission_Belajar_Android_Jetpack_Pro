@@ -1,9 +1,10 @@
 package com.sstudio.submissionbajetpackpro
 
 import android.app.Application
-import com.sstudio.submissionbajetpackpro.di.databaseModule
-import com.sstudio.submissionbajetpackpro.di.networkModule
-import com.sstudio.submissionbajetpackpro.di.repositoryModule
+import com.sstudio.submissionbajetpackpro.core.di.databaseModule
+import com.sstudio.submissionbajetpackpro.core.di.networkModule
+import com.sstudio.submissionbajetpackpro.core.di.repositoryModule
+import com.sstudio.submissionbajetpackpro.di.useCaseModule
 import com.sstudio.submissionbajetpackpro.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -21,7 +22,8 @@ class MyApplication : Application() {
                     databaseModule,
                     networkModule,
                     repositoryModule,
-                    viewModelModule
+                    viewModelModule,
+                    useCaseModule
                 )
             )
         }

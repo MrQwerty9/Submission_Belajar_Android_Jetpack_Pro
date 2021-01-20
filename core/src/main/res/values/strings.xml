@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">yuMovee</string>
+    <string name="title_movie">Judul Film</string>
+    <string name="lorem">lorem ipsum dolor sit amet</string>
+    <string name="change_language_settings">Ubah Pengaturan Bahasa</string>
+    <string name="tab_1">Film</string>
+    <string name="tab_2">Acara Tv</string>
+    <string name="image_poster">image poster</string>
+    <string name="description">Description</string>
+    <string name="language">en-US</string>
+    <string name="tab_movie">Movie</string>
+    <string name="tab_tv">Tv Show</string>
+    <string name="tab_favorite">Favorite</string>
+    <string name="content_title">Content title</string>
+    <string name="txt_release_date">29 Juni 1998</string>
+    <string name="cast">Cast</string>
+    <string name="trailer">Trailer</string>
+    <string name="similar">Similar</string>
+    <string name="message_undo">Batal</string>
+    <string name="message_ok">ok</string>
+</resources>

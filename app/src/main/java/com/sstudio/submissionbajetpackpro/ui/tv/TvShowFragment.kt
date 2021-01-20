@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
+import com.sstudio.submissionbajetpackpro.core.data.Resource
+import com.sstudio.submissionbajetpackpro.core.ui.tv.TvAdapter
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
-import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_tvshow.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -43,20 +43,26 @@ class TvShowFragment : Fragment() {
                 intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
                 startActivity(intent)
             }
+            tvAdapter.onItemClick = {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                startActivity(intent)
+            }
         }
     }
 
     private fun observeData() {
-        viewModel.listTvShow?.observe(this, { listTv ->
-            if (listTv != null) {
-                when (listTv.status) {
-                    Status.LOADING -> progress_bar.visibility = View.VISIBLE
-                    Status.SUCCESS -> {
+        viewModel.listTvShow?.observe(viewLifecycleOwner, { resource ->
+            if (resource != null) {
+                when (resource) {
+                    is Resource.Loading -> progress_bar.visibility = View.VISIBLE
+                    is Resource.Success -> {
                         progress_bar.visibility = View.GONE
-                        tvAdapter.submitList(listTv.data)
+                        tvAdapter.submitList(resource.data)
                         rv_list_tv_show.adapter  = tvAdapter
                     }
-                    Status.ERROR -> {
+                    is Resource.Error -> {
                         progress_bar.visibility = View.GONE
                         Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
                     }

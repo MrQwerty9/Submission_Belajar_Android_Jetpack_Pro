@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
+import com.sstudio.submissionbajetpackpro.core.data.Resource
+import com.sstudio.submissionbajetpackpro.core.ui.movie.MovieAdapter
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
-import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_movie.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -48,20 +48,26 @@ class MovieFragment : Fragment() {
                 setHasFixedSize(true)
 //                adapter = movieAdapter
             }
+            movieAdapter.onItemClick = {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                startActivity(intent)
+            }
         }
     }
 
     private fun observeData() {
-        viewModel.listMovie?.observe(this, { listMovie ->
-            if (listMovie != null) {
-                when (listMovie.status) {
-                    Status.LOADING -> progress_bar.visibility = View.VISIBLE
-                    Status.SUCCESS -> {
+        viewModel.listMovie?.observe(viewLifecycleOwner, { resource ->
+            if (resource != null) {
+                when (resource) {
+                    is Resource.Loading -> progress_bar.visibility = View.VISIBLE
+                    is Resource.Success -> {
                         progress_bar.visibility = View.GONE
-                        movieAdapter.submitList(listMovie.data)
+                        movieAdapter.submitList(resource.data)
                         rv_list_movie.adapter = movieAdapter //why??
                     }
-                    Status.ERROR -> {
+                    is Resource.Error -> {
                         progress_bar.visibility = View.GONE
                         Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
                     }

@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_movie"
+        android:id="@+id/fragment_movie"
         android:icon="@drawable/ic_local_movies_primary_24dp"
         android:title="@string/tab_movie" />
 
     <item
-        android:id="@+id/navigation_tv"
+        android:id="@+id/fragment_tv"
         android:icon="@drawable/ic_live_tv_primary_24dp"
         android:title="@string/tab_tv" />
 
     <item
-        android:id="@+id/navigation_favorite"
+        android:id="@+id/fragment_favorite"
         android:icon="@drawable/ic_favorite_border_favorite_24dp"
         android:title="@string/tab_favorite" />
 

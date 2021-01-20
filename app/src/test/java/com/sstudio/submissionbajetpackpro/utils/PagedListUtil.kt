@@ -1,7 +1,6 @@
 package com.sstudio.submissionbajetpackpro.utils
 
 import androidx.paging.PagedList
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 

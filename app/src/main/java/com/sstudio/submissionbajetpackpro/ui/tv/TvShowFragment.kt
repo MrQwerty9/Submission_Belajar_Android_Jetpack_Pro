@@ -9,8 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
+import com.sstudio.submissionbajetpackpro.core.data.Resource
+import com.sstudio.submissionbajetpackpro.core.ui.tv.TvAdapter
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
-import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.fragment_tvshow.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -49,14 +50,14 @@ class TvShowFragment : Fragment() {
     private fun observeData() {
         viewModel.listTvShow?.observe(viewLifecycleOwner, { resource ->
             if (resource != null) {
-                when (resource.status) {
-                    Status.LOADING -> progress_bar.visibility = View.VISIBLE
-                    Status.SUCCESS -> {
+                when (resource) {
+                    is Resource.Loading -> progress_bar.visibility = View.VISIBLE
+                    is Resource.Success -> {
                         progress_bar.visibility = View.GONE
                         tvAdapter.submitList(resource.data)
                         rv_list_tv_show.adapter  = tvAdapter
                     }
-                    Status.ERROR -> {
+                    is Resource.Error -> {
                         progress_bar.visibility = View.GONE
                         Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
                     }

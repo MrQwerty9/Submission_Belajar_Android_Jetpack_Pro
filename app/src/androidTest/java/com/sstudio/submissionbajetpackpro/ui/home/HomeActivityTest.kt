@@ -10,7 +10,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.core.utils.DataDummy
 import com.sstudio.submissionbajetpackpro.core.utils.EspressoIdlingResource
 import org.hamcrest.Matchers
 import org.junit.After

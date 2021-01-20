@@ -1,11 +1,11 @@
 package com.sstudio.submissionbajetpackpro.ui.detail
 
 import androidx.lifecycle.*
+import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
-import com.sstudio.submissionbajetpackpro.vo.Resource
 
 class DetailViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
 

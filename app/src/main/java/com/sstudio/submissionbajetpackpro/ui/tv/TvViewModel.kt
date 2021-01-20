@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.paging.PagedList
+import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
-import com.sstudio.submissionbajetpackpro.vo.Resource
 
 class TvViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
 

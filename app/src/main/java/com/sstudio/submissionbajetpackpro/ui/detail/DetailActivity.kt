@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sstudio.submissionbajetpackpro.BuildConfig
 import com.sstudio.submissionbajetpackpro.R
+import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
-import com.sstudio.submissionbajetpackpro.vo.Status
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.content_detail.*
 import kotlinx.android.synthetic.main.movie_wrapper.*
@@ -44,14 +43,14 @@ class DetailActivity : AppCompatActivity() {
                 })
                 if (movieOrTv == IS_MOVIE) {
                     viewModel.needFetch = false
-                    viewModel.detailMovie.observe(this, { movie ->
-                        when (movie.status) {
-                            Status.LOADING -> progress_bar.visibility = View.VISIBLE
-                            Status.SUCCESS -> {
+                    viewModel.detailMovie.observe(this, { resource ->
+                        when (resource) {
+                            is Resource.Loading -> progress_bar.visibility = View.VISIBLE
+                            is Resource.Success -> {
                                 progress_bar.visibility = View.GONE
-                                movie.data?.let { populateMovie(it) }
+                                resource.data?.let { populateMovie(it) }
                             }
-                            Status.ERROR -> {
+                            is Resource.Error -> {
                                 progress_bar.visibility = View.GONE
                                 Toast.makeText(
                                     applicationContext,
@@ -63,13 +62,13 @@ class DetailActivity : AppCompatActivity() {
                     })
                 } else {
                     viewModel.detailTv.observe(this, { tvShow ->
-                        when (tvShow.status) {
-                            Status.LOADING -> progress_bar.visibility = View.VISIBLE
-                            Status.SUCCESS -> {
+                        when (tvShow) {
+                            is Resource.Loading -> progress_bar.visibility = View.VISIBLE
+                            is Resource.Success -> {
                                 progress_bar.visibility = View.GONE
                                 tvShow.data?.let { populateTv(it) }
                             }
-                            Status.ERROR -> {
+                            is Resource.Error -> {
                                 progress_bar.visibility = View.GONE
                                 Toast.makeText(
                                     applicationContext,

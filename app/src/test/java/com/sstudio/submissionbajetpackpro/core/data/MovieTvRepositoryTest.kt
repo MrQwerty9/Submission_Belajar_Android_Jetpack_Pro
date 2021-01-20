@@ -21,12 +21,9 @@ import com.sstudio.submissionbajetpackpro.core.utils.AppExecutors
 import com.sstudio.submissionbajetpackpro.core.utils.DataDummy
 import com.sstudio.submissionbajetpackpro.core.utils.LiveDataTestUtil
 import com.sstudio.submissionbajetpackpro.utils.PagedListUtil
-import com.sstudio.submissionbajetpackpro.vo.Resource
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
@@ -89,7 +86,7 @@ class MovieTvRepositoryTest {
 
         movieTvRepository.getAllMovie(false)
 
-        val movieEntities = Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
+        val movieEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
 //        Thread.sleep(10000)
 //        verify(local).getAllMovie()
         assertNotNull(movieEntities.data)
@@ -136,7 +133,7 @@ class MovieTvRepositoryTest {
         `when`(local.getAllFavoriteMovie()).thenReturn(dataSourceFactory)
         movieTvRepository.getAllFavoriteMovie()
 
-        val movieEntities = Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
+        val movieEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
         verify(local).getAllFavoriteMovie()
         assertNotNull(movieEntities)
         assertEquals(movieResponses.results.size.toLong(), movieEntities.data?.size?.toLong())
@@ -148,7 +145,7 @@ class MovieTvRepositoryTest {
         `when`(local.getAllTv()).thenReturn(dataSourceFactory)
         movieTvRepository.getAllTvShows(false)
 
-        val tvShowEntities = Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
+        val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
         verify(local).getAllTv()
         assertNotNull(tvShowEntities)
         assertEquals(tvShowResponses.results.size.toLong(), tvShowEntities.data?.size?.toLong())
@@ -172,7 +169,7 @@ class MovieTvRepositoryTest {
         `when`(local.getAllFavoriteTv()).thenReturn(dataSourceFactory)
         movieTvRepository.getAllFavoriteTv()
 
-        val favoriteEntities = Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
+        val favoriteEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
         verify(local).getAllFavoriteTv()
         assertNotNull(favoriteEntities)
         assertEquals(movieResponses.results.size.toLong(), favoriteEntities.data?.size?.toLong())

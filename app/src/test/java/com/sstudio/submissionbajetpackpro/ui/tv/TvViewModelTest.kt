@@ -6,10 +6,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.FakeMovieTvRepository
+import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
-import com.sstudio.submissionbajetpackpro.vo.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
@@ -55,7 +55,7 @@ class TvViewModelTest {
 
     @Test
     fun testGetTvShow() {
-        val dataTvShows = Resource.success(pagedList)
+        val dataTvShows = Resource.Success(pagedList)
         `when`(dataTvShows.data?.size).thenReturn(5)
         val tvShows = MutableLiveData<Resource<PagedList<Tv>>>()
         tvShows.value = dataTvShows

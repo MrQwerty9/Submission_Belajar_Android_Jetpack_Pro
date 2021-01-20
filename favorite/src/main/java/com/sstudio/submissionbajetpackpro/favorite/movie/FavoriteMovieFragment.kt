@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.ui.favorite.movie
+package com.sstudio.submissionbajetpackpro.favorite.movie
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.ui.movie.MovieAdapter
+import com.sstudio.submissionbajetpackpro.favorite.R
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import kotlinx.android.synthetic.main.fragment_favorite_movie.*
 import org.koin.android.viewmodel.ext.android.viewModel

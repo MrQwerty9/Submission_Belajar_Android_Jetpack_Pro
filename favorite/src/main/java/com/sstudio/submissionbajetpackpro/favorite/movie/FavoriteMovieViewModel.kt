@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.ui.favorite.movie
+package com.sstudio.submissionbajetpackpro.favorite.movie
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

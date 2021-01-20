@@ -3,8 +3,6 @@ package com.sstudio.submissionbajetpackpro.di
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailViewModel
-import com.sstudio.submissionbajetpackpro.ui.favorite.movie.FavoriteMovieViewModel
-import com.sstudio.submissionbajetpackpro.ui.favorite.tv.FavoriteTvShowViewModel
 import com.sstudio.submissionbajetpackpro.ui.movie.MovieViewModel
 import com.sstudio.submissionbajetpackpro.ui.tv.TvViewModel
 import org.koin.android.viewmodel.dsl.viewModel
@@ -18,7 +16,5 @@ val useCaseModule = module {
 val viewModelModule = module {
     viewModel { MovieViewModel(get()) }
     viewModel { TvViewModel(get()) }
-    viewModel { FavoriteMovieViewModel(get()) }
-    viewModel { FavoriteTvShowViewModel(get()) }
     viewModel { DetailViewModel(get()) }
 }

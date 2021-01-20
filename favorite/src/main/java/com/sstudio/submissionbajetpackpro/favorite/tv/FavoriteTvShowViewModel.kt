@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.ui.favorite.tv
+package com.sstudio.submissionbajetpackpro.favorite.tv
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

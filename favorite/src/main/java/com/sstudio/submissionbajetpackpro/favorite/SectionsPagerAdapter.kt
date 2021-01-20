@@ -1,12 +1,12 @@
-package com.sstudio.submissionbajetpackpro.ui.favorite
+package com.sstudio.submissionbajetpackpro.favorite
 
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.ui.favorite.movie.FavoriteMovieFragment
-import com.sstudio.submissionbajetpackpro.ui.favorite.tv.FavoriteTvShowFragment
+import com.sstudio.submissionbajetpackpro.favorite.movie.FavoriteMovieFragment
+import com.sstudio.submissionbajetpackpro.favorite.tv.FavoriteTvShowFragment
 
 class SectionsPagerAdapter(private val context: Context, fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 

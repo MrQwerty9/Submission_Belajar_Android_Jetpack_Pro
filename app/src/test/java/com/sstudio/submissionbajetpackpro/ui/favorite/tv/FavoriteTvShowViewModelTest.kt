@@ -23,7 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class FavoriteTvShowViewModelTest {
 
-    private lateinit var viewModel: FavoriteTvShowViewModel
+    private lateinit var viewModel: com.sstudio.submissionbajetpackpro.favorite.tv.FavoriteTvShowViewModel
     private lateinit var movieTvUseCase: MovieTvUseCase
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
@@ -43,7 +43,8 @@ class FavoriteTvShowViewModelTest {
     fun setUp() {
         Dispatchers.setMain(mainThreadSurrogate)
         movieTvUseCase = FakeMovieTvInteractor(movieTvRepository)
-        viewModel = FavoriteTvShowViewModel(movieTvUseCase)
+        viewModel =
+            com.sstudio.submissionbajetpackpro.favorite.tv.FavoriteTvShowViewModel(movieTvUseCase)
     }
 
     @After
@@ -60,13 +61,13 @@ class FavoriteTvShowViewModelTest {
         tv.value = dataTvShows
 
         `when`(movieTvRepository.getAllFavoriteTv()).thenReturn(tv.asFlow())
-        viewModel.listTv?.observeForever(observer)
+        viewModel.listTv.observeForever(observer)
 
         Thread.sleep(2000)
-        val movieEntities = viewModel.listTv?.value
+        val movieEntities = viewModel.listTv.value
         Mockito.verify(movieTvRepository).getAllFavoriteTv()
         Assert.assertNotNull(movieEntities)
-        Assert.assertEquals(2, movieEntities?.size)
+        Assert.assertEquals(2, movieEntities.size)
         Mockito.verify(observer).onChanged(dataTvShows)
 
     }

@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.ui.favorite
+package com.sstudio.submissionbajetpackpro.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
-import com.sstudio.submissionbajetpackpro.R
+import com.sstudio.submissionbajetpackpro.favorite.di.viewModelModule
 import kotlinx.android.synthetic.main.fragment_favorite.*
-import kotlinx.android.synthetic.main.fragment_favorite.view.*
+import org.koin.core.context.loadKoinModules
 
 class FavoriteFragment : Fragment() {
 
@@ -22,13 +22,15 @@ class FavoriteFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null){
+
+            loadKoinModules(viewModelModule)
+
             val pagerAdapter = context?.let { SectionsPagerAdapter(it, childFragmentManager) }
             with(pager_container){
                 addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab_layout))
                 adapter = pagerAdapter
             }
             tab_layout.setupWithViewPager(pager_container)
-            //        supportActionBar?.elevation = 0f
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.sstudio.submissionbajetpackpro.core.data
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.asFlow
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -93,6 +94,10 @@ class MovieTvRepository constructor(
         ).build().asFlow()
     }
 
+    override fun getSearchMovie(query: String): LiveData<List<Movie>> {
+
+    }
+
     override fun getAllTvShows(needFetch: Boolean): Flow<Resource<PagedList<Tv>>> {
         return object :
             NetworkBoundResource<PagedList<Tv>, TvResponse>(appExecutors) {
@@ -160,6 +165,10 @@ class MovieTvRepository constructor(
             },
             config
         ).build().asFlow()
+    }
+
+    override fun getSearchTv(query: String): LiveData<List<Tv>> {
+
     }
 
     override fun setFavorite(id: Int) {

@@ -3,17 +3,15 @@ package com.sstudio.submissionbajetpackpro.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedList
-import com.sstudio.submissionbajetpackpro.data.MovieTvRepository
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.MovieEntity
-import com.sstudio.submissionbajetpackpro.data.source.local.entity.TvEntity
-import com.sstudio.submissionbajetpackpro.vo.Resource
+import com.sstudio.submissionbajetpackpro.core.data.MovieTvRepository
+import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
+import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 
 class SearchViewModel(private val movieTvRepository: MovieTvRepository) : ViewModel() {
 
     private var query: String = ""
 
-    var listSearchMovie: LiveData<List<MovieEntity>>? = null
+    var listSearchMovie: LiveData<List<Movie>>? = null
         get() {
             if (field == null) {
                 field = MutableLiveData()
@@ -23,7 +21,7 @@ class SearchViewModel(private val movieTvRepository: MovieTvRepository) : ViewMo
         }
         private set
 
-    var listSearchTv: LiveData<List<TvEntity>>? = null
+    var listSearchTv: LiveData<List<Tv>>? = null
         get() {
             if (field == null) {
                 field = MutableLiveData()

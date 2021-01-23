@@ -18,6 +18,9 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun getAllFavoriteMovie(): Flow<PagedList<Movie>> =
         movieTvRepository.getAllFavoriteMovie()
 
+    override fun getSearchMovie(query: String): Flow<Resource<List<Movie>>> =
+        movieTvRepository.getSearchMovie(query)
+
     override fun getAllTvShows(needFetch: Boolean): Flow<Resource<PagedList<Tv>>> =
         movieTvRepository.getAllTvShows(needFetch)
 
@@ -26,6 +29,9 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
 
     override fun getAllFavoriteTv(): Flow<PagedList<Tv>> =
         movieTvRepository.getAllFavoriteTv()
+
+    override fun getSearchTv(query: String): Flow<Resource<List<Tv>>> =
+        movieTvRepository.getSearchTv(query)
 
     override fun setFavorite(id: Int) =
         movieTvRepository.setFavorite(id)

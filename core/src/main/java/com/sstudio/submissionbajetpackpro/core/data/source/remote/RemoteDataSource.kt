@@ -93,5 +93,41 @@ class RemoteDataSource constructor(private val apiService: ApiService, context: 
             }
         }.flowOn(Dispatchers.IO)
     }
+
+    fun getSearchMovie(query: String): Flow<ApiResponse<List<MovieResponse.Result>>> {
+        return flow {
+            try {
+                val response = apiService.getSearchMovie(query, BuildConfig.TMDB_API_KEY, language).results
+                if (response.isNotEmpty()){
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+                EspressoIdlingResource.decrement()
+            } catch (e : Exception){
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+                EspressoIdlingResource.decrement()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun getSearchTv(query: String): Flow<ApiResponse<List<TvResponse.Result>>> {
+        return flow {
+            try {
+                val response = apiService.getSearchTv(query, BuildConfig.TMDB_API_KEY, language).results
+                if (response.isNotEmpty()){
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+                EspressoIdlingResource.decrement()
+            } catch (e : Exception){
+                emit(ApiResponse.Error(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+                EspressoIdlingResource.decrement()
+            }
+        }.flowOn(Dispatchers.IO)
+    }
 }
 

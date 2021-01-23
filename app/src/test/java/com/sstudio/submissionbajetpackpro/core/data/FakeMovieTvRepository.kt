@@ -16,6 +16,8 @@ import com.sstudio.submissionbajetpackpro.core.domain.repository.IMovieTvReposit
 import com.sstudio.submissionbajetpackpro.core.utils.AppExecutors
 import com.sstudio.submissionbajetpackpro.core.utils.DataMapper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class FakeMovieTvRepository constructor(
@@ -90,12 +92,31 @@ class FakeMovieTvRepository constructor(
             .setInitialLoadSizeHint(4)
             .setPageSize(4)
             .build()
-        return LivePagedListBuilder(
-            localDataSource.getAllFavoriteMovie().map {
+        val livePageList =
+            LivePagedListBuilder(localDataSource.getAllFavoriteMovie(), config).build()
+        return Transformations.map(livePageList) { pagedList ->
+            pagedList.map {
                 DataMapper.mapMovieEntitiesToDomain(it.movie)
-            },
-            config
-        ).build().asFlow()
+            } as PagedList<Movie>
+        }.asFlow()
+    }
+
+    override fun getSearchMovie(query: String): Flow<Resource<List<Movie>>> {
+        val data = remoteDataSource.getSearchMovie(query)
+        return flow {
+            emit(Resource.Loading())
+            when (val apiResponse = data.first()) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(DataMapper.mapMovieResponseToDomain(apiResponse.data)))
+                }
+                is ApiResponse.Empty -> {
+                    emit( Resource.Success<List<Movie>>(listOf()))
+                }
+                is ApiResponse.Error -> {
+                    emit(Resource.Error<List<Movie>>(apiResponse.errorMessage))
+                }
+            }
+        }
     }
 
     override fun getAllTvShows(needFetch: Boolean): Flow<Resource<PagedList<Tv>>> {
@@ -159,12 +180,31 @@ class FakeMovieTvRepository constructor(
             .setInitialLoadSizeHint(4)
             .setPageSize(4)
             .build()
-        return LivePagedListBuilder(
-            localDataSource.getAllFavoriteTv().map {
+        val livePageList =
+            LivePagedListBuilder(localDataSource.getAllFavoriteTv(), config).build()
+        return Transformations.map(livePageList) { pagedList ->
+            pagedList.map {
                 DataMapper.mapTvEntitiesToDomain(it.tv)
-            },
-            config
-        ).build().asFlow()
+            } as PagedList<Tv>
+        }.asFlow()
+    }
+
+    override fun getSearchTv(query: String): Flow<Resource<List<Tv>>> {
+        val data = remoteDataSource.getSearchTv(query)
+        return flow {
+            emit(Resource.Loading())
+            when (val apiResponse = data.first()) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(DataMapper.mapTvResponseToDomain(apiResponse.data)))
+                }
+                is ApiResponse.Empty -> {
+                    emit( Resource.Success<List<Tv>>(listOf()))
+                }
+                is ApiResponse.Error -> {
+                    emit(Resource.Error<List<Tv>>(apiResponse.errorMessage))
+                }
+            }
+        }
     }
 
     override fun setFavorite(id: Int) {

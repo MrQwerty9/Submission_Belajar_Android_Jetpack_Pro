@@ -9,6 +9,20 @@ import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 
 object DataMapper {
+    fun mapMovieResponseToDomain(input: List<MovieResponse.Result>): List<Movie> =
+        input.map { response ->
+            Movie(
+                response.backdropPath ?: "",
+                response.genreIds?.joinToString(separator = ",") ?: "",
+                response.id,
+                response.originalTitle ?: "",
+                response.overview ?: "",
+                response.posterPath ?: "",
+                response.releaseDate ?: "",
+                response.voteAverage ?: 0.0
+            )
+        }
+
     fun mapMovieResponseToEntities(input: List<MovieResponse.Result>): List<MovieEntity> =
         input.map { response ->
             MovieEntity(
@@ -34,6 +48,20 @@ object DataMapper {
                 releaseDate = entity.releaseDate,
                 voteAverage = entity.voteAverage
             )
+
+    fun mapTvResponseToDomain(input: List<TvResponse.Result>): List<Tv> =
+        input.map { response ->
+            Tv(
+                backdropPath = response.backdropPath ?: "",
+                genreIds = response.genreIds?.joinToString(separator = ",") ?: "",
+                id = response.id,
+                originalName = response.originalName ?: "",
+                overview = response.overview ?: "",
+                posterPath = response.posterPath ?: "",
+                firstAirDate = response.firstAirDate ?: "",
+                voteAverage = response.voteAverage ?: 0.0
+            )
+        }
 
     fun mapTvResponseToEntities(response: TvResponse.Result): TvEntity =
             TvEntity(

@@ -69,7 +69,7 @@ class DetailViewModelTest {
 
         Mockito.`when`(movieTvRepository.getMovieDetail(false, movieId)).thenReturn(
             Transformations.map(dummyLiveData) { resource ->
-                Resource.Success(resource.data?.let { DataMapper.mapMovieEntitiesToDomain(it) })
+                Resource.Success(DataMapper.mapMovieEntitiesToDomain(resource.data as MovieEntity))
             }.asFlow()
         )
         viewModel.setSelectedMovieTv(movieId)
@@ -90,7 +90,7 @@ class DetailViewModelTest {
 
         Mockito.`when`(movieTvRepository.getTvShowDetail(false, tvId)).thenReturn(
             tvShow.map { resource ->
-                Resource.Success(resource.data?.let { DataMapper.mapTvEntitiesToDomain(it) })
+                Resource.Success(DataMapper.mapTvEntitiesToDomain(resource.data as TvEntity))
             }.asFlow()
         )
         viewModel.setSelectedMovieTv(tvId)

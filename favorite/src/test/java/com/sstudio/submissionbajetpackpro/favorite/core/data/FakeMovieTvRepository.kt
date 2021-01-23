@@ -1,5 +1,6 @@
 package com.sstudio.submissionbajetpackpro.core.data
 
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.asFlow
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -19,7 +20,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class MovieTvRepository constructor(
+class FakeMovieTvRepository constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val appExecutors: AppExecutors
@@ -35,10 +36,14 @@ class MovieTvRepository constructor(
                     .setInitialLoadSizeHint(4)
                     .setPageSize(4)
                     .build()
-                return LivePagedListBuilder(
-                    localDataSource.getAllMovie().map { DataMapper.mapMovieEntitiesToDomain(it) },
-                    config
-                ).build().asFlow()
+
+                val livePageList =
+                    LivePagedListBuilder(localDataSource.getAllMovie(), config).build()
+                return Transformations.map(livePageList) { pagedList ->
+                    pagedList.map {
+                        DataMapper.mapMovieEntitiesToDomain(it)
+                    } as PagedList<Movie>
+                }.asFlow()
             }
 
             override fun shouldFetch(data: PagedList<Movie>?): Boolean =

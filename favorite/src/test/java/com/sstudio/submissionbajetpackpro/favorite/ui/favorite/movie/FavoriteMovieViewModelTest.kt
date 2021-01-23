@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.ui.favorite.movie
+package com.sstudio.submissionbajetpackpro.favorite.ui.favorite.movie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +9,8 @@ import com.sstudio.submissionbajetpackpro.core.data.FakeMovieTvRepository
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
+import com.sstudio.submissionbajetpackpro.favorite.movie.FavoriteMovieViewModel
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
@@ -23,7 +25,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class FavoriteMovieViewModelTest {
 
-    private lateinit var viewModel: com.sstudio.submissionbajetpackpro.favorite.movie.FavoriteMovieViewModel
+    private lateinit var viewModel: FavoriteMovieViewModel
     private lateinit var movieTvUseCase: MovieTvUseCase
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
@@ -62,12 +64,12 @@ class FavoriteMovieViewModelTest {
 
         `when`(movieTvRepository.getAllFavoriteMovie()).thenReturn(movies.asFlow())
 
-        viewModel.listMovie.observeForever(observer)
+        viewModel.listMovie?.observeForever(observer)
         Mockito.verify(movieTvRepository).getAllFavoriteMovie()
         Thread.sleep(2000)
         Mockito.verify(observer).onChanged(dataMovies)
-        val movieEntities = viewModel.listMovie.value
+        val movieEntities = viewModel.listMovie?.value
         Assert.assertNotNull(movieEntities)
-        Assert.assertEquals(2, movieEntities.size)
+        Assert.assertEquals(2, movieEntities?.size)
     }
 }

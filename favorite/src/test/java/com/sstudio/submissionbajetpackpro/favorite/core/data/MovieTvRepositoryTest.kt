@@ -120,10 +120,9 @@ class MovieTvRepositoryTest {
         `when`(local.getMovieById(movieId)).thenReturn(dummyMovie.asFlow())
 
         val movieEntities = LiveDataTestUtil.getValue(movieTvRepository.getMovieDetail(false, movieId).asLiveData())
-        Thread.sleep(2000)
         verify(local).getMovieById(movieId)
         Assert.assertNotNull(movieEntities)
-//        assertEquals(detailMovieResponses.originalTitle, movieEntities.data?.originalTitle)
+        assertEquals(detailMovieResponses.originalTitle, movieEntities.data?.originalTitle)
     }
 
     @Test
@@ -145,7 +144,6 @@ class MovieTvRepositoryTest {
         movieTvRepository.getAllTvShows(false)
 
         val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
-        Thread.sleep(2000)
         verify(local).getAllTv()
         assertNotNull(tvShowEntities)
         assertEquals(tvShowResponses.results.size.toLong(), tvShowEntities.data?.size?.toLong())
@@ -160,7 +158,7 @@ class MovieTvRepositoryTest {
         val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getTvShowDetail(false, tvId).asLiveData())
         verify(local).getTvById(tvId)
         Assert.assertNotNull(tvShowEntities)
-//        assertEquals(detailTvShowResponses.originalName, tvShowEntities.data?.originalName)
+        assertEquals(detailTvShowResponses.originalName, tvShowEntities.data?.originalName)
     }
 
     @Test

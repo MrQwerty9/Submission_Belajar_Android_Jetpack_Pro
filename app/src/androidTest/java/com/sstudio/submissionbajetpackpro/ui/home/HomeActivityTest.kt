@@ -22,12 +22,12 @@ class HomeActivityTest {
     @Before
     fun setup() {
         ActivityScenario.launch(HomeActivity::class.java)
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.idlingResource)
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource())
     }
 
     @After
     fun tearDown() {
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingResource)
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource())
     }
 
     @Test
@@ -57,7 +57,7 @@ class HomeActivityTest {
         onView(
             Matchers.allOf(
                 withText(R.string.tab_tv),
-                isDescendantOfA(withId(R.id.navigation_tv)),
+                isDescendantOfA(withId(R.id.fragment_tv)),
                 isDisplayed()
             )
         )
@@ -75,7 +75,7 @@ class HomeActivityTest {
         onView(
             Matchers.allOf(
                 withText(R.string.tab_tv),
-                isDescendantOfA(withId(R.id.navigation_tv)),
+                isDescendantOfA(withId(R.id.fragment_movie)),
                 isDisplayed()
             )
         )
@@ -103,7 +103,7 @@ class HomeActivityTest {
         onView(
             Matchers.allOf(
                 withText(R.string.tab_favorite),
-                isDescendantOfA(withId(R.id.navigation_favorite)),
+                isDescendantOfA(withId(R.id.fragment_favorite)),
                 isDisplayed()
             )
         )
@@ -126,7 +126,7 @@ class HomeActivityTest {
         onView(
             Matchers.allOf(
                 withText(R.string.tab_tv),
-                isDescendantOfA(withId(R.id.navigation_tv)),
+                isDescendantOfA(withId(R.id.fragment_tv)),
                 isDisplayed()
             )
         )
@@ -142,7 +142,7 @@ class HomeActivityTest {
         onView(
             Matchers.allOf(
                 withText(R.string.tab_favorite),
-                isDescendantOfA(withId(R.id.navigation_favorite)),
+                isDescendantOfA(withId(R.id.fragment_favorite)),
                 isDisplayed()
             )
         )

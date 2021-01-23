@@ -13,6 +13,8 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         toolbar.title = this.getString(R.string.app_name)
+        setSupportActionBar(toolbar)
+
         val navController = supportFragmentManager
             .findFragmentById(R.id.fragment_nav_host) as NavHostFragment
         NavigationUI.setupWithNavController(

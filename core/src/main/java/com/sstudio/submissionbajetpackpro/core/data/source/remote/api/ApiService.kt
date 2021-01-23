@@ -33,17 +33,17 @@ interface ApiService {
         @Query("language") language: String
     ): TvResponse.Result
 
-    @GET("search/movie/{query}")
-    fun getSearchMovie(
-        @Path("query") id: String,
+    @GET("search/movie")
+    suspend fun getSearchMovie(
+        @Query("query") query: String,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Call<DataSource<Int, MovieResponse>>
+    ): MovieResponse
 
-    @GET("search/tv/{query}")
-    fun getSearchTv(
-        @Path("query") id: String,
+    @GET("search/tv")
+    suspend fun getSearchTv(
+        @Query("query") query: String,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): Call<TvResponse>
+    ): TvResponse
 }

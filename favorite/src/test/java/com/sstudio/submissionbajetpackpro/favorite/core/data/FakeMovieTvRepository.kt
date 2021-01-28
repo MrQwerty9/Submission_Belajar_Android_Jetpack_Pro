@@ -111,7 +111,7 @@ class FakeMovieTvRepository constructor(
                 is ApiResponse.Empty -> {
                     emit( Resource.Success<List<Movie>>(listOf()))
                 }
-                is ApiResponse.Error -> {
+                is ApiResponse.Failed -> {
                     emit(Resource.Error<List<Movie>>(apiResponse.errorMessage))
                 }
             }
@@ -198,7 +198,7 @@ class FakeMovieTvRepository constructor(
                 is ApiResponse.Empty -> {
                     emit( Resource.Success<List<Tv>>(listOf()))
                 }
-                is ApiResponse.Error -> {
+                is ApiResponse.Failed -> {
                     emit(Resource.Error<List<Tv>>(apiResponse.errorMessage))
                 }
             }

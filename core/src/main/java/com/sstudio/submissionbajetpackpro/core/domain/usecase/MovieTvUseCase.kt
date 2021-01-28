@@ -8,7 +8,7 @@ import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import kotlinx.coroutines.flow.Flow
 
 interface MovieTvUseCase {
-    fun getAllMovie(needFetch: Boolean): Flow<Resource<PagedList<Movie>>>
+    fun getAllMovie(needFetch: Boolean): Flow<PagedList<Movie>>
     fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>>
     fun getAllFavoriteMovie(): Flow<PagedList<Movie>>
     fun getSearchMovie(query: String): Flow<Resource<List<Movie>>>

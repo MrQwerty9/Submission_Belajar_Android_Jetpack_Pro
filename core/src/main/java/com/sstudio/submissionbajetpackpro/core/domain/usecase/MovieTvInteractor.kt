@@ -9,7 +9,7 @@ import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import kotlinx.coroutines.flow.Flow
 
 class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): MovieTvUseCase {
-    override fun getAllMovie(needFetch: Boolean): Flow<Resource<PagedList<Movie>>> =
+    override fun getAllMovie(needFetch: Boolean): Flow<PagedList<Movie>> =
         movieTvRepository.getAllMovie(needFetch)
 
     override fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>> =

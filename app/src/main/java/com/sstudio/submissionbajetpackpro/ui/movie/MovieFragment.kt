@@ -2,12 +2,12 @@ package com.sstudio.submissionbajetpackpro.ui.movie
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.core.data.Resource
+import com.sstudio.submissionbajetpackpro.core.data.source.remote.ApiResponse
 import com.sstudio.submissionbajetpackpro.core.ui.movie.MovieAdapter
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.ui.search.SearchActivity
@@ -27,16 +27,12 @@ class MovieFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
 
-
             setHasOptionsMenu(true)
-
-
+//            observeData()
             movieAdapter = MovieAdapter()
-            observeData()
-
             swipe_layout.setOnRefreshListener {
                 viewModel.fetchListMovie()
-                observeData()
+//                observeData()
                 swipe_layout.isRefreshing = false
             }
 
@@ -48,14 +44,50 @@ class MovieFragment : Fragment() {
             }
             with(rv_list_movie) {
                 layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-//                adapter = movieAdapter
+//                setHasFixedSize(true)
+                adapter = movieAdapter
             }
-            movieAdapter.onItemClick = {
-                val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
-                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
-                startActivity(intent)
+//            viewModel.state.observe(viewLifecycleOwner, {
+//                Log.d("mytag", "repo status")
+//                Toast.makeText(context, "STtus", Toast.LENGTH_SHORT).show()
+//                when (it.status) {
+//                    NetworkState.Status.LOADING -> {
+//                        Log.d("mytag", "observe loading")
+//                        progress_bar.visibility = View.VISIBLE
+//                    }
+//                    NetworkState.Status.SUCCESS -> {
+//                        Log.d("mytag", "observe success")
+//                        progress_bar.visibility = View.GONE
+//                    }
+//                    NetworkState.Status.EMPTY -> {
+//                        Log.d("mytag", "observe empty")
+//                        progress_bar.visibility = View.GONE
+//                    }
+//                    else -> {
+//                        Log.d("mytag", "observe ${it.msg}")
+//                        progress_bar.visibility = View.GONE
+//                        Toast.makeText(context, "Terjadi Kesalahan ${it.msg}", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            })
+
+            viewModel.listMovie?.observe(viewLifecycleOwner) { resource ->
+                if (resource != null) {
+                    when (resource) {
+                        is ApiResponse.Success -> {
+                        Log.d("mytag", "observe success")
+                            movieAdapter.submitList(resource.data)
+                        }
+                        is ApiResponse.Empty -> {
+                            ApiResponse.Empty
+                        Log.d("mytag", "observe empty")
+                        }
+                        is ApiResponse.Failed -> {
+                            ApiResponse.Failed(resource.errorMessage)
+                        Log.d("mytag", "observe fail ${resource.errorMessage}")
+                        }
+                    }
+                }
             }
         }
     }
@@ -72,24 +104,5 @@ class MovieFragment : Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun observeData() {
-        viewModel.listMovie?.observe(viewLifecycleOwner, { resource ->
-            if (resource != null) {
-                when (resource) {
-                    is Resource.Loading -> progress_bar.visibility = View.VISIBLE
-                    is Resource.Success -> {
-                        progress_bar.visibility = View.GONE
-                        movieAdapter.submitList(resource.data)
-                        rv_list_movie.adapter = movieAdapter //why??
-                    }
-                    is Resource.Error -> {
-                        progress_bar.visibility = View.GONE
-                        Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
     }
 }

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.ui.home.HomeActivity
+import com.sstudio.submissionbajetpackpro.ui.movie.MainActivity
 
 class SplashScreen : AppCompatActivity() {
     private val delayMillis: Long = 2000
@@ -14,7 +14,7 @@ class SplashScreen : AppCompatActivity() {
         setContentView(R.layout.splash_screen)
 
         Handler().postDelayed({
-            val intent = Intent(this@SplashScreen, HomeActivity::class.java)
+            val intent = Intent(this@SplashScreen, MainActivity::class.java)
             startActivity(intent)
             finish()
         }, delayMillis)

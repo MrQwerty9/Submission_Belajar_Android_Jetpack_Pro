@@ -8,32 +8,36 @@ import com.sstudio.submissionbajetpackpro.core.data.source.remote.api.ApiService
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvResponse
 import com.sstudio.submissionbajetpackpro.core.utils.EspressoIdlingResource
+import com.sstudio.submissionbajetpackpro.core.utils.Params
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class RemoteDataSource constructor(private val apiService: ApiService, context: Context) {
+class RemoteDataSource constructor(
+    private val apiService: ApiService,
+    context: Context
+) {
 
     private val language = context.getString(R.string.language)
 
-    suspend fun getAllMovie(): Flow<ApiResponse<MovieResponse>> {
-        EspressoIdlingResource.increment()
-        return flow {
-            try {
-                val response = apiService.getPopularMovies(BuildConfig.TMDB_API_KEY, language)
-                val dataArray = response.results
-                if (dataArray.isNotEmpty()){
-                    emit(ApiResponse.Success(response))
-                } else {
-                    emit(ApiResponse.Empty)
-                }
-                EspressoIdlingResource.decrement()
-            } catch (e : Exception){
-                emit(ApiResponse.Error(e.toString()))
-                Log.e("RemoteDataSource", e.toString())
-                EspressoIdlingResource.decrement()
+    suspend fun getAllMovie(movieParams: Params.MovieParams): ApiResponse<MovieResponse> {
+        Log.d("mytag", "remotedatasource")
+        return try {
+            val response = apiService.getPopularMovies(
+                movieParams.apiKey,
+                movieParams.language,
+                movieParams.page
+            )
+            if (response.results.isNotEmpty()) {
+                ApiResponse.Success(response)
+            } else {
+                ApiResponse.Empty
             }
-        }.flowOn(Dispatchers.IO)
+        } catch (e: Exception) {
+            Log.e("RemoteDataSource", e.toString())
+            EspressoIdlingResource.decrement()
+            ApiResponse.Failed(e.toString())
+        }
     }
 
     fun getAllTvShows(): Flow<ApiResponse<TvResponse>> {
@@ -42,14 +46,14 @@ class RemoteDataSource constructor(private val apiService: ApiService, context: 
             try {
                 val response = apiService.getPopularTv(BuildConfig.TMDB_API_KEY, language)
                 val dataArray = response.results
-                if (dataArray.isNotEmpty()){
+                if (dataArray.isNotEmpty()) {
                     emit(ApiResponse.Success(response))
                 } else {
                     emit(ApiResponse.Empty)
                 }
                 EspressoIdlingResource.decrement()
-            } catch (e : Exception){
-                emit(ApiResponse.Error(e.toString()))
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
                 EspressoIdlingResource.decrement()
             }
@@ -60,15 +64,16 @@ class RemoteDataSource constructor(private val apiService: ApiService, context: 
         EspressoIdlingResource.increment()
         return flow {
             try {
-                val response = apiService.getMovieDetail(movieId, BuildConfig.TMDB_API_KEY, language)
-                if (response.id > 0 ){
+                val response =
+                    apiService.getMovieDetail(movieId, BuildConfig.TMDB_API_KEY, language)
+                if (response.id > 0) {
                     emit(ApiResponse.Success(response))
                 } else {
                     emit(ApiResponse.Empty)
                 }
                 EspressoIdlingResource.decrement()
-            } catch (e : Exception){
-                emit(ApiResponse.Error(e.toString()))
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
                 EspressoIdlingResource.decrement()
             }
@@ -80,14 +85,14 @@ class RemoteDataSource constructor(private val apiService: ApiService, context: 
         return flow {
             try {
                 val response = apiService.getTvDetail(tvShowId, BuildConfig.TMDB_API_KEY, language)
-                if (response.id > 0){
+                if (response.id > 0) {
                     emit(ApiResponse.Success(response))
                 } else {
                     emit(ApiResponse.Empty)
                 }
                 EspressoIdlingResource.decrement()
-            } catch (e : Exception){
-                emit(ApiResponse.Error(e.toString()))
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
                 EspressoIdlingResource.decrement()
             }
@@ -97,15 +102,16 @@ class RemoteDataSource constructor(private val apiService: ApiService, context: 
     fun getSearchMovie(query: String): Flow<ApiResponse<List<MovieResponse.Result>>> {
         return flow {
             try {
-                val response = apiService.getSearchMovie(query, BuildConfig.TMDB_API_KEY, language).results
-                if (response.isNotEmpty()){
+                val response =
+                    apiService.getSearchMovie(query, BuildConfig.TMDB_API_KEY, language).results
+                if (response.isNotEmpty()) {
                     emit(ApiResponse.Success(response))
                 } else {
                     emit(ApiResponse.Empty)
                 }
                 EspressoIdlingResource.decrement()
-            } catch (e : Exception){
-                emit(ApiResponse.Error(e.toString()))
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
                 EspressoIdlingResource.decrement()
             }
@@ -115,15 +121,16 @@ class RemoteDataSource constructor(private val apiService: ApiService, context: 
     fun getSearchTv(query: String): Flow<ApiResponse<List<TvResponse.Result>>> {
         return flow {
             try {
-                val response = apiService.getSearchTv(query, BuildConfig.TMDB_API_KEY, language).results
-                if (response.isNotEmpty()){
+                val response =
+                    apiService.getSearchTv(query, BuildConfig.TMDB_API_KEY, language).results
+                if (response.isNotEmpty()) {
                     emit(ApiResponse.Success(response))
                 } else {
                     emit(ApiResponse.Empty)
                 }
                 EspressoIdlingResource.decrement()
-            } catch (e : Exception){
-                emit(ApiResponse.Error(e.toString()))
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
                 EspressoIdlingResource.decrement()
             }

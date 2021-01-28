@@ -18,6 +18,7 @@
             android:name=".ui.detail.DetailActivity"
             android:parentActivityName=".ui.home.HomeActivity" />
         <activity android:name=".ui.home.HomeActivity" />
+        <activity android:name=".ui.movie.MainActivity" />
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

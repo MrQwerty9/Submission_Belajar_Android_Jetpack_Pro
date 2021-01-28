@@ -16,7 +16,7 @@ val useCaseModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { MovieViewModel(get()) }
+    viewModel { MovieViewModel(get(), get()) }
     viewModel { TvViewModel(get()) }
     viewModel { DetailViewModel(get()) }
     viewModel { SearchMovieViewModel(get()) }

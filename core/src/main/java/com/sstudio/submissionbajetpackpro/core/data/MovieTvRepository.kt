@@ -1,5 +1,6 @@
 package com.sstudio.submissionbajetpackpro.core.data
 
+import android.util.Log
 import androidx.lifecycle.asFlow
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -7,6 +8,7 @@ import com.sstudio.submissionbajetpackpro.core.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.ApiResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RemoteDataSource
+import com.sstudio.submissionbajetpackpro.core.data.source.remote.paging.movie.MovieDataSourceFactory
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvResponse
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
@@ -14,10 +16,10 @@ import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.core.domain.repository.IMovieTvRepository
 import com.sstudio.submissionbajetpackpro.core.utils.AppExecutors
 import com.sstudio.submissionbajetpackpro.core.utils.DataMapper
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.*
 
 class MovieTvRepository constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -26,34 +28,144 @@ class MovieTvRepository constructor(
 ) :
     IMovieTvRepository {
 
-    override fun getAllMovie(needFetch: Boolean): Flow<Resource<PagedList<Movie>>> {
-        return object :
-            NetworkBoundResource<PagedList<Movie>, MovieResponse>(appExecutors) {
-            override fun loadFromDB(): Flow<PagedList<Movie>> {
-                val config = PagedList.Config.Builder()
-                    .setEnablePlaceholders(false)
-                    .setInitialLoadSizeHint(4)
-                    .setPageSize(4)
-                    .build()
-                return LivePagedListBuilder(
-                    localDataSource.getAllMovie().map { DataMapper.mapMovieEntitiesToDomain(it) },
-                    config
-                ).build().asFlow()
+    fun getAllMovie(
+        needRefresh: Boolean,
+        movieDataSourceFactory: MovieDataSourceFactory
+    ): Flow<ApiResponse<PagedList<Movie>>> {
+        return flow {
+//            val state = Transformations.switchMap(
+//                movieDataSourceFactory.mutableLiveData,
+//                MovieDataSource::state
+//            )
+//            movieDataSourceFactory.movieDataSource?.setState()
+//            coroutineScope {
+//                val state = async {
+//                    movieDataSourceFactory.movieDataSource?.getState()?.first()
+//                }.await()
+//                when (state) {
+//                    NetworkState.LOADING -> {
+//                        Log.d("mytag", "repo loading")
+//                    }
+//                    NetworkState.SUCCESS -> {
+//                        Log.d("mytag", "repo success")
+//                    }
+//                    else ->
+//                        Log.d("mytag", "repo else")
+//                }
+//            }
+
+            val config = PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setInitialLoadSizeHint(10)
+                .setPageSize(20)
+                .setPrefetchDistance(4)
+                .build()
+
+            val bbb: Flow<PagedList<Movie>> = (LivePagedListBuilder(movieDataSourceFactory.map {
+                when (it) {
+                    is ApiResponse.Success -> {
+                        DataMapper.mapMovieResponseToDomain(it.data.results.first())
+                    }
+                    is ApiResponse.Empty -> {
+                        Movie()
+                    }
+                    is ApiResponse.Failed -> {
+                        it.errorMessage as Movie
+                    }
+                }
+            }, config)
+                .setFetchExecutor(appExecutors.networkIO())
+                .build()).asFlow()
+
+            val dataSource = movieDataSourceFactory.map {
+                when (it) {
+                    is ApiResponse.Success -> {
+                        ApiResponse.Success(bbb)
+                    }
+                    is ApiResponse.Empty -> {
+                        ApiResponse.Empty
+                    }
+                    is ApiResponse.Failed -> {
+                        ApiResponse.Failed(it.errorMessage)
+                    }
+                }
             }
 
-            override fun shouldFetch(data: PagedList<Movie>?): Boolean =
-                data == null || data.isEmpty() || needFetch
+            val aaa: ApiResponse<Flow<PagedList<Movie>>>? = LivePagedListBuilder(dataSource, config)
+                .setFetchExecutor(appExecutors.networkIO())
+                .build().asFlow().first().first()
+//            emitAll(aaa.asFlow())
 
-            override suspend fun createCall(): Flow<ApiResponse<MovieResponse>> =
-                remoteDataSource.getAllMovie()
-
-            override suspend fun saveCallResult(data: MovieResponse) {
-                localDataSource.insertAllMovie(DataMapper.mapMovieResponseToEntities(data.results))
+            coroutineScope {
+                val abc: Flow<ApiResponse<PagedList<Movie>>> = async {
+                    Log.d("mytag", "repo async")
+                    flow {
+                            when (aaa) {
+                                is ApiResponse.Success -> {
+                                    Log.d("mytag", "repo suc")
+                                    emit(ApiResponse.Success(aaa.data.first()))
+                                }
+//                                NetworkState.Status.SUCCESS -> {
+//                                    Log.d("mytag", "repo suc")
+//                                    Resource.Success(it)
+//                                }
+//                            NetworkState.Status.LOADING ->{
+//                                Log.d("mytag", "repo loading")
+//                                Resource.Success(it)
+//                            }
+//                            NetworkState.Status.FAILED ->{
+//                                Log.d("mytag", "repo fa")
+//                                Resource.Success(it)
+//                            }
+//                            else ->{
+//                                Log.d("mytag", "repo els")
+//                                Resource.Success(it)
+//                            }
+                            }
+                    }
+                }.await()
+                emitAll(abc)
             }
-        }.asFlow()
+        }
     }
 
-    override fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>> {
+    override fun getAllMovie(needRefresh: Boolean): Flow<PagedList<Movie>> {
+        return flow {
+            val movieDataSourceFactory = MovieDataSourceFactory(remoteDataSource)
+            val config = PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setInitialLoadSizeHint(10)
+                .setPageSize(20)
+                .setPrefetchDistance(4)
+                .build()
+
+            emitAll(
+                LivePagedListBuilder(movieDataSourceFactory.map {
+                    DataMapper.mapMovieResponseToDomain(
+                        when (it) {
+                            is ApiResponse.Success -> {
+                                Log.d("mytag", "repo suc")
+                                it.data.results.first()
+                            }
+                            is ApiResponse.Empty -> {
+                                Log.d("mytag", "repo suc")
+                                MovieResponse.Result()
+                            }
+                            is ApiResponse.Failed -> {
+                                Log.d("mytag", "repo suc")
+                                (it.errorMessage) as MovieResponse.Result
+                            }
+                        }
+                    )
+                }, config)
+                    .setFetchExecutor(appExecutors.networkIO())
+                    .build().asFlow().flowOn(Dispatchers.IO)
+            )
+        }
+
+    }
+
+    override fun getMovieDetail(needRefresh: Boolean, movieId: Int): Flow<Resource<Movie>> {
         return object : NetworkBoundResource<Movie, MovieResponse.Result>(appExecutors) {
             override fun loadFromDB(): Flow<Movie> =
                 localDataSource.getMovieById(movieId).map {
@@ -61,7 +173,7 @@ class MovieTvRepository constructor(
                 }
 
             override fun shouldFetch(data: Movie?): Boolean =
-                data == null || needFetch
+                data == null || needRefresh
 
             override suspend fun createCall(): Flow<ApiResponse<MovieResponse.Result>> =
                 remoteDataSource.getMovieDetail(movieId)
@@ -76,6 +188,15 @@ class MovieTvRepository constructor(
                         ).first()
                     )
                 }
+            }
+
+            override suspend fun deleteOldDB() {
+
+            }
+
+            override suspend fun showData(data: MovieResponse.Result): Movie {
+                return DataMapper.mapMovieResponseToDomain(data)
+
             }
 
         }.asFlow()
@@ -101,12 +222,16 @@ class MovieTvRepository constructor(
             emit(Resource.Loading())
             when (val apiResponse = data.first()) {
                 is ApiResponse.Success -> {
-                    emit(Resource.Success(DataMapper.mapMovieResponseToDomain(apiResponse.data)))
+                    emit(Resource.Success(
+                        apiResponse.data.map {
+                            DataMapper.mapMovieResponseToDomain(it)
+                        }
+                    ))
                 }
                 is ApiResponse.Empty -> {
-                    emit( Resource.Success<List<Movie>>(listOf()))
+                    emit(Resource.Success<List<Movie>>(listOf()))
                 }
-                is ApiResponse.Error -> {
+                is ApiResponse.Failed -> {
                     emit(Resource.Error<List<Movie>>(apiResponse.errorMessage))
                 }
             }
@@ -142,6 +267,15 @@ class MovieTvRepository constructor(
                 )
             }
 
+            override suspend fun deleteOldDB() {
+
+            }
+
+            override suspend fun showData(data: TvResponse): PagedList<Tv>? {
+                return null
+            }
+
+
         }.asFlow()
     }
 
@@ -164,6 +298,14 @@ class MovieTvRepository constructor(
                         DataMapper.mapTvResponseToEntities(data)
                     )
                 }
+            }
+
+            override suspend fun deleteOldDB() {
+
+            }
+
+            override suspend fun showData(data: TvResponse.Result): Tv? {
+                return null
             }
         }.asFlow()
     }
@@ -188,12 +330,16 @@ class MovieTvRepository constructor(
             emit(Resource.Loading())
             when (val apiResponse = data.first()) {
                 is ApiResponse.Success -> {
-                    emit(Resource.Success(DataMapper.mapTvResponseToDomain(apiResponse.data)))
+                    emit(Resource.Success(
+                        apiResponse.data.map {
+                            DataMapper.mapTvResponseToDomain(it)
+                        }
+                    ))
                 }
                 is ApiResponse.Empty -> {
-                    emit( Resource.Success<List<Tv>>(listOf()))
+                    emit(Resource.Success<List<Tv>>(listOf()))
                 }
-                is ApiResponse.Error -> {
+                is ApiResponse.Failed -> {
                     emit(Resource.Error<List<Tv>>(apiResponse.errorMessage))
                 }
             }
@@ -210,4 +356,6 @@ class MovieTvRepository constructor(
     override fun deleteFavorite(id: Int) {
         appExecutors.diskIO().execute { localDataSource.deleteFavorite(id) }
     }
+
+
 }

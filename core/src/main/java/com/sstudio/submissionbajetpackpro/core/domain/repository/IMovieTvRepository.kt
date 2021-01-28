@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface IMovieTvRepository {
 
-    fun getAllMovie(needFetch: Boolean): Flow<Resource<PagedList<Movie>>>
-    fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>>
+    fun getAllMovie(needRefresh: Boolean): Flow<PagedList<Movie>>
+    fun getMovieDetail(needRefresh: Boolean, movieId: Int): Flow<Resource<Movie>>
     fun getAllFavoriteMovie(): Flow<PagedList<Movie>>
     fun getSearchMovie(query: String): Flow<Resource<List<Movie>>>
 
-    fun getAllTvShows(needFetch: Boolean): Flow<Resource<PagedList<Tv>>>
-    fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): Flow<Resource<Tv>>
+    fun getAllTvShows(needRefresh: Boolean): Flow<Resource<PagedList<Tv>>>
+    fun getTvShowDetail(needRefresh: Boolean, tvShowId: Int): Flow<Resource<Tv>>
     fun getAllFavoriteTv(): Flow<PagedList<Tv>>
     fun getSearchTv(query: String): Flow<Resource<List<Tv>>>
 

@@ -26,12 +26,13 @@ interface MovieTvDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovieDetail(data: MovieEntity)
 
+    @Query("DELETE FROM MovieEntity")
+    fun deleteAllMovie()
+
     @Query("SELECT * FROM TvEntity")
     fun getAllTv(): DataSource.Factory<Int, TvEntity>
 
-    @Query(
-        "SELECT *, * FROM TvEntity, FavoriteEntity WHERE TvEntity.id = favoriteEntity.idMovieTv"
-    )
+    @Query("SELECT *, * FROM TvEntity, FavoriteEntity WHERE TvEntity.id = favoriteEntity.idMovieTv")
     fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite>
 
     @Query("SELECT * FROM TvEntity where id = :tvId")
@@ -43,6 +44,8 @@ interface MovieTvDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTvDetail(tv: TvEntity)
 
+    @Query("DELETE FROM TvEntity")
+    fun deleteAllTv()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFavorite(favorite: FavoriteEntity)

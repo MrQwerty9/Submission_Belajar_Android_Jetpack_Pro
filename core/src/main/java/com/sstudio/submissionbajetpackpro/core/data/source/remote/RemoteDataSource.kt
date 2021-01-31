@@ -4,24 +4,53 @@ import android.content.Context
 import android.util.Log
 import com.sstudio.submissionbajetpackpro.core.BuildConfig
 import com.sstudio.submissionbajetpackpro.core.R
+import com.sstudio.submissionbajetpackpro.core.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.api.ApiService
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvResponse
+import com.sstudio.submissionbajetpackpro.core.utils.AppExecutors
+import com.sstudio.submissionbajetpackpro.core.utils.DataMapper
 import com.sstudio.submissionbajetpackpro.core.utils.EspressoIdlingResource
 import com.sstudio.submissionbajetpackpro.core.utils.Params
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class RemoteDataSource constructor(
     private val apiService: ApiService,
-    context: Context
+    context: Context,
+    private val appExecutors: AppExecutors,
+    private val localDataSource: LocalDataSource
 ) {
 
     private val language = context.getString(R.string.language)
 
+    suspend fun getAllMovieList(movieParams: Params.MovieParams): MovieResponse {
+        return try {
+            val api = apiService.getPopularMovies(
+                movieParams.apiKey,
+                movieParams.language,
+                movieParams.page
+            )
+            appExecutors.diskIO().execute {
+                CoroutineScope(Dispatchers.IO).launch {
+                    localDataSource.insertAllMovie(DataMapper.mapMovieResponseToEntities(api.results))
+                    Log.d("mytag", "aftersaved")
+                }
+            }
+            api
+        } catch (e: Exception) {
+            Log.e("RemoteDataSource", e.toString())
+            EspressoIdlingResource.decrement()
+            MovieResponse()
+        }
+
+
+    }
+
     suspend fun getAllMovie(movieParams: Params.MovieParams): ApiResponse<MovieResponse> {
-        Log.d("mytag", "remotedatasource")
         return try {
             val response = apiService.getPopularMovies(
                 movieParams.apiKey,

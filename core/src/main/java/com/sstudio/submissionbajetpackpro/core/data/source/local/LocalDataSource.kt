@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
 
     fun getAllMovie(): DataSource.Factory<Int, MovieEntity> = mMovieDao.getAllMovie()
+    fun getAllMovieList() = mMovieDao.getAllMovieList()
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite> = mMovieDao.getAllFavoriteMovie()
     fun getMovieById(movieId: Int): Flow<MovieEntity> = mMovieDao.getMovieById(movieId)
     fun deleteAllMovie() = mMovieDao.deleteAllMovie()

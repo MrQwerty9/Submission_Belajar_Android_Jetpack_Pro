@@ -17,7 +17,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
                 is ApiResponse.Success -> {
 //                    Handler().postDelayed(Runnable { Log.d("mytag", "networkounce success ${apiResponse.data}") }, 3000)
 //                    deleteOldDB()
-//                    saveCallResult(apiResponse.data)
+                    saveCallResult(apiResponse.data)
                     emit(Resource.Success(apiResponse.data as ResultType))
 //                    emitAll(loadFromDB().map { Resource.Success(it) })
                 }

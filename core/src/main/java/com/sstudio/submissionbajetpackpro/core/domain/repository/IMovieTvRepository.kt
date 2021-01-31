@@ -1,15 +1,19 @@
 package com.sstudio.submissionbajetpackpro.core.domain.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
+import com.sstudio.submissionbajetpackpro.core.vo.NetworkState
 import kotlinx.coroutines.flow.Flow
 
 interface IMovieTvRepository {
 
     fun getAllMovie(needRefresh: Boolean): Flow<PagedList<Movie>>
+    fun getAllMovieState(): LiveData<NetworkState>
+    fun insertAllMovie(list: List<Movie>)
     fun getMovieDetail(needRefresh: Boolean, movieId: Int): Flow<Resource<Movie>>
     fun getAllFavoriteMovie(): Flow<PagedList<Movie>>
     fun getSearchMovie(query: String): Flow<Resource<List<Movie>>>

@@ -4,11 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.ApiResponse
+import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.ui.movie.MovieAdapter
+import com.sstudio.submissionbajetpackpro.core.vo.NetworkState
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.fragment_movie.*
@@ -18,6 +21,9 @@ class MovieFragment : Fragment() {
 
     private lateinit var movieAdapter: MovieAdapter
     private val viewModel: MovieViewModel by viewModel()
+    private var pagedListMovie: PagedList<Movie>? = null
+    private var networkState: NetworkState? = null
+    private var localToNetwork = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_movie, container, false)
@@ -42,53 +48,53 @@ class MovieFragment : Fragment() {
                 intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
                 startActivity(intent)
             }
-            with(rv_list_movie) {
-                layoutManager = LinearLayoutManager(context)
-//                setHasFixedSize(true)
-                adapter = movieAdapter
-            }
-//            viewModel.state.observe(viewLifecycleOwner, {
-//                Log.d("mytag", "repo status")
-//                Toast.makeText(context, "STtus", Toast.LENGTH_SHORT).show()
-//                when (it.status) {
-//                    NetworkState.Status.LOADING -> {
-//                        Log.d("mytag", "observe loading")
-//                        progress_bar.visibility = View.VISIBLE
-//                    }
-//                    NetworkState.Status.SUCCESS -> {
-//                        Log.d("mytag", "observe success")
-//                        progress_bar.visibility = View.GONE
-//                    }
-//                    NetworkState.Status.EMPTY -> {
-//                        Log.d("mytag", "observe empty")
-//                        progress_bar.visibility = View.GONE
-//                    }
-//                    else -> {
-//                        Log.d("mytag", "observe ${it.msg}")
-//                        progress_bar.visibility = View.GONE
-//                        Toast.makeText(context, "Terjadi Kesalahan ${it.msg}", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            })
+            adapterManage()
 
-            viewModel.listMovie?.observe(viewLifecycleOwner) { resource ->
-                if (resource != null) {
-                    when (resource) {
-                        is ApiResponse.Success -> {
-                        Log.d("mytag", "observe success")
-                            movieAdapter.submitList(resource.data)
-                        }
-                        is ApiResponse.Empty -> {
-                            ApiResponse.Empty
-                        Log.d("mytag", "observe empty")
-                        }
-                        is ApiResponse.Failed -> {
-                            ApiResponse.Failed(resource.errorMessage)
-                        Log.d("mytag", "observe fail ${resource.errorMessage}")
-                        }
+//            CombinedLiveData.(viewModel.state, viewModel.listMovie)
+            viewModel.state.observe(viewLifecycleOwner, {
+                networkState = it
+                when (it.status) {
+                    NetworkState.Status.LOADING -> {
+                        progress_bar.visibility = View.VISIBLE
+                    }
+                    NetworkState.Status.SUCCESS -> {
+                        progress_bar.visibility = View.GONE
+                        moviePopulate()
+                        localToNetwork = false
+                    }
+                    NetworkState.Status.EMPTY -> {
+                        progress_bar.visibility = View.GONE
+                        Toast.makeText(context, "Tidak ada data ${it.msg}", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        progress_bar.visibility = View.GONE
+                        Toast.makeText(context, "Terjadi Kesalahan ${it.msg}", Toast.LENGTH_SHORT).show()
                     }
                 }
+            })
+
+            viewModel.listMovie?.observe(viewLifecycleOwner) {
+                pagedListMovie = it
+                moviePopulate()
             }
+        }
+    }
+
+    private fun moviePopulate(){
+        Log.d("mytag", "populatemovie $pagedListMovie")
+        if (!pagedListMovie.isNullOrEmpty()) {
+            if (networkState == NetworkState.SUCCESS && localToNetwork)
+                adapterManage()
+            movieAdapter.submitList(pagedListMovie)
+        }
+    }
+
+    private fun adapterManage(){
+        movieAdapter = MovieAdapter()
+        with(rv_list_movie) {
+            layoutManager = LinearLayoutManager(context)
+//                setHasFixedSize(true)
+            adapter = movieAdapter
         }
     }
 

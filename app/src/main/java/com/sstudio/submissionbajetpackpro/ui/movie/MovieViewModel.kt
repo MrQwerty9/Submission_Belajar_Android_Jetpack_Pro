@@ -5,31 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.paging.PagedList
-import com.sstudio.submissionbajetpackpro.core.data.MovieTvRepository
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.ApiResponse
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.RemoteDataSource
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.paging.movie.MovieDataSourceFactory
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
+import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
 
-class MovieViewModel(private val movieTvUseCase: MovieTvRepository, remoteDataSource: RemoteDataSource) : ViewModel() {
+class MovieViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
 
-    private val movieDataSourceFactory = MovieDataSourceFactory(remoteDataSource)
-//    val state = Transformations.switchMap(
-//        movieDataSourceFactory.mutableLiveData,
-//        MovieDataSource::state
-//    )
+    val state = movieTvUseCase.getAllMovieState()
 
-    var listMovie: LiveData<ApiResponse<PagedList<Movie>>>? = null
+    var listMovie: LiveData<PagedList<Movie>>? = null
         get() {
-            if (field == null){
+            if (field == null) {
                 field = MutableLiveData()
-                field = movieTvUseCase.getAllMovie(false, movieDataSourceFactory).asLiveData()
+                field = movieTvUseCase.getAllMovie(false).asLiveData()
             }
             return field
         }
         private set
 
-    fun fetchListMovie(){
-        listMovie = movieTvUseCase.getAllMovie(true, movieDataSourceFactory).asLiveData()
+
+    fun fetchListMovie() {
+        listMovie = movieTvUseCase.getAllMovie(true).asLiveData()
     }
 }

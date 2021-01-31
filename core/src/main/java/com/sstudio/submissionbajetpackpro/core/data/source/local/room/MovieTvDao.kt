@@ -14,6 +14,9 @@ interface MovieTvDao {
     @Query("SELECT * FROM MovieEntity")
     fun getAllMovie(): DataSource.Factory<Int, MovieEntity>
 
+    @Query("SELECT * FROM MovieEntity")
+    fun getAllMovieList(): Flow<List<MovieEntity>>
+
     @Query("SELECT MovieEntity.*, FavoriteEntity.* FROM MovieEntity, FavoriteEntity WHERE MovieEntity.id = favoriteEntity.idMovieTv")
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite>
 

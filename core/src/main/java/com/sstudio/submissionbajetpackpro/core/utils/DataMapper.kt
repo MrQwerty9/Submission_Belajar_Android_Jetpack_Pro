@@ -97,6 +97,18 @@ object DataMapper {
             voteAverage = entity.voteAverage
         )
 
+    fun mapMovieDomainToEntity(movie: Movie): MovieEntity =
+        MovieEntity(
+            backdropPath = movie.backdropPath,
+            genreIds = movie.genreIds,
+            id = movie.id,
+            originalTitle = movie.originalTitle,
+            overview = movie.overview,
+            posterPath = movie.posterPath,
+            releaseDate = movie.releaseDate,
+            voteAverage = movie.voteAverage
+        )
+
 //    fun mapMovieFavoriteToDomainPagedList(input: DataSource.Factory<Int, MovieFavorite>): DataSource.Factory<Int, Movie> =
 //        input.map{
 //            Movie(

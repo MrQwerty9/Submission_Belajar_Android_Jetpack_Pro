@@ -6,11 +6,12 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class MovieEntity (
-    var backdropPath: String = "",
-    var genreIds: String = "",
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     var id: Int = 0,
+    var backdropPath: String = "",
+    var genreIds: String = "",
+    var idMovie: Int = 0,
     var originalTitle: String = "",
     var overview: String = "",
     var posterPath: String = "",

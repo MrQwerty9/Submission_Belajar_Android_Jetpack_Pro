@@ -1,27 +1,27 @@
-package com.sstudio.submissionbajetpackpro.ui.tv
+package com.sstudio.submissionbajetpackpro.ui.movie.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.Resource
-import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
+import com.sstudio.submissionbajetpackpro.core.domain.model.MovieHome
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
 
-class TvViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
+class MovieHomeViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
 
-    var listTvShow: LiveData<Resource<PagedList<Tv>>>? = null
+    var listMovie: LiveData<List<Resource<MovieHome>>>? = null
         get() {
             if (field == null) {
                 field = MutableLiveData()
-                field = movieTvUseCase.getAllTvShows(false).asLiveData()
+                field = movieTvUseCase.getMovieHome().asLiveData()
             }
             return field
         }
         private set
 
-    fun fetchListMovie(){
-        listTvShow = movieTvUseCase.getAllTvShows(true).asLiveData()
+
+    fun refresh() {
+        listMovie = movieTvUseCase.getMovieHome().asLiveData()
     }
 }

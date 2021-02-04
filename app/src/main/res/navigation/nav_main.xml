@@ -5,14 +5,14 @@
     app:startDestination="@id/fragment_movie">
     <fragment
         android:id="@+id/fragment_movie"
-        android:name="com.sstudio.submissionbajetpackpro.ui.movie.MovieFragment">
+        android:name="com.sstudio.submissionbajetpackpro.ui.movie.home.MovieHomeFragment">
         <action
             android:id="@+id/action_goto_favorite"
             app:destination="@+id/fragment_favorite" />
     </fragment>
     <fragment
         android:id="@+id/fragment_tv"
-        android:name="com.sstudio.submissionbajetpackpro.ui.tv.TvShowFragment">
+        android:name="com.sstudio.submissionbajetpackpro.ui.tv.home.TvHomeFragment">
         <action
             android:id="@+id/action_goto_favorite"
             app:destination="@+id/fragment_favorite" />

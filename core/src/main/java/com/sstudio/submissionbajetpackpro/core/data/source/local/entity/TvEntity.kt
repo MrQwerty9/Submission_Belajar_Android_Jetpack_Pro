@@ -6,12 +6,13 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TvEntity(
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    var id: Int = 0,
     var backdropPath: String = "",
     var firstAirDate: String = "",
     var genreIds: String = "",
-    @PrimaryKey
-    @NonNull
-    var id: Int = 0,
+    var idTv: Int = 0,
     var originalName: String = "",
     var overview: String = "",
     var posterPath: String = "",

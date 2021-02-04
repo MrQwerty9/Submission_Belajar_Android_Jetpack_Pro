@@ -24,6 +24,7 @@ object DataMapper {
     fun mapMovieResponseToEntities(input: List<MovieResponse.Result>): List<MovieEntity> =
         input.map { response ->
             MovieEntity(
+                0,
                 response.backdropPath ?: "",
                 response.genreIds?.joinToString(separator = ",") ?: "",
                 response.id,

@@ -7,7 +7,6 @@ import com.sstudio.submissionbajetpackpro.core.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.room.MovieTvDatabase
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RemoteDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.api.ApiService
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.paging.movie.MovieDataSourceFactory
 import com.sstudio.submissionbajetpackpro.core.utils.AppExecutors
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,7 +23,9 @@ val databaseModule = module {
         Room.databaseBuilder(
             androidContext(),
             MovieTvDatabase::class.java, "MovieTvDb.db"
-        ).fallbackToDestructiveMigration().build()
+        ).fallbackToDestructiveMigration()
+//            .addMigrations(MovieTvDatabase::MIGRATION_2_3)
+            .build()
     }
 }
 
@@ -49,7 +50,6 @@ val networkModule = module {
 val repositoryModule = module {
     single { LocalDataSource(get()) }
     single { RemoteDataSource(get(), get(), get(), get()) }
-    single { MovieDataSourceFactory(get(), get(), get()) }
     factory { AppExecutors() }
-    single { MovieTvRepository(get(), get(), get(), get()) }
+    single { MovieTvRepository(get(), get(), get()) }
 }

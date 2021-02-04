@@ -12,6 +12,7 @@ object DataDummy {
         val movies = ArrayList<MovieEntity>()
         movies.add(
             MovieEntity(
+                0,
                 "/jeAQdDX9nguP6YOX6QSWKDPkbBo.jpg",
                 "28, 14, 878",
                 590706,
@@ -24,6 +25,7 @@ object DataDummy {
         )
         movies.add(
             MovieEntity(
+                0,
                 "/ckfwfLkl0CkafTasoRw5FILhZAS.jpg",
                 "28, 35, 14",
                 602211,
@@ -36,6 +38,7 @@ object DataDummy {
         )
         movies.add(
             MovieEntity(
+                0,
                 "/vam9VHLZl8tqNwkp1zjEAxIOrkk.jpg",
                 "10751, 14, 10770",
                 671583,
@@ -48,6 +51,7 @@ object DataDummy {
         )
         movies.add(
             MovieEntity(
+                0,
                 "/zKv7KF0pH9ASv2uGgTvTylMlxQn.jpg",
                 "37",
                 729648,
@@ -60,6 +64,7 @@ object DataDummy {
         )
         movies.add(
             MovieEntity(
+                0,
                 "/86L8wqGMDbwURPni2t7FQ0nDjsH.jpg",
                 "28, 53",
                 724989,
@@ -77,6 +82,7 @@ object DataDummy {
         val tvShows = ArrayList<TvEntity>()
         tvShows.add(
             TvEntity(
+                0,
                 "/9ijMGlJKqcslswWUzTEwScm82Gs.jpg",
                 "2019-11-12",
                 "10765, 10759, 37",
@@ -89,6 +95,7 @@ object DataDummy {
         )
         tvShows.add(
             TvEntity(
+                0,
                 "/iDbIEpCM9nhoayUDTwqFL1iVwzb.jpg",
                 "2017-09-25",
                 "18",
@@ -101,6 +108,7 @@ object DataDummy {
         )
         tvShows.add(
             TvEntity(
+                0,
                 "/edmk8xjGBsYVIf4QtLY9WMaMcXZ.jpg",
                 "2005-03-27",
                 "18",
@@ -113,6 +121,7 @@ object DataDummy {
         )
         tvShows.add(
             TvEntity(
+                0,
                 "/Wu8kh7oyvaIfkNyMJyJHCamh5L.jpg",
                 "2020-12-04",
                 "18",
@@ -125,6 +134,7 @@ object DataDummy {
         )
         tvShows.add(
             TvEntity(
+                0,
                 "/6lOtF3yx8iurvaBVz1ZVhwcRgmD.jpg",
                 "2017-09-27",
                 "10759, 18, 10768",

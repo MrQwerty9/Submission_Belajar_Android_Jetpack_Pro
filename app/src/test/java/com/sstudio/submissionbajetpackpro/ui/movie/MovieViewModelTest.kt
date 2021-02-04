@@ -10,6 +10,7 @@ import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
+import com.sstudio.submissionbajetpackpro.ui.movie.home.MovieHomeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
@@ -24,7 +25,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class MovieViewModelTest {
 
-    private lateinit var viewModel: MovieViewModel
+    private lateinit var viewModel: MovieHomeViewModel
     private lateinit var movieTvUseCase: MovieTvUseCase
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
@@ -44,7 +45,7 @@ class MovieViewModelTest {
     fun setUp() {
         Dispatchers.setMain(mainThreadSurrogate)
         movieTvUseCase = FakeMovieTvInteractor(movieTvRepository)
-        viewModel = MovieViewModel(movieTvUseCase)
+        viewModel = MovieHomeViewModel(movieTvUseCase)
     }
 
     @After
@@ -60,14 +61,14 @@ class MovieViewModelTest {
         val movies = MutableLiveData<Resource<PagedList<Movie>>>()
         movies.value = dataMovies
 
-        `when`(movieTvRepository.getAllMovie(false)).thenReturn(movies.asFlow())
+        `when`(movieTvRepository.getMovieList(false)).thenReturn(movies.asFlow())
         viewModel.listMovie?.observeForever(observer)
 
         Thread.sleep(2000)
         val movieEntities = viewModel.listMovie?.value?.data
-        Mockito.verify(movieTvRepository).getAllMovie(false)
+        Mockito.verify(movieTvRepository).getMovieList(false)
         Assert.assertNotNull(movieEntities)
-        Assert.assertEquals(5, movieEntities?.size)
+        Assert.assertEquals(5, movieEntities.size)
         Mockito.verify(observer).onChanged(dataMovies)
 
     }

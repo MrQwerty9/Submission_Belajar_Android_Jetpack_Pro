@@ -1,21 +1,24 @@
 package com.sstudio.submissionbajetpackpro.core.domain.usecase
 
-import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.MovieTvRepository
 import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.remote.RepoResult
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
+import com.sstudio.submissionbajetpackpro.core.domain.model.MovieHome
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
-import com.sstudio.submissionbajetpackpro.core.vo.NetworkState
+import com.sstudio.submissionbajetpackpro.core.domain.model.TvHome
+import com.sstudio.submissionbajetpackpro.core.utils.Params
 import kotlinx.coroutines.flow.Flow
 
 class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): MovieTvUseCase {
-    override fun getAllMovie(needFetch: Boolean): Flow<PagedList<Movie>> =
-        movieTvRepository.getAllMovie(needFetch)
 
-    override fun getAllMovieState(): LiveData<NetworkState> =
-        movieTvRepository.getAllMovieState()
+    override fun getMovieHome(): Flow<List<Resource<MovieHome>>> =
+        movieTvRepository.getMovieHome()
+
+    override fun getMovieList(params: Params.MovieParams): RepoResult<Movie> =
+        movieTvRepository.getMovieList(params)
 
     override fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>> =
         movieTvRepository.getMovieDetail(needFetch, movieId)
@@ -26,8 +29,11 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun getSearchMovie(query: String): Flow<Resource<List<Movie>>> =
         movieTvRepository.getSearchMovie(query)
 
-    override fun getAllTvShows(needFetch: Boolean): Flow<Resource<PagedList<Tv>>> =
-        movieTvRepository.getAllTvShows(needFetch)
+    override fun getTvHome(): Flow<List<Resource<TvHome>>> =
+        movieTvRepository.getTvHome()
+
+    override fun getTvShowsList(params: Params.MovieParams): RepoResult<Tv> =
+        movieTvRepository.getTvShowsList(params)
 
     override fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): Flow<Resource<Tv>> =
         movieTvRepository.getTvShowDetail(needFetch, tvShowId)

@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.ui.tv
+package com.sstudio.submissionbajetpackpro.ui.tv.home
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,18 +8,18 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.data.Resource
-import com.sstudio.submissionbajetpackpro.core.ui.tv.TvAdapter
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.ui.search.SearchActivity
-import kotlinx.android.synthetic.main.fragment_tvshow.*
+import com.sstudio.submissionbajetpackpro.ui.tv.list.TvListActivity
+import kotlinx.android.synthetic.main.fragment_tv_home.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class TvShowFragment : Fragment() {
-    private lateinit var tvAdapter: TvAdapter
-    private val viewModel: TvViewModel by viewModel()
+class TvHomeFragment : Fragment() {
+    private lateinit var homeParentAdapter: TvHomeParentAdapter
+    private val viewModel: TvHomeViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_tvshow, container, false)
+        return inflater.inflate(R.layout.fragment_tv_home, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -28,10 +28,10 @@ class TvShowFragment : Fragment() {
 
             setHasOptionsMenu(true)
 
-            tvAdapter = TvAdapter()
+            homeParentAdapter = TvHomeParentAdapter()
             observeData()
             swipe_layout.setOnRefreshListener {
-                viewModel.fetchListMovie()
+                viewModel.refresh()
                 observeData()
                 swipe_layout.isRefreshing = false
             }
@@ -39,15 +39,14 @@ class TvShowFragment : Fragment() {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
             }
-            tvAdapter.onItemClick = {
-                val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
-                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+            homeParentAdapter.onItemMoreClick = {
+                val intent = Intent(context, TvListActivity::class.java)
+                intent.putExtra(TvListActivity.PARAMS_EXTRA, it)
                 startActivity(intent)
             }
-            tvAdapter.onItemClick = {
+            homeParentAdapter.onItemTvClick = {
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
+                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
                 intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
                 startActivity(intent)
             }
@@ -69,21 +68,28 @@ class TvShowFragment : Fragment() {
     }
 
     private fun observeData() {
-        viewModel.listTvShow?.observe(viewLifecycleOwner, { resource ->
-            if (resource != null) {
-                when (resource) {
-                    is Resource.Loading -> progress_bar.visibility = View.VISIBLE
-                    is Resource.Success -> {
-                        progress_bar.visibility = View.GONE
-                        tvAdapter.submitList(resource.data)
-                        rv_list_tv_show.adapter  = tvAdapter
-                    }
-                    is Resource.Error -> {
-                        progress_bar.visibility = View.GONE
-                        Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
+        viewModel.listTv?.observe(viewLifecycleOwner) {
+            if (it != null) {
+                val listTvHome = it.map { resource ->
+                    when (resource) {
+                        is Resource.Loading -> {
+                            progress_bar.visibility = View.VISIBLE
+                            resource.data
+                        }
+                        is Resource.Success -> {
+                            progress_bar.visibility = View.GONE
+                            resource.data
+                        }
+                        is Resource.Error -> {
+                            progress_bar.visibility = View.GONE
+                            Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
+                            resource.data
+                        }
                     }
                 }
+                homeParentAdapter.updateList(listTvHome)
+                rv_list_tv_show.adapter = homeParentAdapter
             }
-        })
+        }
     }
 }

@@ -30,7 +30,7 @@ interface MovieTvDao {
     suspend fun insertMovieDetail(data: MovieEntity)
 
     @Query("DELETE FROM MovieEntity")
-    fun deleteAllMovie()
+    suspend fun deleteAllMovie()
 
     @Query("SELECT * FROM TvEntity")
     fun getAllTv(): DataSource.Factory<Int, TvEntity>
@@ -48,7 +48,7 @@ interface MovieTvDao {
     suspend fun insertTvDetail(tv: TvEntity)
 
     @Query("DELETE FROM TvEntity")
-    fun deleteAllTv()
+    suspend fun deleteAllTv()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFavorite(favorite: FavoriteEntity)

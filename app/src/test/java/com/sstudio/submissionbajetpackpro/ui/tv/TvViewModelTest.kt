@@ -59,14 +59,14 @@ class TvViewModelTest {
         `when`(dataTvShows.data?.size).thenReturn(5)
         val tvShows = MutableLiveData<Resource<PagedList<Tv>>>()
         tvShows.value = dataTvShows
-        `when`(movieTvRepository.getAllTvShows(false)).thenReturn(tvShows.asFlow())
+        `when`(movieTvRepository.getTvShowsList(false)).thenReturn(tvShows.asFlow())
 
-        viewModel.listTvShow?.observeForever(observer)
-        Mockito.verify(movieTvRepository).getAllTvShows(false)
+        viewModel.listTvShow.observeForever(observer)
+        Mockito.verify(movieTvRepository).getTvShowsList(false)
         Thread.sleep(2000)
-        val tvShowEntities = viewModel.listTvShow?.value?.data
+        val tvShowEntities = viewModel.listTvShow.value.data
         Assert.assertNotNull(tvShowEntities)
-        Assert.assertEquals(5, tvShowEntities?.size)
+        Assert.assertEquals(5, tvShowEntities.size)
         Mockito.verify(observer).onChanged(dataTvShows)
     }
 }

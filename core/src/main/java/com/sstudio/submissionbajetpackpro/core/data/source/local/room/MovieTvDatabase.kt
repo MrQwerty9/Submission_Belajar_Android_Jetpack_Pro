@@ -7,8 +7,10 @@ import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.MovieEnt
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.TvEntity
 
 @Database(entities = [MovieEntity::class, TvEntity::class, FavoriteEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false)
 abstract class MovieTvDatabase : RoomDatabase() {
     abstract fun movieTvDao(): MovieTvDao
+
+    val MIGRATION_2_3 = ""
 }

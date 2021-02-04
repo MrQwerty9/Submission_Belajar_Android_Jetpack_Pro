@@ -8,10 +8,9 @@ import kotlinx.coroutines.flow.Flow
 class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
 
     fun getAllMovie(): DataSource.Factory<Int, MovieEntity> = mMovieDao.getAllMovie()
-    fun getAllMovieList() = mMovieDao.getAllMovieList()
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite> = mMovieDao.getAllFavoriteMovie()
     fun getMovieById(movieId: Int): Flow<MovieEntity> = mMovieDao.getMovieById(movieId)
-    fun deleteAllMovie() = mMovieDao.deleteAllMovie()
+    suspend fun deleteAllMovie() = mMovieDao.deleteAllMovie()
 
     suspend fun insertAllMovie(movie: List<MovieEntity>) = mMovieDao.insertAllMovie(movie)
     suspend fun insertMovieDetail(data: MovieEntity) = mMovieDao.insertMovieDetail(data)
@@ -19,6 +18,7 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
     fun getAllTv(): DataSource.Factory<Int, TvEntity> = mMovieDao.getAllTv()
     fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite> = mMovieDao.getAllFavoriteTv()
     fun getTvById(tvShowId: Int): Flow<TvEntity> = mMovieDao.getTvById(tvShowId)
+    suspend fun deleteAllTv() = mMovieDao.deleteAllTv()
 
     suspend fun insertAllTv(tv: List<TvEntity>) = mMovieDao.insertAllTv(tv)
     suspend fun insertTvDetail(tv: TvEntity) = mMovieDao.insertTvDetail(tv)

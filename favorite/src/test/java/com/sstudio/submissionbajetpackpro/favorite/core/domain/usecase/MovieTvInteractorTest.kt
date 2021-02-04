@@ -6,11 +6,12 @@ import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
+import com.sstudio.submissionbajetpackpro.core.utils.Params
 import kotlinx.coroutines.flow.Flow
 
 class FakeMovieTvInteractor(private val fakeMovieTvRepository: FakeMovieTvRepository): MovieTvUseCase {
-    override fun getAllMovie(needFetch: Boolean): Flow<Resource<PagedList<Movie>>> =
-        fakeMovieTvRepository.getAllMovie(needFetch)
+    override fun getMovieList(params: Params.MovieParams): Flow<Resource<PagedList<Movie>>> =
+        fakeMovieTvRepository.getMovieList(params)
 
     override fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>> =
         fakeMovieTvRepository.getMovieDetail(needFetch, movieId)
@@ -21,8 +22,8 @@ class FakeMovieTvInteractor(private val fakeMovieTvRepository: FakeMovieTvReposi
     override fun getSearchMovie(query: String): Flow<Resource<List<Movie>>> =
         fakeMovieTvRepository.getSearchMovie(query)
 
-    override fun getAllTvShows(needFetch: Boolean): Flow<Resource<PagedList<Tv>>> =
-        fakeMovieTvRepository.getAllTvShows(needFetch)
+    override fun getTvShowsList(needFetch: Boolean): Flow<Resource<PagedList<Tv>>> =
+        fakeMovieTvRepository.getTvShowsList(needFetch)
 
     override fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): Flow<Resource<Tv>> =
         fakeMovieTvRepository.getTvShowDetail(needFetch, tvShowId)

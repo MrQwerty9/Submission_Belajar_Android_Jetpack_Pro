@@ -15,6 +15,7 @@ import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.core.domain.repository.IMovieTvRepository
 import com.sstudio.submissionbajetpackpro.core.utils.AppExecutors
 import com.sstudio.submissionbajetpackpro.core.utils.DataMapper
+import com.sstudio.submissionbajetpackpro.core.utils.Params
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -27,7 +28,7 @@ class FakeMovieTvRepository constructor(
 ) :
     IMovieTvRepository {
 
-    override fun getAllMovie(needFetch: Boolean): Flow<Resource<PagedList<Movie>>> {
+    override fun getMovieList(needFetch: Params.MovieParams): Flow<Resource<PagedList<Movie>>> {
         return object :
             NetworkBoundResource<PagedList<Movie>, MovieResponse>(appExecutors) {
             override fun loadFromDB(): Flow<PagedList<Movie>> {
@@ -118,7 +119,7 @@ class FakeMovieTvRepository constructor(
         }
     }
 
-    override fun getAllTvShows(needFetch: Boolean): Flow<Resource<PagedList<Tv>>> {
+    override fun getTvShowsList(needFetch: Boolean): Flow<Resource<PagedList<Tv>>> {
         return object :
             NetworkBoundResource<PagedList<Tv>, TvResponse>(appExecutors) {
             override fun loadFromDB(): Flow<PagedList<Tv>> {

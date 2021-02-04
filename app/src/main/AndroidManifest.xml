@@ -12,8 +12,11 @@
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.SubmissionBAJetpackPro">
-        <activity android:name=".ui.search.SearchActivity"
-            android:parentActivityName=".ui.home.HomeActivity"/>
+        <activity android:name=".ui.tv.list.TvListActivity"></activity>
+        <activity android:name=".ui.movie.list.MovieListActivity" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.detail.DetailActivity"
             android:parentActivityName=".ui.home.HomeActivity" />

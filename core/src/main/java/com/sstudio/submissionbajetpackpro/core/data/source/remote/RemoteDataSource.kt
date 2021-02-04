@@ -8,10 +8,7 @@ import com.sstudio.submissionbajetpackpro.core.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.api.ApiService
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvResponse
-import com.sstudio.submissionbajetpackpro.core.utils.AppExecutors
-import com.sstudio.submissionbajetpackpro.core.utils.DataMapper
-import com.sstudio.submissionbajetpackpro.core.utils.EspressoIdlingResource
-import com.sstudio.submissionbajetpackpro.core.utils.Params
+import com.sstudio.submissionbajetpackpro.core.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,12 +23,13 @@ class RemoteDataSource constructor(
 ) {
 
     private val language = context.getString(R.string.language)
+    private val apiKey = BuildConfig.TMDB_API_KEY
 
     suspend fun getAllMovieList(movieParams: Params.MovieParams): MovieResponse {
         return try {
             val api = apiService.getPopularMovies(
-                movieParams.apiKey,
-                movieParams.language,
+                apiKey,
+                language,
                 movieParams.page
             )
             appExecutors.diskIO().execute {
@@ -46,17 +44,24 @@ class RemoteDataSource constructor(
             EspressoIdlingResource.decrement()
             MovieResponse()
         }
-
-
     }
 
     suspend fun getAllMovie(movieParams: Params.MovieParams): ApiResponse<MovieResponse> {
         return try {
-            val response = apiService.getPopularMovies(
-                movieParams.apiKey,
-                movieParams.language,
-                movieParams.page
-            )
+            val response: MovieResponse = when (movieParams.listType) {
+                ListType.POPULAR -> {
+                    apiService.getPopularMovies(apiKey, language, movieParams.page)
+                }
+                ListType.NOW_PLAYING -> {
+                    apiService.getNowPlayingMovies(apiKey, language, movieParams.page)
+                }
+                ListType.TOP_RATED -> {
+                    apiService.getTopRatedMovies(apiKey, language, movieParams.page)
+                }
+                else -> {
+                    apiService.getUpcomingMovies(apiKey, language, movieParams.page)
+                }
+            }
             if (response.results.isNotEmpty()) {
                 ApiResponse.Success(response)
             } else {
@@ -69,24 +74,33 @@ class RemoteDataSource constructor(
         }
     }
 
-    fun getAllTvShows(): Flow<ApiResponse<TvResponse>> {
+    suspend fun getAllTvShows(movieParams: Params.MovieParams): ApiResponse<TvResponse> {
         EspressoIdlingResource.increment()
-        return flow {
-            try {
-                val response = apiService.getPopularTv(BuildConfig.TMDB_API_KEY, language)
-                val dataArray = response.results
-                if (dataArray.isNotEmpty()) {
-                    emit(ApiResponse.Success(response))
-                } else {
-                    emit(ApiResponse.Empty)
+        return try {
+            val response: TvResponse = when (movieParams.listType) {
+                ListType.POPULAR_TV_SHOW -> {
+                    apiService.getPopularTv(apiKey, language, movieParams.page)
                 }
-                EspressoIdlingResource.decrement()
-            } catch (e: Exception) {
-                emit(ApiResponse.Failed(e.toString()))
-                Log.e("RemoteDataSource", e.toString())
-                EspressoIdlingResource.decrement()
+                ListType.ON_AIR_TV_SHOW -> {
+                    apiService.getOnAirTv(apiKey, language, movieParams.page)
+                }
+                ListType.TOP_RATED_TV_SHOW -> {
+                    apiService.getTopRatedTv(apiKey, language, movieParams.page)
+                }
+                else -> {
+                    apiService.getAiringTodayTv(apiKey, language, movieParams.page)
+                }
             }
-        }.flowOn(Dispatchers.IO)
+            val dataArray = response.results
+            if (dataArray.isNotEmpty()) {
+                ApiResponse.Success(response)
+            } else {
+                ApiResponse.Empty
+            }
+        } catch (e: Exception) {
+            Log.e("RemoteDataSource", e.toString())
+            ApiResponse.Failed(e.toString())
+        }
     }
 
     fun getMovieDetail(movieId: Int): Flow<ApiResponse<MovieResponse.Result>> {

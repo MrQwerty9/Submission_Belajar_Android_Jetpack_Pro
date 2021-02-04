@@ -11,36 +11,33 @@ import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 object DataMapper {
     fun mapMovieResponseToDomain(response: MovieResponse.Result): Movie =
             Movie(
-                response.backdropPath ?: "",
-                response.genreIds?.joinToString(separator = ",") ?: "",
-                response.id,
-                response.originalTitle ?: "",
-                response.overview ?: "",
-                response.posterPath ?: "",
-                response.releaseDate ?: "",
-                response.voteAverage ?: 0.0
+                backdropPath = response.backdropPath ?: "",
+                genreIds = response.genreIds?.joinToString(separator = ",") ?: "",
+                id = response.id,
+                originalTitle = response.originalTitle ?: "",
+                overview = response.overview ?: "",
+                posterPath = response.posterPath ?: "",
+                releaseDate = response.releaseDate ?: "",
+                voteAverage = response.voteAverage ?: 0.0
             )
 
-    fun mapMovieResponseToEntities(input: List<MovieResponse.Result>): List<MovieEntity> =
-        input.map { response ->
+    fun mapMovieResponseToEntities(response: MovieResponse.Result): MovieEntity =
             MovieEntity(
-                0,
-                response.backdropPath ?: "",
-                response.genreIds?.joinToString(separator = ",") ?: "",
-                response.id,
-                response.originalTitle ?: "",
-                response.overview ?: "",
-                response.posterPath ?: "",
-                response.releaseDate ?: "",
-                response.voteAverage ?: 0.0
+                backdropPath = response.backdropPath ?: "",
+                genreIds = response.genreIds?.joinToString(separator = ",") ?: "",
+                idMovie = response.id,
+                originalTitle = response.originalTitle ?: "",
+                overview = response.overview ?: "",
+                posterPath = response.posterPath ?: "",
+                releaseDate = response.releaseDate ?: "",
+                voteAverage = response.voteAverage ?: 0.0
             )
-        }
 
     fun mapMovieEntitiesToDomain(entity: MovieEntity): Movie =
             Movie(
                 backdropPath = entity.backdropPath,
                 genreIds = entity.genreIds,
-                id = entity.id,
+                id = entity.idMovie,
                 originalTitle = entity.originalTitle,
                 overview = entity.overview,
                 posterPath = entity.posterPath,
@@ -64,7 +61,7 @@ object DataMapper {
             TvEntity(
                 backdropPath = response.backdropPath ?: "",
                 genreIds = response.genreIds?.joinToString(separator = ",") ?: "",
-                id = response.id,
+                idTv = response.id,
                 originalName = response.originalName ?: "",
                 overview = response.overview ?: "",
                 posterPath = response.posterPath ?: "",
@@ -90,7 +87,7 @@ object DataMapper {
         Tv(
             backdropPath = entity.backdropPath,
             genreIds = entity.genreIds,
-            id = entity.id,
+            id = entity.idTv,
             originalName = entity.originalName,
             overview = entity.overview,
             posterPath = entity.posterPath,

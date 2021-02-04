@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class RemoteDataSource constructor(
@@ -34,7 +35,9 @@ class RemoteDataSource constructor(
             )
             appExecutors.diskIO().execute {
                 CoroutineScope(Dispatchers.IO).launch {
-                    localDataSource.insertAllMovie(DataMapper.mapMovieResponseToEntities(api.results))
+                    localDataSource.insertAllMovie(api.results.map {
+                        DataMapper.mapMovieResponseToEntities(it)
+                    })
                     Log.d("mytag", "aftersaved")
                 }
             }

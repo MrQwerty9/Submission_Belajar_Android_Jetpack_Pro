@@ -97,9 +97,9 @@ class DetailActivity : AppCompatActivity() {
     private fun favoriteOnChange() {
         isFavorite?.let { isFavorite ->
             if (isFavorite) {
-                btn_favorite.setImageResource(R.drawable.ic_favorite_border_white)
-            } else {
                 btn_favorite.setImageResource(R.drawable.ic_favorite_pink)
+            } else {
+                btn_favorite.setImageResource(R.drawable.ic_favorite_border_white)
             }
         }
     }

@@ -48,7 +48,9 @@ class MovieBoundaryCallback constructor(
                         if (movieParams.page == 1){
                             localDataSource.deleteAllMovie()
                         }
-                        localDataSource.insertAllMovie(DataMapper.mapMovieResponseToEntities(response.data.results))
+                        localDataSource.insertAllMovie(response.data.results.map {
+                            DataMapper.mapMovieResponseToEntities(it)
+                        })
                         state.postValue(NetworkState.SUCCESS)
                         movieParams.page++
                     }

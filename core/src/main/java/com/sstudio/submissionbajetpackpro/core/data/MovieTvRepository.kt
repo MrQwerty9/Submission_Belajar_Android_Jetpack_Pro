@@ -107,11 +107,17 @@ class MovieTvRepository constructor(
         return object : NetworkBoundResource<Movie, MovieResponse.Result>(appExecutors) {
             override fun loadFromDB(): Flow<Movie> =
                 localDataSource.getMovieById(movieId).map {
-                    DataMapper.mapMovieEntitiesToDomain(it)
+                    if (!it.isNullOrEmpty())
+                        DataMapper.mapMovieEntitiesToDomain(it.first())
+                    else
+                        Movie()
                 }
 
-            override fun shouldFetch(data: Movie?): Boolean =
-                data == null || needRefresh
+            override fun shouldFetch(data: Movie?): Boolean {
+                data?.id == 0 || needRefresh
+                Log.d("mytag", " shouldfetch $data")
+                return true
+            }
 
             override suspend fun createCall(): Flow<ApiResponse<MovieResponse.Result>> =
                 remoteDataSource.getMovieDetail(movieId)
@@ -119,24 +125,10 @@ class MovieTvRepository constructor(
             override suspend fun saveCallResult(data: MovieResponse.Result) {
                 if (data.id == movieId) {
                     localDataSource.insertMovieDetail(
-                        DataMapper.mapMovieResponseToEntities(
-                            listOf(
-                                data
-                            )
-                        ).first()
+                        DataMapper.mapMovieResponseToEntities(data)
                     )
                 }
             }
-
-            override suspend fun deleteOldDB() {
-
-            }
-
-            override suspend fun showData(data: MovieResponse.Result): Movie {
-                return DataMapper.mapMovieResponseToDomain(data)
-
-            }
-
         }.asFlow()
     }
 
@@ -241,15 +233,18 @@ class MovieTvRepository constructor(
         return RepoResult(local, state)
     }
 
-    override fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): Flow<Resource<Tv>> {
+    override fun getTvShowDetail(needRefresh: Boolean, tvShowId: Int): Flow<Resource<Tv>> {
         return object : NetworkBoundResource<Tv, TvResponse.Result>(appExecutors) {
             override fun loadFromDB(): Flow<Tv> =
                 localDataSource.getTvById(tvShowId).map {
-                    DataMapper.mapTvEntitiesToDomain(it)
+                    if (!it.isNullOrEmpty())
+                        DataMapper.mapTvEntitiesToDomain(it.first())
+                    else
+                        Tv()
                 }
 
             override fun shouldFetch(data: Tv?): Boolean =
-                data == null || needFetch
+                data == Tv() || needRefresh
 
             override suspend fun createCall(): Flow<ApiResponse<TvResponse.Result>> =
                 remoteDataSource.getTvShowDetail(tvShowId)
@@ -260,14 +255,6 @@ class MovieTvRepository constructor(
                         DataMapper.mapTvResponseToEntities(data)
                     )
                 }
-            }
-
-            override suspend fun deleteOldDB() {
-
-            }
-
-            override suspend fun showData(data: TvResponse.Result): Tv? {
-                return null
             }
         }.asFlow()
     }

@@ -9,7 +9,7 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
 
     fun getAllMovie(): DataSource.Factory<Int, MovieEntity> = mMovieDao.getAllMovie()
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite> = mMovieDao.getAllFavoriteMovie()
-    fun getMovieById(movieId: Int): Flow<MovieEntity> = mMovieDao.getMovieById(movieId)
+    fun getMovieById(movieId: Int): Flow<List<MovieEntity>> = mMovieDao.getMovieById(movieId)
     suspend fun deleteAllMovie() = mMovieDao.deleteAllMovie()
 
     suspend fun insertAllMovie(movie: List<MovieEntity>) = mMovieDao.insertAllMovie(movie)
@@ -17,7 +17,7 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
 
     fun getAllTv(): DataSource.Factory<Int, TvEntity> = mMovieDao.getAllTv()
     fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite> = mMovieDao.getAllFavoriteTv()
-    fun getTvById(tvShowId: Int): Flow<TvEntity> = mMovieDao.getTvById(tvShowId)
+    fun getTvById(tvShowId: Int): Flow<List<TvEntity>> = mMovieDao.getTvById(tvShowId)
     suspend fun deleteAllTv() = mMovieDao.deleteAllTv()
 
     suspend fun insertAllTv(tv: List<TvEntity>) = mMovieDao.insertAllTv(tv)

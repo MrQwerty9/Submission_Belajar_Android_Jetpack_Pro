@@ -14,19 +14,16 @@ interface MovieTvDao {
     @Query("SELECT * FROM MovieEntity")
     fun getAllMovie(): DataSource.Factory<Int, MovieEntity>
 
-    @Query("SELECT * FROM MovieEntity")
-    fun getAllMovieList(): Flow<List<MovieEntity>>
-
-    @Query("SELECT MovieEntity.*, FavoriteEntity.* FROM MovieEntity, FavoriteEntity WHERE MovieEntity.id = favoriteEntity.idMovieTv")
+    @Query("SELECT MovieEntity.*, FavoriteEntity.* FROM MovieEntity, FavoriteEntity WHERE MovieEntity.idMovie = favoriteEntity.idMovieTv")
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite>
 
-    @Query("SELECT * FROM MovieEntity where id = :movieId")
-    fun getMovieById(movieId: Int): Flow<MovieEntity>
+    @Query("SELECT * FROM MovieEntity where idMovie = :movieId")
+    fun getMovieById(movieId: Int): Flow<List<MovieEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllMovie(movie: List<MovieEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMovieDetail(data: MovieEntity)
 
     @Query("DELETE FROM MovieEntity")
@@ -35,16 +32,16 @@ interface MovieTvDao {
     @Query("SELECT * FROM TvEntity")
     fun getAllTv(): DataSource.Factory<Int, TvEntity>
 
-    @Query("SELECT *, * FROM TvEntity, FavoriteEntity WHERE TvEntity.id = favoriteEntity.idMovieTv")
+    @Query("SELECT *, * FROM TvEntity, FavoriteEntity WHERE TvEntity.idTv = favoriteEntity.idMovieTv")
     fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite>
 
-    @Query("SELECT * FROM TvEntity where id = :tvId")
-    fun getTvById(tvId: Int): Flow<TvEntity>
+    @Query("SELECT * FROM TvEntity where idTv = :tvId")
+    fun getTvById(tvId: Int): Flow<List<TvEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllTv(tv: List<TvEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTvDetail(tv: TvEntity)
 
     @Query("DELETE FROM TvEntity")

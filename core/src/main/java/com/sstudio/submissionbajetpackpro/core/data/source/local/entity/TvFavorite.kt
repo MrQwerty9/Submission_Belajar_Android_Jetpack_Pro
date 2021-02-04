@@ -7,6 +7,6 @@ data class TvFavorite (
     @Embedded
     var tv: TvEntity,
 
-    @Relation(parentColumn = "id", entityColumn = "idMovieTv")
+    @Relation(parentColumn = "idTv", entityColumn = "idMovieTv")
     var favoriteEntity: FavoriteEntity?
 )

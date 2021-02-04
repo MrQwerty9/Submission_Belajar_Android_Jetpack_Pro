@@ -18,11 +18,13 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
 //                    Handler().postDelayed(Runnable { Log.d("mytag", "networkounce success ${apiResponse.data}") }, 3000)
 //                    deleteOldDB()
                     saveCallResult(apiResponse.data)
-                    emit(Resource.Success(apiResponse.data as ResultType))
-//                    emitAll(loadFromDB().map { Resource.Success(it) })
+//                    emit(Resource.Success(apiResponse.data))
+                    emitAll(loadFromDB().map {
+                        Log.d("mytag", "networkbounce db $it")
+                        Resource.Success(it) }
+                    )
                 }
                 is ApiResponse.Empty -> {
-                    Log.d("mytag", "networkounce empty")
                     emitAll(loadFromDB().map { Resource.Success(it) })
                 }
                 is ApiResponse.Failed -> {
@@ -36,8 +38,6 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
         }
     }
 
-    protected abstract suspend fun showData(data: RequestType): ResultType?
-
     protected fun onFetchFailed() {}
 
     protected abstract fun loadFromDB(): Flow<ResultType>
@@ -45,8 +45,6 @@ abstract class NetworkBoundResource<ResultType, RequestType>(private val mExecut
     protected abstract fun shouldFetch(data: ResultType?): Boolean
 
     protected abstract suspend fun createCall(): Flow<ApiResponse<RequestType>>
-
-    protected abstract suspend fun deleteOldDB()
 
     protected abstract suspend fun saveCallResult(data: RequestType)
 

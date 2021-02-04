@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/whiteGrey"
         android:textSize="14sp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/txt_rating"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txt_rating"
@@ -109,10 +109,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="13dp"
-        android:src="@drawable/ic_favorite_border_white"
+        android:src="@drawable/ic_favorite_pink"
+        app:tint="@null"
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintTop_toTopOf="@+id/view"
+        tools:ignore="contentDescription"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

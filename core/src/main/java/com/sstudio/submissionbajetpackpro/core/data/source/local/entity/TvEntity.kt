@@ -2,9 +2,10 @@ package com.sstudio.submissionbajetpackpro.core.data.source.local.entity
 
 import androidx.annotation.NonNull
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(indices = [Index(value = ["idTv"], unique = true)])
 data class TvEntity(
     @PrimaryKey(autoGenerate = true)
     @NonNull

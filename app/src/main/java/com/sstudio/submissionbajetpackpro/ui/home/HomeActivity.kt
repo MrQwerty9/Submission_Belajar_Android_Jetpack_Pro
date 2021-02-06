@@ -15,11 +15,13 @@ class HomeActivity : AppCompatActivity() {
         toolbar.title = this.getString(R.string.app_name)
         setSupportActionBar(toolbar)
 
-        val navController = supportFragmentManager
-            .findFragmentById(R.id.fragment_nav_host) as NavHostFragment
-        NavigationUI.setupWithNavController(
-            bottom_nav,
-            navController.navController
-        )
+        if (savedInstanceState == null) {
+            val navController = supportFragmentManager
+                .findFragmentById(R.id.fragment_nav_host) as NavHostFragment
+            NavigationUI.setupWithNavController(
+                bottom_nav,
+                navController.navController
+            )
+        }
     }
 }

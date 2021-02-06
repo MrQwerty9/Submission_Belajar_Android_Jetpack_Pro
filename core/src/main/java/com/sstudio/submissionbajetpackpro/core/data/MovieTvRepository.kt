@@ -1,6 +1,5 @@
 package com.sstudio.submissionbajetpackpro.core.data
 
-import android.util.Log
 import androidx.lifecycle.asFlow
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -36,53 +35,78 @@ class MovieTvRepository constructor(
     IMovieTvRepository {
 
     override fun getMovieHome(): Flow<List<Resource<MovieHome>>> {
+        val typeListTotal = 4
         return flow {
             val movieList = ArrayList<Resource<MovieHome>>()
-            emit(listOf(Resource.Loading()))
-            repeat(4) {
-                val mListType = when(it){
-                    0 ->
-                        ListType.POPULAR
-                    1 ->
-                        ListType.UPCOMING
-                    2 ->
-                        ListType.TOP_RATED
-                    3 ->
-                        ListType.NOW_PLAYING
-                    else ->
-                        ListType.EMPTY
-                }
-
-                when (val remote = remoteDataSource.getAllMovie(Params.MovieParams(listType = mListType))) {
-                    is ApiResponse.Success -> {
-                        movieList.add(Resource.Success(
-                            MovieHome(
-                                listType = mListType,
-                                listMovie = remote.data.results.map { movieResponseResult ->
-                                    DataMapper.mapMovieResponseToDomain(movieResponseResult)
-                                } as ArrayList<Movie>)))
+            repeat(typeListTotal) { times ->
+                val mListType = listTypeMovieHome(times)
+                val local =
+                    localDataSource.getMovieList(Params.MovieParams(listType = mListType)).map {
+                        if (it.size >= 9)
+                            it.subList(0, 9)
+                        else
+                            it
                     }
-                    is ApiResponse.Empty -> {
-                        movieList.add(
-                            Resource.Success(
+                movieList.add(Resource.Loading(
+                    MovieHome(
+                        listType = mListType,
+                        listMovie = local.first().map {
+                            DataMapper.mapMovieEntitiesToDomain(it)
+                        } as ArrayList<Movie>)
+                ))
+
+                emit(movieList)
+            }
+
+            repeat(typeListTotal) { times ->
+                val mListType = listTypeMovieHome(times)
+                    when (val remote =
+                        remoteDataSource.getAllMovie(Params.MovieParams(listType = mListType))) {
+                        is ApiResponse.Success -> {
+                            movieList[times] = Resource.Success(
+                                MovieHome(
+                                    listType = mListType,
+                                    listMovie = remote.data.results.map { movieResponseResult ->
+                                        DataMapper.mapMovieResponseToDomain(movieResponseResult)
+                                    } as ArrayList<Movie>))
+
+                            localDataSource.deleteListTypeMovie(mListType)
+                            localDataSource.insertListTypeMovie(remote.data.results.map { movieResponseResult ->
+                                DataMapper.mapMovieResponseToEntities(movieResponseResult)
+                            }, mListType)
+                        }
+                        is ApiResponse.Empty -> {
+                            movieList[times] = Resource.Success(
                                 MovieHome(
                                     listType = mListType,
                                     listMovie = arrayListOf()
                                 )
                             )
-                        )
+                        }
+                        is ApiResponse.Failed -> {
+                            movieList[times] = Resource.Error(remote.errorMessage)
+                        }
                     }
-                    is ApiResponse.Failed -> {
-                        movieList.add(Resource.Error(remote.errorMessage))
-                    }
-                }
+                emit(movieList)
             }
-            emit(movieList)
         }
     }
 
+    private fun listTypeMovieHome(times: Int) =
+        when (times) {
+            0 ->
+                ListType.POPULAR
+            1 ->
+                ListType.UPCOMING
+            2 ->
+                ListType.TOP_RATED
+            3 ->
+                ListType.NOW_PLAYING
+            else ->
+                ListType.EMPTY
+        }
+
     override fun getMovieList(params: Params.MovieParams): RepoResult<Movie> {
-        Log.d("mytag", "repo getMovie")
         val movieBoundaryCallback = MovieBoundaryCallback(
             remoteDataSource,
             localDataSource,
@@ -95,7 +119,7 @@ class MovieTvRepository constructor(
             .setPageSize(20)
             .build()
 
-        val local = LivePagedListBuilder(localDataSource.getAllMovie().map {
+        val local = LivePagedListBuilder(localDataSource.getMovieListPaging(params).map {
             DataMapper.mapMovieEntitiesToDomain(it)
         }, config)
             .setBoundaryCallback(movieBoundaryCallback)
@@ -115,7 +139,6 @@ class MovieTvRepository constructor(
 
             override fun shouldFetch(data: Movie?): Boolean {
                 data?.id == 0 || needRefresh
-                Log.d("mytag", " shouldfetch $data")
                 return true
             }
 
@@ -169,48 +192,73 @@ class MovieTvRepository constructor(
     }
 
     override fun getTvHome(): Flow<List<Resource<TvHome>>> {
+        val listTypeTotal = 4
         return flow {
             val movieList = ArrayList<Resource<TvHome>>()
-            emit(listOf(Resource.Loading()))
-            repeat(4) {
-                val mListType = when(it){
-                    0 ->
-                        ListType.POPULAR_TV_SHOW
-                    1 ->
-                        ListType.ON_AIR_TV_SHOW
-                    2 ->
-                        ListType.TOP_RATED_TV_SHOW
-                    else ->
-                        ListType.AIRING_TODAY
-                }
+            repeat(listTypeTotal) { times ->
+                val mListType = listTypeTvHome(times)
+                val local =
+                    localDataSource.getTvList(Params.MovieParams(listType = mListType)).map {
+                        if (it.size >= 9)
+                            it.subList(0, 9)
+                        else
+                            it
+                    }
+                movieList.add(Resource.Loading(
+                    TvHome(
+                        listType = mListType,
+                        listTv = local.first().map {
+                            DataMapper.mapTvEntitiesToDomain(it)
+                        } as ArrayList<Tv>)
+                ))
 
-                when (val remote = remoteDataSource.getAllTvShows(Params.MovieParams(listType = mListType))) {
+                emit(movieList)
+            }
+            repeat(listTypeTotal) { times ->
+                val mListType = listTypeTvHome(times)
+                when (val remote =
+                    remoteDataSource.getAllTvShows(Params.MovieParams(listType = mListType))) {
                     is ApiResponse.Success -> {
-                        movieList.add(Resource.Success(
+                        movieList[times] = Resource.Success(
                             TvHome(
                                 listType = mListType,
                                 listTv = remote.data.results.map { movieResponseResult ->
                                     DataMapper.mapTvResponseToDomain(movieResponseResult)
-                                } as ArrayList<Tv>)))
+                                } as ArrayList<Tv>))
+
+                        localDataSource.deleteListTypeTv(mListType)
+                        localDataSource.insertListTypeTv(remote.data.results.map { movieResponseResult ->
+                            DataMapper.mapTvResponseToEntities(movieResponseResult)
+                        }, mListType)
                     }
                     is ApiResponse.Empty -> {
-                        movieList.add(
-                            Resource.Success(
-                                TvHome(
-                                    listType = mListType,
-                                    listTv = arrayListOf()
-                                )
+                        movieList[times] = Resource.Success(
+                            TvHome(
+                                listType = mListType,
+                                listTv = arrayListOf()
                             )
                         )
                     }
                     is ApiResponse.Failed -> {
-                        movieList.add(Resource.Error(remote.errorMessage))
+                        movieList[times] = Resource.Error(remote.errorMessage)
                     }
                 }
+                emit(movieList)
             }
-            emit(movieList)
         }
     }
+
+    private fun listTypeTvHome(times: Int) =
+        when (times) {
+            0 ->
+                ListType.POPULAR_TV_SHOW
+            1 ->
+                ListType.ON_AIR_TV_SHOW
+            2 ->
+                ListType.TOP_RATED_TV_SHOW
+            else ->
+                ListType.AIRING_TODAY
+        }
 
     override fun getTvShowsList(params: Params.MovieParams): RepoResult<Tv> {
         val tvBoundaryCallback = TvBoundaryCallback(
@@ -225,7 +273,7 @@ class MovieTvRepository constructor(
             .setPageSize(20)
             .build()
 
-        val local = LivePagedListBuilder(localDataSource.getAllTv().map {
+        val local = LivePagedListBuilder(localDataSource.getTvListPaging(params).map {
             DataMapper.mapTvEntitiesToDomain(it)
         }, config)
             .setBoundaryCallback(tvBoundaryCallback)

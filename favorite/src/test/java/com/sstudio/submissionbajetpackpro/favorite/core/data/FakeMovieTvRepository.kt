@@ -39,7 +39,7 @@ class FakeMovieTvRepository constructor(
                     .build()
 
                 val livePageList =
-                    LivePagedListBuilder(localDataSource.getAllMovie(), config).build()
+                    LivePagedListBuilder(localDataSource.getMovieListPaging(), config).build()
                 return Transformations.map(livePageList) { pagedList ->
                     pagedList.map {
                         DataMapper.mapMovieEntitiesToDomain(it)
@@ -129,7 +129,7 @@ class FakeMovieTvRepository constructor(
                     .setPageSize(4)
                     .build()
                 return LivePagedListBuilder(
-                    localDataSource.getAllTv().map {
+                    localDataSource.getTvListPaging().map {
                         DataMapper.mapTvEntitiesToDomain(it)
                     },
                     config

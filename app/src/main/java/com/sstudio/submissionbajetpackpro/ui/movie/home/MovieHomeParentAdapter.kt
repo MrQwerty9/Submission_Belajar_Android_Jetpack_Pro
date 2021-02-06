@@ -2,7 +2,6 @@ package com.sstudio.submissionbajetpackpro.ui.movie.home
 
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,9 +25,8 @@ class MovieHomeParentAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var context: Context
 
     fun updateList(list: List<MovieHome?>) {
-        mList.clear()
-        mList.addAll(list)
-        Log.d("mytag", "adapter mList $mList")
+        mList = list as ArrayList<MovieHome?>
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

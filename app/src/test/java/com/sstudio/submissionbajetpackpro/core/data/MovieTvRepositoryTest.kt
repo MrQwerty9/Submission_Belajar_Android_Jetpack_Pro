@@ -80,7 +80,7 @@ class MovieTvRepositoryTest {
     @Test
     fun testGetAllMovie() = runBlocking {
         val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
-        `when`(local.getAllMovie()).thenReturn(dataSourceFactory)
+        `when`(local.getMovieListPaging()).thenReturn(dataSourceFactory)
 
         movieTvRepository.getMovieList(false)
 
@@ -141,12 +141,12 @@ class MovieTvRepositoryTest {
     @Test
     fun testGetAllTvShows() {
         val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvEntity>
-        `when`(local.getAllTv()).thenReturn(dataSourceFactory)
+        `when`(local.getTvListPaging()).thenReturn(dataSourceFactory)
         movieTvRepository.getTvShowsList(false)
 
         val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
         Thread.sleep(2000)
-        verify(local).getAllTv()
+        verify(local).getTvListPaging()
         assertNotNull(tvShowEntities)
         assertEquals(tvShowResponses.results.size.toLong(), tvShowEntities.data?.size?.toLong())
     }

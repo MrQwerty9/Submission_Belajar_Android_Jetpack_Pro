@@ -25,8 +25,8 @@ class TvHomeParentAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var context: Context
 
     fun updateList(list: List<TvHome?>) {
-        mList.clear()
-        mList.addAll(list)
+        mList = list as ArrayList<TvHome?>
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

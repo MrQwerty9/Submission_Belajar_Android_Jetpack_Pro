@@ -37,7 +37,8 @@ class TvHomeFragment : Fragment() {
             }
             with(rv_list_tv_show) {
                 layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
+                adapter = homeParentAdapter
+//                setHasFixedSize(true)
             }
             homeParentAdapter.onItemMoreClick = {
                 val intent = Intent(context, TvListActivity::class.java)
@@ -74,21 +75,18 @@ class TvHomeFragment : Fragment() {
                     when (resource) {
                         is Resource.Loading -> {
                             progress_bar.visibility = View.VISIBLE
-                            resource.data
                         }
                         is Resource.Success -> {
                             progress_bar.visibility = View.GONE
-                            resource.data
                         }
                         is Resource.Error -> {
                             progress_bar.visibility = View.GONE
                             Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
-                            resource.data
                         }
                     }
+                    resource.data
                 }
                 homeParentAdapter.updateList(listTvHome)
-                rv_list_tv_show.adapter = homeParentAdapter
             }
         }
     }

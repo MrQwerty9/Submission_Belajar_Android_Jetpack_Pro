@@ -2,7 +2,8 @@ package com.sstudio.submissionbajetpackpro.core.domain.usecase
 
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.Resource
-import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteMovieEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteTvEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RepoResult
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.MovieHome
@@ -24,7 +25,11 @@ interface MovieTvUseCase {
     fun getAllFavoriteTv(): Flow<PagedList<Tv>>
     fun getSearchTv(query: String): Flow<Resource<List<Tv>>>
 
-    fun setFavorite(id: Int)
-    fun getFavoriteById(id: Int): Flow<List<FavoriteEntity>>
-    fun deleteFavorite(id: Int)
+    fun setFavoriteMovie(id: Int)
+    fun getFavoriteMovieById(id: Int): Flow<List<FavoriteMovieEntity>>
+    fun deleteFavoriteMovie(id: Int)
+
+    fun setFavoriteTv(id: Int)
+    fun getFavoriteTvById(id: Int): Flow<List<FavoriteTvEntity>>
+    fun deleteFavoriteTv(id: Int)
 }

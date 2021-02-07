@@ -5,9 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class FavoriteEntity(
-
+data class FavoriteTvEntity(
     @PrimaryKey(autoGenerate = false)
     @NonNull
-    var idMovieTv: Int
+    var idTv: Int
 )

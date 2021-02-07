@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.data.Resource
+import com.sstudio.submissionbajetpackpro.core.utils.Params
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.ui.search.SearchActivity
 import com.sstudio.submissionbajetpackpro.ui.tv.list.TvListActivity
@@ -42,12 +43,12 @@ class TvHomeFragment : Fragment() {
             }
             homeParentAdapter.onItemMoreClick = {
                 val intent = Intent(context, TvListActivity::class.java)
-                intent.putExtra(TvListActivity.PARAMS_EXTRA, it)
+                intent.putExtra(TvListActivity.PARAMS_EXTRA, Params.MovieParams(listType = it))
                 startActivity(intent)
             }
             homeParentAdapter.onItemTvClick = {
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
+                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
                 intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
                 startActivity(intent)
             }

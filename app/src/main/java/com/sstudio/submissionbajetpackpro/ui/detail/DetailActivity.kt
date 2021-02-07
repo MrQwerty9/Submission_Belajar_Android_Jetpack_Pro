@@ -37,12 +37,12 @@ class DetailActivity : AppCompatActivity() {
             val movieOrTv = extras.getString(EXTRA_MOVIE_TV)
             if (movieTvId != 0) {
                 viewModel.setSelectedMovieTv(movieTvId)
-                viewModel.getFavoriteStatus(movieTvId).observe(this, {
-                        isFavorite = it.isNotEmpty()
-                    favoriteOnChange()
-                })
                 if (movieOrTv == IS_MOVIE) {
-                    viewModel.needFetch = false
+                    viewModel.getFavoriteMovieStatus(movieTvId).observe(this, {
+                        isFavorite = it.isNotEmpty()
+
+                    })
+                    favoriteOnChange()
                     viewModel.detailMovie.observe(this, { resource ->
                         when (resource) {
                             is Resource.Loading -> progress_bar.visibility = View.VISIBLE
@@ -61,6 +61,10 @@ class DetailActivity : AppCompatActivity() {
                         }
                     })
                 } else {
+                    viewModel.getFavoriteTvStatus(movieTvId).observe(this, {
+                        isFavorite = it.isNotEmpty()
+                        favoriteOnChange()
+                    })
                     viewModel.detailTv.observe(this, { tvShow ->
                         when (tvShow) {
                             is Resource.Loading -> progress_bar.visibility = View.VISIBLE
@@ -81,12 +85,7 @@ class DetailActivity : AppCompatActivity() {
                 }
                 btn_favorite.setOnClickListener {
                     isFavorite?.let { isFavorite->
-                        if (isFavorite) {
-                            viewModel.deleteFavorite(movieTvId)
-                        }
-                        else{
-                            viewModel.setFavorite(movieTvId)
-                        }
+                        viewModel.updateFavorite(isFavorite, movieOrTv, movieTvId)
                         favoriteOnChange()
                     }
                 }

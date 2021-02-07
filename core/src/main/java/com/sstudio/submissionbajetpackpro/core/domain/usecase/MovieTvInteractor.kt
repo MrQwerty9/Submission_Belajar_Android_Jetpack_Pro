@@ -3,7 +3,8 @@ package com.sstudio.submissionbajetpackpro.core.domain.usecase
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.MovieTvRepository
 import com.sstudio.submissionbajetpackpro.core.data.Resource
-import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteMovieEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteTvEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RepoResult
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.MovieHome
@@ -44,12 +45,25 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun getSearchTv(query: String): Flow<Resource<List<Tv>>> =
         movieTvRepository.getSearchTv(query)
 
-    override fun setFavorite(id: Int) =
-        movieTvRepository.setFavorite(id)
+    override fun setFavoriteMovie(id: Int) {
+        movieTvRepository.setFavoriteMovie(id)
+    }
 
-    override fun getFavoriteById(id: Int): Flow<List<FavoriteEntity>> =
-        movieTvRepository.getFavoriteById(id)
+    override fun getFavoriteMovieById(id: Int): Flow<List<FavoriteMovieEntity>> =
+        movieTvRepository.getFavoriteMovieById(id)
 
-    override fun deleteFavorite(id: Int) =
-        movieTvRepository.deleteFavorite(id)
+    override fun deleteFavoriteMovie(id: Int) {
+        movieTvRepository.deleteFavoriteMovie(id)
+    }
+
+    override fun setFavoriteTv(id: Int) {
+        movieTvRepository.setFavoriteTv(id)
+    }
+
+    override fun getFavoriteTvById(id: Int): Flow<List<FavoriteTvEntity>> =
+        movieTvRepository.getFavoriteTvById(id)
+
+    override fun deleteFavoriteTv(id: Int) {
+        movieTvRepository.deleteFavoriteTv(id)
+    }
 }

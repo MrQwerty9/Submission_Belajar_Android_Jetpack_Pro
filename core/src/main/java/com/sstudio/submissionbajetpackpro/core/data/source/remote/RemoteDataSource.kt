@@ -9,12 +9,9 @@ import com.sstudio.submissionbajetpackpro.core.data.source.remote.api.ApiService
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvResponse
 import com.sstudio.submissionbajetpackpro.core.utils.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 
 class RemoteDataSource constructor(
     private val apiService: ApiService,
@@ -25,29 +22,6 @@ class RemoteDataSource constructor(
 
     private val language = context.getString(R.string.language)
     private val apiKey = BuildConfig.TMDB_API_KEY
-
-    suspend fun getAllMovieList(movieParams: Params.MovieParams): MovieResponse {
-        return try {
-            val api = apiService.getPopularMovies(
-                apiKey,
-                language,
-                movieParams.page
-            )
-            appExecutors.diskIO().execute {
-                CoroutineScope(Dispatchers.IO).launch {
-                    localDataSource.insertAllMovie(api.results.map {
-                        DataMapper.mapMovieResponseToEntities(it)
-                    })
-                    Log.d("mytag", "aftersaved")
-                }
-            }
-            api
-        } catch (e: Exception) {
-            Log.e("RemoteDataSource", e.toString())
-            EspressoIdlingResource.decrement()
-            MovieResponse()
-        }
-    }
 
     suspend fun getAllMovie(movieParams: Params.MovieParams): ApiResponse<MovieResponse> {
         return try {

@@ -29,6 +29,9 @@ class MovieListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_list)
 
         val params = intent.getParcelableExtra<Params.MovieParams>(PARAMS_EXTRA)
+        if (params == null){
+            Log.d("mytag", "movieList null")
+        }
         viewModel.getMovie(params)
         observeData()
         swipe_layout.setOnRefreshListener {

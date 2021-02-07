@@ -22,10 +22,10 @@ class FavoriteMovieViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewM
         private set
 
     fun deleteFavorite(idMovieTv: Int){
-        movieTvUseCase.deleteFavorite(idMovieTv)
+        movieTvUseCase.deleteFavoriteMovie(idMovieTv)
     }
 
     fun addFavorite(idMovieTv: Int) {
-        movieTvUseCase.setFavorite(idMovieTv)
+        movieTvUseCase.setFavoriteMovie(idMovieTv)
     }
 }

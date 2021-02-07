@@ -12,7 +12,6 @@ import com.sstudio.submissionbajetpackpro.core.ui.tv.TvAdapter
 import com.sstudio.submissionbajetpackpro.core.utils.Params
 import com.sstudio.submissionbajetpackpro.core.vo.NetworkState
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
-import com.sstudio.submissionbajetpackpro.ui.movie.list.MovieListActivity
 import kotlinx.android.synthetic.main.activity_tv_list.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -29,7 +28,7 @@ class TvListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_list)
 
-        val params = intent.getParcelableExtra<Params.MovieParams>(MovieListActivity.PARAMS_EXTRA)
+        val params = intent.getParcelableExtra<Params.MovieParams>(PARAMS_EXTRA)
         viewModel.getTv(params)
         observeData()
         swipe_layout.setOnRefreshListener {

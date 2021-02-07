@@ -46,9 +46,9 @@ class MovieBoundaryCallback constructor(
                 when (val response = remoteDataSource.getAllMovie(movieParams)) {
                     is ApiResponse.Success -> {
                         if (movieParams.page == 1){
-                            localDataSource.deleteListTypeMovie(movieParams.listType)
+                            localDataSource.deleteMovieList(movieParams.listType)
                         }
-                        localDataSource.insertListTypeMovie(response.data.results.map {
+                        localDataSource.insertMovieListType(response.data.results.map {
                             DataMapper.mapMovieResponseToEntities(it)
                         }, movieParams.listType)
                         state.postValue(NetworkState.SUCCESS)

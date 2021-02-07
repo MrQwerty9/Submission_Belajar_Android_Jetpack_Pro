@@ -7,6 +7,6 @@ data class ListTypeMovie (
     @Embedded
     var movie: MovieEntity,
 
-    @Relation(parentColumn = "idMovie", entityColumn = "idMovieTv")
-    var listTypeEntity: ListTypeEntity?
+    @Relation(parentColumn = "idMovie", entityColumn = "idMovie")
+    var listTypeEntity: ListTypeMovieEntity?
 )

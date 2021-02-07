@@ -7,6 +7,6 @@ data class ListTypeTv (
     @Embedded
     var tv: TvEntity,
 
-    @Relation(parentColumn = "idTv", entityColumn = "idMovieTv")
-    var listTypeEntity: ListTypeEntity?
+    @Relation(parentColumn = "idTv", entityColumn = "idTv")
+    var listTypeEntity: ListTypeTvEntity?
 )

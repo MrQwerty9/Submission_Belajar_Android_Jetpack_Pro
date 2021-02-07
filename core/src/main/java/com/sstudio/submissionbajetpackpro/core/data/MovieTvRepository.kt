@@ -4,7 +4,8 @@ import androidx.lifecycle.asFlow
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.source.local.LocalDataSource
-import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteMovieEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteTvEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.ApiResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RemoteDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RepoResult
@@ -70,8 +71,8 @@ class MovieTvRepository constructor(
                                         DataMapper.mapMovieResponseToDomain(movieResponseResult)
                                     } as ArrayList<Movie>))
 
-                            localDataSource.deleteListTypeMovie(mListType)
-                            localDataSource.insertListTypeMovie(remote.data.results.map { movieResponseResult ->
+                            localDataSource.deleteMovieList(mListType)
+                            localDataSource.insertMovieListType(remote.data.results.map { movieResponseResult ->
                                 DataMapper.mapMovieResponseToEntities(movieResponseResult)
                             }, mListType)
                         }
@@ -226,8 +227,8 @@ class MovieTvRepository constructor(
                                     DataMapper.mapTvResponseToDomain(movieResponseResult)
                                 } as ArrayList<Tv>))
 
-                        localDataSource.deleteListTypeTv(mListType)
-                        localDataSource.insertListTypeTv(remote.data.results.map { movieResponseResult ->
+                        localDataSource.deleteTvList(mListType)
+                        localDataSource.insertTvListType(remote.data.results.map { movieResponseResult ->
                             DataMapper.mapTvResponseToEntities(movieResponseResult)
                         }, mListType)
                     }
@@ -343,16 +344,25 @@ class MovieTvRepository constructor(
         }
     }
 
-    override fun setFavorite(id: Int) {
-        appExecutors.diskIO().execute { localDataSource.insertFavorite(FavoriteEntity(id)) }
+    override fun setFavoriteMovie(id: Int) {
+        appExecutors.diskIO().execute { localDataSource.insertMovieFavorite(FavoriteMovieEntity(id)) }
     }
 
-    override fun getFavoriteById(id: Int): Flow<List<FavoriteEntity>> =
-        localDataSource.getFavoriteById(id)
+    override fun getFavoriteMovieById(id: Int): Flow<List<FavoriteMovieEntity>> =
+        localDataSource.getFavoriteMovieById(id)
 
-    override fun deleteFavorite(id: Int) {
-        appExecutors.diskIO().execute { localDataSource.deleteFavorite(id) }
+    override fun deleteFavoriteMovie(id: Int) {
+        appExecutors.diskIO().execute { localDataSource.deleteFavoriteMovie(id) }
     }
 
+    override fun setFavoriteTv(id: Int) {
+        appExecutors.diskIO().execute { localDataSource.insertTvFavorite(FavoriteTvEntity(id)) }
+    }
 
+    override fun getFavoriteTvById(id: Int): Flow<List<FavoriteTvEntity>> =
+        localDataSource.getFavoriteTvById(id)
+
+    override fun deleteFavoriteTv(id: Int) {
+        appExecutors.diskIO().execute { localDataSource.deleteFavoriteTv(id) }
+    }
 }

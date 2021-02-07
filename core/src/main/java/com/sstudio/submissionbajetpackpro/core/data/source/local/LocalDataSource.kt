@@ -16,9 +16,8 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
         mMovieDao.getMovieListType(params.listType.toString())
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite> = mMovieDao.getAllFavoriteMovie()
     fun getMovieById(movieId: Int): Flow<List<MovieEntity>> = mMovieDao.getMovieById(movieId)
-    suspend fun deleteAllMovie() = mMovieDao.deleteAllMovie()
 
-    suspend fun insertAllMovie(movie: List<MovieEntity>) = mMovieDao.insertAllMovie(movie)
+    suspend fun insertAllMovie(movie: List<MovieEntity>) = mMovieDao.insertMovies(movie)
     suspend fun insertMovieDetail(data: MovieEntity) = mMovieDao.insertMovieDetail(data)
 
     fun getTvListPaging(movieParams: Params.MovieParams): DataSource.Factory<Int, TvEntity> =
@@ -27,35 +26,36 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
         mMovieDao.getTvListType(movieParams.listType.toString())
     fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite> = mMovieDao.getAllFavoriteTv()
     fun getTvById(tvShowId: Int): Flow<List<TvEntity>> = mMovieDao.getTvById(tvShowId)
-    suspend fun deleteAllTv() = mMovieDao.deleteAllTv()
 
-    suspend fun insertAllTv(tv: List<TvEntity>) = mMovieDao.insertAllTv(tv)
+    suspend fun insertAllTv(tv: List<TvEntity>) = mMovieDao.insertTvShows(tv)
     suspend fun insertTvDetail(tv: TvEntity) = mMovieDao.insertTvDetail(tv)
 
-    fun insertFavorite(favorite: FavoriteEntity) = mMovieDao.insertFavorite(favorite)
-    fun deleteFavorite(id: Int) = mMovieDao.deleteFavorite(id)
-    fun getFavoriteById(id: Int): Flow<List<FavoriteEntity>> = mMovieDao.getFavoriteById(id)
+    fun insertMovieFavorite(favorite: FavoriteMovieEntity) = mMovieDao.insertFavoriteMovie(favorite)
+    fun insertTvFavorite(favorite: FavoriteTvEntity) = mMovieDao.insertFavoriteTv(favorite)
+    fun deleteFavoriteMovie(id: Int) = mMovieDao.deleteFavoriteMovie(id)
+    fun deleteFavoriteTv(id: Int) = mMovieDao.deleteFavoriteTv(id)
+    fun getFavoriteMovieById(id: Int): Flow<List<FavoriteMovieEntity>> = mMovieDao.getFavoriteMovieById(id)
+    fun getFavoriteTvById(id: Int): Flow<List<FavoriteTvEntity>> = mMovieDao.getFavoriteTvById(id)
 
-    suspend fun insertListTypeMovie(movies: List<MovieEntity>, listType: ListType){
-
-        mMovieDao.insertListType(movies.map {
-            ListTypeEntity(0, it.idMovie, listType.toString())
+    suspend fun insertMovieListType(movies: List<MovieEntity>, listType: ListType){
+        mMovieDao.insertMovieListType(movies.map {
+            ListTypeMovieEntity(0, it.idMovie, listType.toString())
         })
-        mMovieDao.insertAllMovie(movies)
+        mMovieDao.insertMovies(movies)
     }
 
-    suspend fun deleteListTypeMovie(listType: ListType){
-        mMovieDao.deleteListType(listType.toString())
+    suspend fun deleteMovieList(listType: ListType){
+        mMovieDao.deleteMovieList(listType.toString())
     }
 
-    suspend fun insertListTypeTv(tv: List<TvEntity>, listType: ListType) {
-        mMovieDao.insertListType(tv.map {
-            ListTypeEntity(0, it.idTv, listType.toString())
+    suspend fun insertTvListType(tv: List<TvEntity>, listType: ListType) {
+        mMovieDao.insertTvListType(tv.map {
+            ListTypeTvEntity(0, it.idTv, listType.toString())
         })
-        mMovieDao.insertAllTv(tv)
+        mMovieDao.insertTvShows(tv)
     }
 
-    suspend fun deleteListTypeTv(listType: ListType) {
-        mMovieDao.deleteListType(listType.toString())
+    suspend fun deleteTvList(listType: ListType) {
+        mMovieDao.deleteTvList(listType.toString())
     }
 }

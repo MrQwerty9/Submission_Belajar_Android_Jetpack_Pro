@@ -46,11 +46,12 @@ class TvBoundaryCallback constructor(
                 when (val response = remoteDataSource.getAllTvShows(movieParams)) {
                     is ApiResponse.Success -> {
                         if (movieParams.page == 1){
-                            localDataSource.deleteAllTv()
+                            localDataSource.deleteTvList(movieParams.listType)
                         }
-                        localDataSource.insertAllTv(response.data.results.map {
-                            DataMapper.mapTvResponseToEntities(it)
-                        })
+
+                        localDataSource.insertTvListType(response.data.results.map { movieResponseResult ->
+                            DataMapper.mapTvResponseToEntities(movieResponseResult)
+                        }, movieParams.listType)
                         state.postValue(NetworkState.SUCCESS)
                         movieParams.page++
                     }

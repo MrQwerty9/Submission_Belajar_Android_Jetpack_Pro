@@ -6,10 +6,7 @@ import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteMovieEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteTvEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RepoResult
-import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
-import com.sstudio.submissionbajetpackpro.core.domain.model.MovieHome
-import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
-import com.sstudio.submissionbajetpackpro.core.domain.model.TvHome
+import com.sstudio.submissionbajetpackpro.core.domain.model.*
 import com.sstudio.submissionbajetpackpro.core.utils.Params
 import kotlinx.coroutines.flow.Flow
 
@@ -21,7 +18,7 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun getMovieList(params: Params.MovieParams): RepoResult<Movie> =
         movieTvRepository.getMovieList(params)
 
-    override fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>> =
+    override fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<MovieDetail>> =
         movieTvRepository.getMovieDetail(needFetch, movieId)
 
     override fun getAllFavoriteMovie(): Flow<PagedList<Movie>> =
@@ -36,7 +33,7 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun getTvShowsList(params: Params.MovieParams): RepoResult<Tv> =
         movieTvRepository.getTvShowsList(params)
 
-    override fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): Flow<Resource<Tv>> =
+    override fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): Flow<Resource<TvDetail>> =
         movieTvRepository.getTvShowDetail(needFetch, tvShowId)
 
     override fun getAllFavoriteTv(): Flow<PagedList<Tv>> =
@@ -66,4 +63,28 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun deleteFavoriteTv(id: Int) {
         movieTvRepository.deleteFavoriteTv(id)
     }
+
+    override fun getCreditsMovie(id: Int): Flow<Resource<Credits>> =
+        movieTvRepository.getCreditsMovie(id)
+
+    override fun getCreditsTv(id: Int): Flow<Resource<Credits>> =
+        movieTvRepository.getCreditsTv(id)
+
+    override fun getVideoMovie(id: Int): Flow<Resource<List<Video>>> =
+        movieTvRepository.getVideoMovie(id)
+
+    override fun getVideoTv(id: Int): Flow<Resource<List<Video>>> =
+        movieTvRepository.getVideoTv(id)
+
+    override fun getSimilarMovie(id: Int): Flow<Resource<List<Movie>>> =
+        movieTvRepository.getSimilarMovie(id)
+
+    override fun getSimilarTv(id: Int): Flow<Resource<List<Tv>>> =
+        movieTvRepository.getSimilarTv(id)
+
+    override fun getAllGenreMovie(): Flow<Resource<List<Genre>>> =
+        movieTvRepository.getAllGenreMovie()
+
+    override fun getAllGenreListTv(): Flow<Resource<List<Genre>>> =
+        movieTvRepository.getAllGenreTv()
 }

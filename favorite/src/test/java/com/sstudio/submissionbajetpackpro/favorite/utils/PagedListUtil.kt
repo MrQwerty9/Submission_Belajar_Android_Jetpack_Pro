@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.utils
+package com.sstudio.submissionbajetpackpro.core.utils
 
 import androidx.paging.PagedList
 import org.mockito.Mockito.`when`

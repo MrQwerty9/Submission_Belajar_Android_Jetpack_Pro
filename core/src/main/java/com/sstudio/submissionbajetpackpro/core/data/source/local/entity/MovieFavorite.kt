@@ -8,7 +8,7 @@ data class MovieFavorite (
     @Embedded
     var movie: MovieEntity,
 
-    @Relation(parentColumn = "idMovie", entityColumn = "idMovie")
+    @Relation(parentColumn = "id_movie", entityColumn = "idMovie")
     @NonNull
     var favoriteEntity: FavoriteMovieEntity
 )

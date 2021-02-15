@@ -5,17 +5,17 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index(value = ["idTv"], unique = true)])
+@Entity(indices = [Index(value = ["id_tv"], unique = true)])
 data class TvEntity(
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    var id: Int = 0,
-    var backdropPath: String = "",
-    var firstAirDate: String = "",
-    var genreIds: String = "",
-    var idTv: Int = 0,
-    var originalName: String = "",
-    var overview: String = "",
-    var posterPath: String = "",
-    var voteAverage: Double = 0.0
+    val id: Int = 0,
+    val backdrop_path: String? = "",
+    val first_air_date: String? = "",
+    val genres_ids: String? = "",
+    val id_tv: Int = 0,
+    val original_name: String? = "",
+    val overview: String? = "",
+    val poster_path: String? = "",
+    val vote_average: Double? = 0.0
 )

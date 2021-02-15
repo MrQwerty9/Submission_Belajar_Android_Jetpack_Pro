@@ -11,6 +11,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.utils.Params
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
+import com.sstudio.submissionbajetpackpro.ui.detail.DetailData
 import com.sstudio.submissionbajetpackpro.ui.movie.list.MovieListActivity
 import com.sstudio.submissionbajetpackpro.ui.search.SearchActivity
 import kotlinx.android.synthetic.main.fragment_movie_home.*
@@ -45,8 +46,7 @@ class MovieHomeFragment : Fragment() {
             }
             homeParentAdapter.onItemMovieClick = {
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
-                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, DetailData(it.id, it.originalTitle, DetailData.Type.MOVIE))
                 startActivity(intent)
             }
             with(rv_list_movie) {

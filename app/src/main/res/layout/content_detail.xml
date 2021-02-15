@@ -16,54 +16,46 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="19dp"
         android:layout_marginEnd="19dp"
-        android:background="@color/white">
-
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:background="@color/colorPrimaryDark"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginStart="-20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="-20dp"
-            android:background="@drawable/curve_bg_white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:background="@color/defaultBg">
 
         <TextView
             android:id="@+id/tv_overview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
             android:text="@string/lorem"
-            android:textColor="@color/whiteGrey"
+            android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.043" />
 
         <TextView
             android:id="@+id/tv_cast_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:text="@string/cast"
+            android:textColor="@color/white"
             android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="@+id/tv_overview"
-            app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_trailer" />
+
+        <Button
+            android:id="@+id/btn_cast_show_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/see_all"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="13sp"
+            app:backgroundTint="@color/transparent"
+            style="?android:attr/borderlessButtonStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_cast_label"
+            app:layout_constraintEnd_toEndOf="@+id/tv_overview"
+            app:layout_constraintTop_toTopOf="@+id/tv_cast_label" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_cast"
@@ -80,10 +72,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/trailer"
+            android:textColor="@color/white"
             android:textAllCaps="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="@+id/tv_overview"
-            app:layout_constraintTop_toBottomOf="@+id/rv_cast" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_trailer"
@@ -102,8 +95,23 @@
             android:text="@string/similar"
             android:textAllCaps="true"
             android:layout_marginTop="15dp"
+            android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="@+id/tv_overview"
-            app:layout_constraintTop_toBottomOf="@+id/rv_trailer" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_cast" />
+
+        <Button
+            android:id="@+id/btn_similar_show_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/see_all"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="13sp"
+            app:backgroundTint="@color/transparent"
+            style="?android:attr/borderlessButtonStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_similar_label"
+            app:layout_constraintEnd_toEndOf="@+id/tv_overview"
+            app:layout_constraintTop_toTopOf="@+id/tv_similar_label" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_similar"

@@ -6,8 +6,10 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.*
 
-@Database(entities = [MovieEntity::class, TvEntity::class, FavoriteMovieEntity::class, FavoriteTvEntity::class, ListTypeMovieEntity::class, ListTypeTvEntity::class],
-    version = 8,
+@Database(entities = [MovieEntity::class, TvEntity::class, FavoriteMovieEntity::class,
+    FavoriteTvEntity::class, MovieListEntity::class, TvListEntity::class,
+                     MovieDetailEntity::class, TvDetailEntity::class],
+    version = 10,
     exportSchema = false)
 abstract class MovieTvDatabase : RoomDatabase() {
     abstract fun movieTvDao(): MovieTvDao

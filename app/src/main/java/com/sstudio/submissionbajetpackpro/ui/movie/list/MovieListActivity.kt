@@ -12,6 +12,7 @@ import com.sstudio.submissionbajetpackpro.core.ui.movie.MovieAdapter
 import com.sstudio.submissionbajetpackpro.core.utils.Params
 import com.sstudio.submissionbajetpackpro.core.vo.NetworkState
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
+import com.sstudio.submissionbajetpackpro.ui.detail.DetailData
 import kotlinx.android.synthetic.main.activity_movie_list.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -29,21 +30,17 @@ class MovieListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_list)
 
         val params = intent.getParcelableExtra<Params.MovieParams>(PARAMS_EXTRA)
-        if (params == null){
-            Log.d("mytag", "movieList null")
-        }
-        viewModel.getMovie(params)
+        viewModel.setMovie(params)
         observeData()
         swipe_layout.setOnRefreshListener {
-            viewModel.getMovie(params)
+            viewModel.setMovie(params)
             observeData()
             swipe_layout.isRefreshing = false
         }
 
         movieAdapter.onItemClick = {
             val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
-            intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+            intent.putExtra(DetailActivity.EXTRA_DETAIL, DetailData(it.id, it.originalTitle, DetailData.Type.MOVIE))
             startActivity(intent)
         }
         with(rv_list_movie) {

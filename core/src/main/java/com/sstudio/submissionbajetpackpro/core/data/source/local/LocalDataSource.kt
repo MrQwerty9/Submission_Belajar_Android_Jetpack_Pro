@@ -15,20 +15,20 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
     fun getMovieList(params: Params.MovieParams): Flow<List<MovieEntity>> =
         mMovieDao.getMovieListType(params.listType.toString())
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite> = mMovieDao.getAllFavoriteMovie()
-    fun getMovieById(movieId: Int): Flow<List<MovieEntity>> = mMovieDao.getMovieById(movieId)
+    fun getMovieDetail(movieId: Int): Flow<MovieDetailEmbed> = mMovieDao.getMovieDetail(movieId)
 
     suspend fun insertAllMovie(movie: List<MovieEntity>) = mMovieDao.insertMovies(movie)
-    suspend fun insertMovieDetail(data: MovieEntity) = mMovieDao.insertMovieDetail(data)
+    suspend fun insertMovieDetail(data: MovieDetailEntity) = mMovieDao.insertMovieDetail(data)
 
     fun getTvListPaging(movieParams: Params.MovieParams): DataSource.Factory<Int, TvEntity> =
         mMovieDao.getTvListTypePaging(movieParams.listType.toString())
     fun getTvList(movieParams: Params.MovieParams): Flow<List<TvEntity>> =
         mMovieDao.getTvListType(movieParams.listType.toString())
     fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite> = mMovieDao.getAllFavoriteTv()
-    fun getTvById(tvShowId: Int): Flow<List<TvEntity>> = mMovieDao.getTvById(tvShowId)
+    fun getTvDetail(tvShowId: Int): Flow<TvDetailEmbed> = mMovieDao.getTvDetail(tvShowId)
 
     suspend fun insertAllTv(tv: List<TvEntity>) = mMovieDao.insertTvShows(tv)
-    suspend fun insertTvDetail(tv: TvEntity) = mMovieDao.insertTvDetail(tv)
+    suspend fun insertTvDetail(tv: TvDetailEntity) = mMovieDao.insertTvDetail(tv)
 
     fun insertMovieFavorite(favorite: FavoriteMovieEntity) = mMovieDao.insertFavoriteMovie(favorite)
     fun insertTvFavorite(favorite: FavoriteTvEntity) = mMovieDao.insertFavoriteTv(favorite)
@@ -39,7 +39,7 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
 
     suspend fun insertMovieListType(movies: List<MovieEntity>, listType: ListType){
         mMovieDao.insertMovieListType(movies.map {
-            ListTypeMovieEntity(0, it.idMovie, listType.toString())
+            MovieListEntity(0, it.id_movie, listType.toString())
         })
         mMovieDao.insertMovies(movies)
     }
@@ -50,7 +50,7 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
 
     suspend fun insertTvListType(tv: List<TvEntity>, listType: ListType) {
         mMovieDao.insertTvListType(tv.map {
-            ListTypeTvEntity(0, it.idTv, listType.toString())
+            TvListEntity(0, it.id_tv, listType.toString())
         })
         mMovieDao.insertTvShows(tv)
     }

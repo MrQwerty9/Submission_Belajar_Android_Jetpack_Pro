@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
+    id 'androidx.navigation.safeargs'
 }
 apply from: '../shared_dependencies.gradle'
 
@@ -20,6 +21,8 @@ android {
         buildConfigField "String", "TMDB_API_KEY", "\"a65ec405c3a90543b914c39e1a1faa00\""
         buildConfigField "String", "POSTER_THUMBNAIL", "\"https://image.tmdb.org/t/p/w154\""
         buildConfigField "String", "POSTER", "\"https://image.tmdb.org/t/p/w342\""
+        buildConfigField "String", "YOUTUBE_WATCH", "\"https://www.youtube.com/watch?v=\""
+        buildConfigField "String", "YOUTUBE_THUMBNAIL", "\"https://img.youtube.com/vi/\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,10 +47,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
 }
 repositories {
     mavenCentral()

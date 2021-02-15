@@ -1,7 +1,6 @@
 package com.sstudio.submissionbajetpackpro.core.data.source.remote.api
 
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieResponse
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvResponse
+import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -40,7 +39,7 @@ interface ApiService {
         @Path("movie_id") id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): MovieResponse.Result
+    ): MovieDetailResponse
 
     @GET("discover/movie")
     suspend fun getDiscoverMovies(
@@ -89,7 +88,7 @@ interface ApiService {
         @Path("movie_id") id: Int,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
-    ): TvResponse.Result
+    ): TvDetailResponse
 
     @GET("discover/tv")
     suspend fun getDiscoverTv(
@@ -117,4 +116,58 @@ interface ApiService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ): TvResponse
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getCreditsMovie(
+        @Path("movie_id") id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): CreditsResponse
+
+    @GET("tv/{movie_id}/credits")
+    suspend fun getCreditsTv(
+        @Path("movie_id") id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): CreditsResponse
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getVideoMovie(
+        @Path("movie_id") id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): VideoResponse
+
+    @GET("tv/{movie_id}/videos")
+    suspend fun getVideoTv(
+        @Path("movie_id") id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): VideoResponse
+
+    @GET("movie/{movie_id}/similar")
+    suspend fun getSimilarMovie(
+        @Path("movie_id") id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): MovieResponse
+
+    @GET("tv/{movie_id}/similar")
+    suspend fun getSimilarTv(
+        @Path("movie_id") id: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): TvResponse
+
+    @GET("genre/movie/list")
+    suspend fun getAllGenreMovie(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): GenresResponse
+
+    @GET("genre/tv/list")
+    suspend fun getAllGenreTv(
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): GenresResponse
 }

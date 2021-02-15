@@ -8,8 +8,8 @@ import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.MovieEnt
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.TvEntity
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
-import com.sstudio.submissionbajetpackpro.core.domain.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
+import com.sstudio.submissionbajetpackpro.core.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.utils.DataDummy
 import com.sstudio.submissionbajetpackpro.core.utils.DataMapper
 import junit.framework.Assert.assertNotNull

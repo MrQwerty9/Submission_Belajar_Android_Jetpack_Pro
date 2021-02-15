@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_detail"
+    app:startDestination="@id/fragment_detail">
+    <fragment
+        android:id="@+id/fragment_detail"
+        android:name="com.sstudio.submissionbajetpackpro.ui.detail.mainDetail.MainDetailFragment">
+        <action
+            android:id="@+id/action_goto_credits"
+            app:destination="@+id/fragment_detail_credits" />
+        <action
+            android:id="@+id/action_goto_similar"
+            app:destination="@+id/fragment_detail_similar" />
+        <action
+            android:id="@+id/action_goto_review"
+            app:destination="@+id/fragment_detail_review" />
+        <action
+            android:id="@+id/action_goto_youtube_player"
+            app:destination="@+id/fragment_youtube_player" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_detail_credits"
+        android:name="com.sstudio.submissionbajetpackpro.ui.detail.creditList.CreditsFragment">
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_detail_similar"
+        android:name="com.sstudio.submissionbajetpackpro.ui.detail.similarList.SimilarFragment">
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_detail_review"
+        android:name="com.sstudio.submissionbajetpackpro.ui.detail.review.ReviewFragment">
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_youtube_player"
+        android:name="com.sstudio.submissionbajetpackpro.ui.detail.videoPlayer.VideoPlayerFragment">
+        <argument
+            android:name="video_id"
+            app:argType="string" />
+    </fragment>
+</navigation>

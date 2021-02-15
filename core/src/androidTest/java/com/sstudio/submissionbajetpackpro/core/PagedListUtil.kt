@@ -1,8 +1,6 @@
-package com.sstudio.submissionbajetpackpro.utils
+package com.sstudio.submissionbajetpackpro.core
 
 import androidx.paging.PagedList
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 
 object PagedListUtil {
     fun <T> mockPagedList(list: List<T>): PagedList<T> {

@@ -4,20 +4,18 @@ import android.content.Context
 import android.util.Log
 import com.sstudio.submissionbajetpackpro.core.BuildConfig
 import com.sstudio.submissionbajetpackpro.core.R
-import com.sstudio.submissionbajetpackpro.core.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.api.ApiService
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieResponse
-import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvResponse
-import com.sstudio.submissionbajetpackpro.core.utils.*
+import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.*
+import com.sstudio.submissionbajetpackpro.core.utils.ListType
+import com.sstudio.submissionbajetpackpro.core.utils.Params
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class RemoteDataSource constructor(
     private val apiService: ApiService,
-    context: Context,
-    private val appExecutors: AppExecutors,
-    private val localDataSource: LocalDataSource
+    context: Context
 ) {
 
     private val language = context.getString(R.string.language)
@@ -46,13 +44,12 @@ class RemoteDataSource constructor(
             }
         } catch (e: Exception) {
             Log.e("RemoteDataSource", e.toString())
-            EspressoIdlingResource.decrement()
             ApiResponse.Failed(e.toString())
         }
     }
 
     suspend fun getAllTvShows(movieParams: Params.MovieParams): ApiResponse<TvResponse> {
-        EspressoIdlingResource.increment()
+        
         return try {
             val response: TvResponse = when (movieParams.listType) {
                 ListType.POPULAR_TV_SHOW -> {
@@ -80,8 +77,8 @@ class RemoteDataSource constructor(
         }
     }
 
-    fun getMovieDetail(movieId: Int): Flow<ApiResponse<MovieResponse.Result>> {
-        EspressoIdlingResource.increment()
+    fun getMovieDetail(movieId: Int): Flow<ApiResponse<MovieDetailResponse>> {
+        
         return flow {
             try {
                 val response =
@@ -91,17 +88,15 @@ class RemoteDataSource constructor(
                 } else {
                     emit(ApiResponse.Empty)
                 }
-                EspressoIdlingResource.decrement()
             } catch (e: Exception) {
                 emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
-                EspressoIdlingResource.decrement()
             }
         }.flowOn(Dispatchers.IO)
     }
 
-    fun getTvShowDetail(tvShowId: Int): Flow<ApiResponse<TvResponse.Result>> {
-        EspressoIdlingResource.increment()
+    fun getTvShowDetail(tvShowId: Int): Flow<ApiResponse<TvDetailResponse>> {
+        
         return flow {
             try {
                 val response = apiService.getTvDetail(tvShowId, BuildConfig.TMDB_API_KEY, language)
@@ -110,17 +105,15 @@ class RemoteDataSource constructor(
                 } else {
                     emit(ApiResponse.Empty)
                 }
-                EspressoIdlingResource.decrement()
             } catch (e: Exception) {
                 emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
-                EspressoIdlingResource.decrement()
             }
         }.flowOn(Dispatchers.IO)
     }
 
-    fun getSearchMovie(query: String): Flow<ApiResponse<List<MovieResponse.Result>>> {
-        return flow {
+    fun getSearchMovie(query: String): Flow<ApiResponse<List<MovieResponse.Result>>> =
+        flow {
             try {
                 val response =
                     apiService.getSearchMovie(query, BuildConfig.TMDB_API_KEY, language).results
@@ -129,17 +122,14 @@ class RemoteDataSource constructor(
                 } else {
                     emit(ApiResponse.Empty)
                 }
-                EspressoIdlingResource.decrement()
             } catch (e: Exception) {
                 emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
-                EspressoIdlingResource.decrement()
             }
         }.flowOn(Dispatchers.IO)
-    }
 
-    fun getSearchTv(query: String): Flow<ApiResponse<List<TvResponse.Result>>> {
-        return flow {
+    fun getSearchTv(query: String): Flow<ApiResponse<List<TvResponse.Result>>> =
+        flow {
             try {
                 val response =
                     apiService.getSearchTv(query, BuildConfig.TMDB_API_KEY, language).results
@@ -148,13 +138,138 @@ class RemoteDataSource constructor(
                 } else {
                     emit(ApiResponse.Empty)
                 }
-                EspressoIdlingResource.decrement()
             } catch (e: Exception) {
                 emit(ApiResponse.Failed(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
-                EspressoIdlingResource.decrement()
             }
         }.flowOn(Dispatchers.IO)
-    }
+
+    fun getCreditsMovie(movieId: Int): Flow<ApiResponse<CreditsResponse>> =
+        flow {
+            try {
+                val response =
+                    apiService.getCreditsMovie(movieId, BuildConfig.TMDB_API_KEY, language)
+                if (response.cast.isNotEmpty() || response.crew.isNotEmpty()) {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+    
+    fun getCreditsTv(tvId: Int): Flow<ApiResponse<CreditsResponse>> =
+        flow {
+            try {
+                val response =
+                    apiService.getCreditsTv(tvId, BuildConfig.TMDB_API_KEY, language)
+                if (response.cast.isNotEmpty()) {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+    
+    fun getVideoMovie(movieId: Int): Flow<ApiResponse<VideoResponse>> =
+        flow {
+            try {
+                val response =
+                    apiService.getVideoMovie(movieId, BuildConfig.TMDB_API_KEY, language)
+                if (response.video.isNotEmpty()) {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+    
+    fun getVideoTv(tvId: Int): Flow<ApiResponse<VideoResponse>> =
+        flow {
+            try {
+                val response =
+                    apiService.getVideoTv(tvId, BuildConfig.TMDB_API_KEY, language)
+                if (response.video.isNotEmpty()) {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+    
+    fun getSimilarMovie(movieId: Int): Flow<ApiResponse<MovieResponse>> =
+        flow {
+            try {
+                val response =
+                    apiService.getSimilarMovie(movieId, BuildConfig.TMDB_API_KEY, language)
+                if (response.results.isNotEmpty()) {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+    
+    fun getSimilarTv(tvId: Int): Flow<ApiResponse<TvResponse>> =
+        flow {
+            try {
+                val response =
+                    apiService.getSimilarTv(tvId, BuildConfig.TMDB_API_KEY, language)
+                if (response.results.isNotEmpty()) {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+
+    fun getAllGenreMovie(): Flow<ApiResponse<GenresResponse>> =
+        flow {
+            try {
+                val response =
+                    apiService.getAllGenreMovie(BuildConfig.TMDB_API_KEY, language)
+                if (response.genres.isNotEmpty()) {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
+    
+    fun getAllGenreTv(): Flow<ApiResponse<GenresResponse>> =
+        flow {
+            try {
+                val response =
+                    apiService.getAllGenreTv(BuildConfig.TMDB_API_KEY, language)
+                if (response.genres.isNotEmpty()) {
+                    emit(ApiResponse.Success(response))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (e: Exception) {
+                emit(ApiResponse.Failed(e.toString()))
+                Log.e("RemoteDataSource", e.toString())
+            }
+        }.flowOn(Dispatchers.IO)
 }
 

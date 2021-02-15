@@ -8,8 +8,8 @@ import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.FakeMovieTvRepository
 import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
-import com.sstudio.submissionbajetpackpro.core.domain.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
+import com.sstudio.submissionbajetpackpro.core.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.ui.movie.home.MovieHomeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext

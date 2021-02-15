@@ -10,6 +10,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.utils.Params
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
+import com.sstudio.submissionbajetpackpro.ui.detail.DetailData
 import com.sstudio.submissionbajetpackpro.ui.search.SearchActivity
 import com.sstudio.submissionbajetpackpro.ui.tv.list.TvListActivity
 import kotlinx.android.synthetic.main.fragment_tv_home.*
@@ -48,8 +49,7 @@ class TvHomeFragment : Fragment() {
             }
             homeParentAdapter.onItemTvClick = {
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_TV)
-                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, DetailData(it.id, it.originalName, DetailData.Type.TV_SHOW))
                 startActivity(intent)
             }
         }

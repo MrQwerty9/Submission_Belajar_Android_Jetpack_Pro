@@ -10,6 +10,7 @@
     <color name="colorTextSecondary">#6D767E</color>
     <color name="colorTextTertiary">#EFEFEF</color>
     <color name="grey">#424242</color>
-    <color name="defaultBg">#FBEFD1</color>
+    <color name="defaultBg">#31364A</color>
     <color name="whiteGrey">#7C7C7C</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

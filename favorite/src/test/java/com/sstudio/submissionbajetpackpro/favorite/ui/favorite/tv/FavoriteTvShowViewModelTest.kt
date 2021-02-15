@@ -7,8 +7,8 @@ import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.FakeMovieTvRepository
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
-import com.sstudio.submissionbajetpackpro.core.domain.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
+import com.sstudio.submissionbajetpackpro.core.usecase.FakeMovieTvInteractor
 import com.sstudio.submissionbajetpackpro.favorite.tv.FavoriteTvShowViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext

@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sstudio.submissionbajetpackpro.core.ui.tv.TvAdapter
 import com.sstudio.submissionbajetpackpro.favorite.R
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
+import com.sstudio.submissionbajetpackpro.ui.detail.DetailData
 import kotlinx.android.synthetic.main.fragment_favorite_tv_show.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -40,8 +41,7 @@ class FavoriteTvShowFragment : Fragment() {
 
             tvAdapter.onItemClick = {
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
-                intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+                intent.putExtra(DetailActivity.EXTRA_DETAIL, DetailData(it.id, it.originalName, DetailData.Type.TV_SHOW))
                 startActivity(intent)
             }
 

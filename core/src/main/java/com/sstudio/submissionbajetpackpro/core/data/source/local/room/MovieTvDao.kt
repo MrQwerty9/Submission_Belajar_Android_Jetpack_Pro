@@ -11,45 +11,45 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MovieTvDao {
 
-    @Query("SELECT MovieEntity.*, ListTypeMovieEntity.* FROM MovieEntity, ListTypeMovieEntity WHERE ListTypeMovieEntity.listType = :listType AND MovieEntity.idMovie = ListTypeMovieEntity.idMovie")
+    @Query("SELECT MovieEntity.*, MovieListEntity.* FROM MovieEntity, MovieListEntity WHERE MovieListEntity.listType = :listType AND MovieEntity.id_movie = MovieListEntity.id_movie")
     fun getMovieListType(listType: String): Flow<List<MovieEntity>>
 
-    @Query("SELECT MovieEntity.*, ListTypeMovieEntity.* FROM MovieEntity, ListTypeMovieEntity WHERE ListTypeMovieEntity.listType = :listType AND MovieEntity.idMovie = ListTypeMovieEntity.idMovie")
+    @Query("SELECT MovieEntity.*, MovieListEntity.* FROM MovieEntity, MovieListEntity WHERE MovieListEntity.listType = :listType AND MovieEntity.id_movie = MovieListEntity.id_movie")
     fun getMovieListTypePaging(listType: String): DataSource.Factory<Int, MovieEntity>
 
-    @Query("SELECT MovieEntity.*, FavoriteMovieEntity.* FROM MovieEntity, FavoriteMovieEntity WHERE MovieEntity.idMovie = FavoriteMovieEntity.idMovie")
+    @Query("SELECT MovieEntity.*, FavoriteMovieEntity.* FROM MovieEntity, FavoriteMovieEntity WHERE MovieEntity.id_movie = FavoriteMovieEntity.idMovie")
     fun getAllFavoriteMovie(): DataSource.Factory<Int, MovieFavorite>
 
-    @Query("SELECT * FROM MovieEntity where idMovie = :movieId")
-    fun getMovieById(movieId: Int): Flow<List<MovieEntity>>
+    @Query("SELECT MovieEntity.*, MovieDetailEntity.* FROM MovieEntity, MovieDetailEntity WHERE MovieEntity.id_movie = MovieDetailEntity.id_movie AND MovieDetailEntity.id_movie = :idMovie")
+    fun getMovieDetail(idMovie: Int): Flow<MovieDetailEmbed>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovies(movie: List<MovieEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovieDetail(data: MovieEntity)
+    suspend fun insertMovieDetail(data: MovieDetailEntity)
 
     @Query("DELETE FROM MovieEntity")
     suspend fun deleteAllMovie()
 
 
-    @Query("SELECT TvEntity.*, ListTypeTvEntity.* FROM TvEntity, ListTypeTvEntity WHERE ListTypeTvEntity.listType = :listType AND TvEntity.idTv = ListTypeTvEntity.idTv")
+    @Query("SELECT TvEntity.*, TvListEntity.* FROM TvEntity, TvListEntity WHERE TvListEntity.listType = :listType AND TvEntity.id_tv = TvListEntity.id_tv")
     fun getTvListType(listType: String): Flow<List<TvEntity>>
 
-    @Query("SELECT TvEntity.*, ListTypeTvEntity.* FROM TvEntity, ListTypeTvEntity WHERE ListTypeTvEntity.listType = :listType AND TvEntity.idTv = ListTypeTvEntity.idTv")
+    @Query("SELECT TvEntity.*, TvListEntity.* FROM TvEntity, TvListEntity WHERE TvListEntity.listType = :listType AND TvEntity.id_tv = TvListEntity.id_tv")
     fun getTvListTypePaging(listType: String): DataSource.Factory<Int, TvEntity>
 
-    @Query("SELECT *, * FROM TvEntity, FavoriteTvEntity WHERE TvEntity.idTv = FavoriteTvEntity.idTv")
+    @Query("SELECT *, * FROM TvEntity, FavoriteTvEntity WHERE TvEntity.id_tv = FavoriteTvEntity.idTv")
     fun getAllFavoriteTv(): DataSource.Factory<Int, TvFavorite>
 
-    @Query("SELECT * FROM TvEntity where idTv = :tvId")
-    fun getTvById(tvId: Int): Flow<List<TvEntity>>
+    @Query("SELECT TvEntity.*, TvDetailEntity.* FROM TvEntity, TvDetailEntity WHERE TvEntity.id_tv = TvDetailEntity.id_tv AND TvDetailEntity.id_tv = :idTv")
+    fun getTvDetail(idTv: Int): Flow<TvDetailEmbed>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTvShows(tv: List<TvEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTvDetail(tv: TvEntity)
+    suspend fun insertTvDetail(tv: TvDetailEntity)
 
     @Query("DELETE FROM TvEntity")
     suspend fun deleteAllTv()
@@ -73,14 +73,14 @@ interface MovieTvDao {
     fun getFavoriteTvById(id: Int): Flow<List<FavoriteTvEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovieListType(listTypeEntity: List<ListTypeMovieEntity>)
+    suspend fun insertMovieListType(listEntity: List<MovieListEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTvListType(listTypeEntity: List<ListTypeTvEntity>)
+    suspend fun insertTvListType(listTypeEntity: List<TvListEntity>)
 
-    @Query("DELETE FROM ListTypeMovieEntity where listType = :listType")
+    @Query("DELETE FROM MovieListEntity where listType = :listType")
     suspend fun deleteMovieList(listType: String)
 
-    @Query("DELETE FROM ListTypeTvEntity where listType = :listType")
+    @Query("DELETE FROM TvListEntity where listType = :listType")
     suspend fun deleteTvList(listType: String)
 }

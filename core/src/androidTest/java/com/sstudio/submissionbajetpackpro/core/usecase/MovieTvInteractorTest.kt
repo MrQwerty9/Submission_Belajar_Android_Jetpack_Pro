@@ -1,4 +1,4 @@
-package com.sstudio.submissionbajetpackpro.core.domain.usecase
+package com.sstudio.submissionbajetpackpro.core.usecase
 
 import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.FakeMovieTvRepository
@@ -6,10 +6,12 @@ import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteEntity
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
+import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
 import com.sstudio.submissionbajetpackpro.core.utils.Params
 import kotlinx.coroutines.flow.Flow
 
-class FakeMovieTvInteractor(private val fakeMovieTvRepository: FakeMovieTvRepository): MovieTvUseCase {
+class FakeMovieTvInteractor(private val fakeMovieTvRepository: FakeMovieTvRepository):
+    MovieTvUseCase {
     override fun getMovieList(params: Params.MovieParams): Flow<Resource<PagedList<Movie>>> =
         fakeMovieTvRepository.getMovieList(params)
 

@@ -12,7 +12,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.domain.model.MovieHome
 import com.sstudio.submissionbajetpackpro.core.utils.ListType
-import com.sstudio.submissionbajetpackpro.utils.StartSnapHelper
+import com.sstudio.submissionbajetpackpro.core.utils.StartSnapHelper
 import kotlinx.android.synthetic.main.item_movie_tv_home.view.*
 
 class MovieHomeParentAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

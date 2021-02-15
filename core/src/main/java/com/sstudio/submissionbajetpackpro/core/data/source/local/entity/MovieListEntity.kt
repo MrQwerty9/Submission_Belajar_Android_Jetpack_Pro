@@ -5,11 +5,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ListTypeTvEntity(
+data class MovieListEntity(
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
     var id: Int,
-    var idTv: Int,
+    var id_movie: Int,
     var listType: String
 )

@@ -10,7 +10,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.BuildConfig
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.core.domain.model.TvHome
-import kotlinx.android.synthetic.main.item_movie_child_home.view.*
+import kotlinx.android.synthetic.main.item_movie_poster.view.*
 
 class TvHomeChildAdapter : RecyclerView.Adapter<TvHomeChildAdapter.MovieViewHolder>() {
 
@@ -24,7 +24,7 @@ class TvHomeChildAdapter : RecyclerView.Adapter<TvHomeChildAdapter.MovieViewHold
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_child_home, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_poster, parent, false)
         return MovieViewHolder(view)
     }
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.asLiveData
 import androidx.paging.DataSource
 import androidx.paging.PagedList
 import com.nhaarman.mockitokotlin2.verify
+import com.sstudio.submissionbajetpackpro.core.PagedListUtil
 import com.sstudio.submissionbajetpackpro.core.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.MovieEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.MovieFavorite
@@ -19,7 +20,6 @@ import com.sstudio.submissionbajetpackpro.core.domain.model.Movie
 import com.sstudio.submissionbajetpackpro.core.utils.AppExecutors
 import com.sstudio.submissionbajetpackpro.core.utils.DataDummy
 import com.sstudio.submissionbajetpackpro.core.utils.LiveDataTestUtil
-import com.sstudio.submissionbajetpackpro.utils.PagedListUtil
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.Dispatchers
@@ -117,10 +117,10 @@ class MovieTvRepositoryTest {
     fun testGetMovieDetail() {
         val dummyMovie = MutableLiveData<MovieEntity>()
         dummyMovie.value = DataDummy.generateDummyMovies()[0]
-        `when`(local.getMovieById(movieId)).thenReturn(dummyMovie.asFlow())
+        `when`(local.getMovieDetail(movieId)).thenReturn(dummyMovie.asFlow())
 
         val movieEntities = LiveDataTestUtil.getValue(movieTvRepository.getMovieDetail(false, movieId).asLiveData())
-        verify(local).getMovieById(movieId)
+        verify(local).getMovieDetail(movieId)
         Assert.assertNotNull(movieEntities)
         assertEquals(detailMovieResponses.originalTitle, movieEntities.data?.originalTitle)
     }
@@ -153,10 +153,10 @@ class MovieTvRepositoryTest {
     fun testGetTvShowDetail() {
         val dummyTv = MutableLiveData<TvEntity>()
         dummyTv.value = DataDummy.generateDummyTvShow()[0]
-        `when`(local.getTvById(tvId)).thenReturn(dummyTv.asFlow())
+        `when`(local.getTvDetail(tvId)).thenReturn(dummyTv.asFlow())
 
         val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getTvShowDetail(false, tvId).asLiveData())
-        verify(local).getTvById(tvId)
+        verify(local).getTvDetail(tvId)
         Assert.assertNotNull(tvShowEntities)
         assertEquals(detailTvShowResponses.originalName, tvShowEntities.data?.originalName)
     }

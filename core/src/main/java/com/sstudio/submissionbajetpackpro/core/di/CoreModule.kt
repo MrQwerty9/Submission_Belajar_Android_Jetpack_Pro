@@ -51,7 +51,7 @@ val networkModule = module {
 
 val repositoryModule = module {
     single { LocalDataSource(get()) }
-    single { RemoteDataSource(get(), get(), get(), get()) }
+    single { RemoteDataSource(get(), get()) }
     factory { AppExecutors() }
     single { MovieTvRepository(get(), get(), get()) }
 }

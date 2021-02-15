@@ -62,8 +62,8 @@ class FakeMovieTvRepository constructor(
     override fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<Movie>> {
         return object : NetworkBoundResource<Movie, MovieResponse.Result>(appExecutors) {
             override fun loadFromDB(): Flow<Movie> =
-                localDataSource.getMovieById(movieId).map {
-                    DataMapper.mapMovieEntitiesToDomain(it)
+                localDataSource.getMovieDetail(movieId).map {
+                    DataMapper.mapMovieDetailEntitiesToDomain(it)
                 }
 
             override fun shouldFetch(data: Movie?): Boolean =
@@ -154,7 +154,7 @@ class FakeMovieTvRepository constructor(
     override fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): Flow<Resource<Tv>> {
         return object : NetworkBoundResource<Tv, TvResponse.Result>(appExecutors) {
             override fun loadFromDB(): Flow<Tv> =
-                localDataSource.getTvById(tvShowId).map {
+                localDataSource.getTvDetail(tvShowId).map {
                     DataMapper.mapTvEntitiesToDomain(it)
                 }
 

@@ -12,6 +12,7 @@ import com.sstudio.submissionbajetpackpro.core.ui.tv.TvAdapter
 import com.sstudio.submissionbajetpackpro.core.utils.Params
 import com.sstudio.submissionbajetpackpro.core.vo.NetworkState
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
+import com.sstudio.submissionbajetpackpro.ui.detail.DetailData
 import kotlinx.android.synthetic.main.activity_tv_list.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -39,8 +40,7 @@ class TvListActivity : AppCompatActivity() {
 
         tvAdapter.onItemClick = {
             val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra(DetailActivity.EXTRA_MOVIE_TV, DetailActivity.IS_MOVIE)
-            intent.putExtra(DetailActivity.EXTRA_DETAIL, it.id)
+            intent.putExtra(DetailActivity.EXTRA_DETAIL, DetailData(it.id, it.originalName, DetailData.Type.TV_SHOW))
             startActivity(intent)
         }
         with(rv_list_tv_show) {

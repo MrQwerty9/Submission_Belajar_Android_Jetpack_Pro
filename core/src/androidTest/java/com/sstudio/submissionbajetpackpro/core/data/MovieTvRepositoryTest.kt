@@ -84,11 +84,12 @@ class MovieTvRepositoryTest {
 
         movieTvRepository.getMovieList(false)
 
-        val movieEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
+        val movieEntities =
+            Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
 //        Thread.sleep(10000)
 //        verify(local).getAllMovie()
         assertNotNull(movieEntities.data)
-        assertEquals(movieResponses.results.size.toLong(), movieEntities.data?.size?.toLong())
+        assertEquals(movieResponses.results.size.toLong(), movieEntities.data.size.toLong())
     }
 
 //    @Test
@@ -117,11 +118,11 @@ class MovieTvRepositoryTest {
     fun testGetMovieDetail() {
         val dummyMovie = MutableLiveData<MovieEntity>()
         dummyMovie.value = DataDummy.generateDummyMovies()[0]
-        `when`(local.getMovieById(movieId)).thenReturn(dummyMovie.asFlow())
+        `when`(local.getMovieDetail(movieId)).thenReturn(dummyMovie.asFlow())
 
         val movieEntities = LiveDataTestUtil.getValue(movieTvRepository.getMovieDetail(false, movieId).asLiveData())
         Thread.sleep(2000)
-        verify(local).getMovieById(movieId)
+        verify(local).getMovieDetail(movieId)
         Assert.assertNotNull(movieEntities)
 //        assertEquals(detailMovieResponses.originalTitle, movieEntities.data?.originalTitle)
     }
@@ -132,10 +133,11 @@ class MovieTvRepositoryTest {
         `when`(local.getAllFavoriteMovie()).thenReturn(dataSourceFactory)
         movieTvRepository.getAllFavoriteMovie()
 
-        val movieEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
+        val movieEntities =
+            Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyMovies()))
         verify(local).getAllFavoriteMovie()
         assertNotNull(movieEntities)
-        assertEquals(movieResponses.results.size.toLong(), movieEntities.data?.size?.toLong())
+        assertEquals(movieResponses.results.size.toLong(), movieEntities.data.size.toLong())
     }
 
     @Test
@@ -144,21 +146,22 @@ class MovieTvRepositoryTest {
         `when`(local.getTvListPaging()).thenReturn(dataSourceFactory)
         movieTvRepository.getTvShowsList(false)
 
-        val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
+        val tvShowEntities =
+            Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
         Thread.sleep(2000)
         verify(local).getTvListPaging()
         assertNotNull(tvShowEntities)
-        assertEquals(tvShowResponses.results.size.toLong(), tvShowEntities.data?.size?.toLong())
+        assertEquals(tvShowResponses.results.size.toLong(), tvShowEntities.data.size.toLong())
     }
 
     @Test
     fun testGetTvShowDetail() {
         val dummyTv = MutableLiveData<TvEntity>()
         dummyTv.value = DataDummy.generateDummyTvShow()[0]
-        `when`(local.getTvById(tvId)).thenReturn(dummyTv.asFlow())
+        `when`(local.getTvDetail(tvId)).thenReturn(dummyTv.asFlow())
 
         val tvShowEntities = LiveDataTestUtil.getValue(movieTvRepository.getTvShowDetail(false, tvId).asLiveData())
-        verify(local).getTvById(tvId)
+        verify(local).getTvDetail(tvId)
         Assert.assertNotNull(tvShowEntities)
 //        assertEquals(detailTvShowResponses.originalName, tvShowEntities.data?.originalName)
     }
@@ -169,9 +172,10 @@ class MovieTvRepositoryTest {
         `when`(local.getAllFavoriteTv()).thenReturn(dataSourceFactory)
         movieTvRepository.getAllFavoriteTv()
 
-        val favoriteEntities = Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
+        val favoriteEntities =
+            Resource.Success(PagedListUtil.mockPagedList(DataDummy.generateDummyTvShow()))
         verify(local).getAllFavoriteTv()
         assertNotNull(favoriteEntities)
-        assertEquals(movieResponses.results.size.toLong(), favoriteEntities.data?.size?.toLong())
+        assertEquals(movieResponses.results.size.toLong(), favoriteEntities.data.size.toLong())
     }
 }

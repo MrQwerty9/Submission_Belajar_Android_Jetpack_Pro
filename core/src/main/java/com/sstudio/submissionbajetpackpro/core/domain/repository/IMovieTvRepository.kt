@@ -13,13 +13,13 @@ interface IMovieTvRepository {
 
     fun getMovieHome(): Flow<List<Resource<MovieHome>>>
     fun getMovieList(params: Params.MovieParams): RepoResult<Movie>
-    fun getMovieDetail(needRefresh: Boolean, movieId: Int): Flow<Resource<MovieDetail>>
+    fun getMovieDetail(movieId: Int): Flow<Resource<MovieDetail>>
     fun getAllFavoriteMovie(): Flow<PagedList<Movie>>
     fun getSearchMovie(query: String): Flow<Resource<List<Movie>>>
 
     fun getTvHome(): Flow<List<Resource<TvHome>>>
     fun getTvShowsList(params: Params.MovieParams): RepoResult<Tv>
-    fun getTvShowDetail(needRefresh: Boolean, tvShowId: Int): Flow<Resource<TvDetail>>
+    fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvDetail>>
     fun getAllFavoriteTv(): Flow<PagedList<Tv>>
     fun getSearchTv(query: String): Flow<Resource<List<Tv>>>
 

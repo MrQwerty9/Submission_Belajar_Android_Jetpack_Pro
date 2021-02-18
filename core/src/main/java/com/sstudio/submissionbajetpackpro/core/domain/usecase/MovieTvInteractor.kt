@@ -18,8 +18,8 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun getMovieList(params: Params.MovieParams): RepoResult<Movie> =
         movieTvRepository.getMovieList(params)
 
-    override fun getMovieDetail(needFetch: Boolean, movieId: Int): Flow<Resource<MovieDetail>> =
-        movieTvRepository.getMovieDetail(needFetch, movieId)
+    override fun getMovieDetail(movieId: Int): Flow<Resource<MovieDetail>> =
+        movieTvRepository.getMovieDetail(movieId)
 
     override fun getAllFavoriteMovie(): Flow<PagedList<Movie>> =
         movieTvRepository.getAllFavoriteMovie()
@@ -33,8 +33,8 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun getTvShowsList(params: Params.MovieParams): RepoResult<Tv> =
         movieTvRepository.getTvShowsList(params)
 
-    override fun getTvShowDetail(needFetch: Boolean, tvShowId: Int): Flow<Resource<TvDetail>> =
-        movieTvRepository.getTvShowDetail(needFetch, tvShowId)
+    override fun getTvShowDetail(tvShowId: Int): Flow<Resource<TvDetail>> =
+        movieTvRepository.getTvShowDetail(tvShowId)
 
     override fun getAllFavoriteTv(): Flow<PagedList<Tv>> =
         movieTvRepository.getAllFavoriteTv()

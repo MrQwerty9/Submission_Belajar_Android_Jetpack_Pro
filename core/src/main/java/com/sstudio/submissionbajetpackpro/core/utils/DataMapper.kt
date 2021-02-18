@@ -36,16 +36,16 @@ object DataMapper {
             vote_average = response.voteAverage ?: 0.0
         )
 
-    fun mapMovieEntitiesToDomain(entity: MovieEntity): Movie =
+    fun mapMovieEntitiesToDomain(entity: MovieEntity?): Movie =
         Movie(
-            backdropPath = entity.backdrop_path ?: "",
-            genreIds = entity.genre_ids ?: "",
-            id = entity.id_movie,
-            originalTitle = entity.original_title ?: "",
-            overview = entity.overview ?: "",
-            posterPath = entity.poster_path ?: "",
-            releaseDate = entity.release_date ?: "",
-            voteAverage = entity.vote_average ?: 0.0
+            backdropPath = entity?.backdrop_path ?: "",
+            genreIds = entity?.genre_ids ?: "",
+            id = entity?.id_movie ?: 0,
+            originalTitle = entity?.original_title ?: "",
+            overview = entity?.overview ?: "",
+            posterPath = entity?.poster_path ?: "",
+            releaseDate = entity?.release_date ?: "",
+            voteAverage = entity?.vote_average ?: 0.0
         )
 
     fun mapTvResponseToDomain(response: TvResponse.Result): Tv =
@@ -178,7 +178,7 @@ object DataMapper {
                     it?.origin_country ?: ""
                 )
             } ?: listOf(),
-            revenue = response.revenue ?: 0,
+            revenue = response.revenue,
             runtime = response.runtime ?: 0,
             status = response.status ?: "",
             title = response.title ?: "",
@@ -260,7 +260,7 @@ object DataMapper {
             production_companies = response.production_companies?.let {
                 mapperListObjToStr(it)
             } ?: "",
-            revenue = response.revenue ?: 0,
+            revenue = response.revenue,
             runtime = response.runtime ?: 0,
             status = response.status ?: "",
             title = response.title ?: "",

@@ -3,7 +3,7 @@ package com.sstudio.submissionbajetpackpro.core.data.source.remote.response
 data class MovieDetailResponse(
     val adult: Boolean? = false,
     val backdrop_path: String? = "",
-    val budget: Int? = 0,
+    val budget: Long? = 0,
     val genres: List<Genre?>? = listOf(),
     val homepage: String? = "",
     val id: Int = 0,
@@ -15,7 +15,7 @@ data class MovieDetailResponse(
     val poster_path: String? = "",
     val production_companies: List<ProductionCompany?>? = listOf(),
     val release_date: String? = "",
-    val revenue: Int? = 0,
+    val revenue: Long = 0,
     val runtime: Int? = 0,
     val status: String? = "",
     val title: String? = "",

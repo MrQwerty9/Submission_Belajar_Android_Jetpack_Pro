@@ -2,7 +2,6 @@ package com.sstudio.submissionbajetpackpro.ui.movie.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -62,15 +61,12 @@ class MovieHomeFragment : Fragment() {
             val listMovieHome = it.map { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        Log.d("mytag", "loading")
                         progress_bar.visibility = View.VISIBLE
                     }
                     is Resource.Success -> {
-                        Log.d("mytag", "loading")
                         progress_bar.visibility = View.GONE
                     }
                     is Resource.Error -> {
-                        Log.d("mytag", "loading")
                         progress_bar.visibility = View.GONE
                         Toast.makeText(context, "Terjadi Kesalahan", Toast.LENGTH_SHORT).show()
                     }

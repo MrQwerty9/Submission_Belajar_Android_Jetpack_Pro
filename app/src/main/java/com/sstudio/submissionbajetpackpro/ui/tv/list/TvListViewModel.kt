@@ -32,7 +32,7 @@ class TvListViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() 
         private set
 
 
-    fun getTv(params: Params.MovieParams?) {
+    fun setTv(params: Params.MovieParams?) {
         movieParams.postValue(params)
     }
 }

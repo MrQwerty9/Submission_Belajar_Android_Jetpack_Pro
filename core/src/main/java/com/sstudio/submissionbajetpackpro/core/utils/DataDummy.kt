@@ -1,26 +1,28 @@
 package com.sstudio.submissionbajetpackpro.core.utils
 
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.*
+import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieDetailResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieResponse
+import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvDetailResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvResponse
+import com.sstudio.submissionbajetpackpro.core.domain.model.*
 import java.util.*
 
 object DataDummy {
     private const val dummyTotalPage = 99
 
-    fun generateDummyMovies(): List<MovieEntity> {
+    fun generateDummyListMovieEntity(): List<MovieEntity> {
         val movies = ArrayList<MovieEntity>()
         movies.add(
             MovieEntity(
-                0,
-                "/jeAQdDX9nguP6YOX6QSWKDPkbBo.jpg",
-                "28, 14, 878",
-                590706,
-                "Jiu Jitsu",
-                "Every six years, an ancient order of jiu-jitsu fighters joins forces to battle a vicious race of alien invaders. But when a celebrated war hero goes down in defeat, the fate of the planet and mankind hangs in the balance.",
-                "/eLT8Cu357VOwBVTitkmlDEg32Fs.jpg",
-                "2020-11-20",
-                5.8
+                backdrop_path = "/jeAQdDX9nguP6YOX6QSWKDPkbBo.jpg",
+                genre_ids = "",
+                id_movie = 299534,
+                original_title = "Avengers: Endgame",
+                overview = "Every six years, an ancient order of jiu-jitsu fighters joins forces to battle a vicious race of alien invaders. But when a celebrated war hero goes down in defeat, the fate of the planet and mankind hangs in the balance.",
+                poster_path = "/eLT8Cu357VOwBVTitkmlDEg32Fs.jpg",
+                release_date = "2020-11-20",
+                vote_average = 5.8,
             )
         )
         movies.add(
@@ -78,7 +80,48 @@ object DataDummy {
         return movies
     }
 
-    fun generateDummyTvShow(): List<TvEntity> {
+    fun generateDummyListMovie(): List<Movie> =
+        generateDummyListMovieEntity().map {
+            DataMapper.mapMovieEntitiesToDomain(it)
+        }
+
+    fun generateDummyDetailMovieEntity(): MovieDetailEntity =
+        MovieDetailEntity(
+            id_movie = 590706,
+            vote_count = 99,
+            production_companies = "",
+            original_language = "en",
+            imdb_id = "99",
+            genres = "",
+            status = "release",
+            popularity = 9.9,
+            id = 1,
+            homepage = "",
+            title = "movies",
+            runtime = 156,
+            revenue = 12345,
+            budget = 123,
+            adult = false
+        )
+
+    fun generateDummyTvDetailEntity(): TvDetailEntity =
+        TvDetailEntity(
+            id_tv = 590706,
+            vote_count = 99,
+            production_companies = "",
+            original_language = "en",
+            genres = "",
+            status = "release",
+            popularity = 9.9,
+            id = 1,
+            homepage = "",
+            name = "movies",
+            number_of_seasons = 99,
+            number_of_episodes = 9,
+            last_air_date = ""
+        )
+
+    fun generateDummyListTvEntity(): List<TvEntity> {
         val tvShows = ArrayList<TvEntity>()
         tvShows.add(
             TvEntity(
@@ -148,7 +191,7 @@ object DataDummy {
         return tvShows
     }
 
-    fun generateRemoteDummyMovies(): MovieResponse {
+    fun generateDummyMovieResponse(): MovieResponse {
 
         val movies = ArrayList<MovieResponse.Result>()
         movies.add(
@@ -214,7 +257,7 @@ object DataDummy {
         return MovieResponse(movies, dummyTotalPage)
     }
 
-    fun generateRemoteDummyTvShow(): TvResponse {
+    fun generateDummyTvResponse(): TvResponse {
         val tvShows = ArrayList<TvResponse.Result>()
         tvShows.add(
             TvResponse.Result(
@@ -279,29 +322,95 @@ object DataDummy {
         return TvResponse(tvShows, dummyTotalPage)
     }
 
-    fun generateRemoteDummyDetailMovie(): MovieResponse.Result {
-        return MovieResponse.Result(
-            "/jeAQdDX9nguP6YOX6QSWKDPkbBo.jpg",
-            listOf(28, 14, 878),
-            590706,
-            "Jiu Jitsu",
-            "Every six years, an ancient order of jiu-jitsu fighters joins forces to battle a vicious race of alien invaders. But when a celebrated war hero goes down in defeat, the fate of the planet and mankind hangs in the balance.",
-            "/eLT8Cu357VOwBVTitkmlDEg32Fs.jpg",
-            "2020-11-20",
-            5.8
+    fun generateDummyMovieDetail(): MovieDetail {
+        return MovieDetail(
+            movie = Movie(
+                backdropPath = "/jeAQdDX9nguP6YOX6QSWKDPkbBo.jpg",
+                genreIds = "",
+                id = 299534,
+                originalTitle = "Avengers: Endgame",
+                overview = "Every six years, an ancient order of jiu-jitsu fighters joins forces to battle a vicious race of alien invaders. But when a celebrated war hero goes down in defeat, the fate of the planet and mankind hangs in the balance.",
+                posterPath = "/eLT8Cu357VOwBVTitkmlDEg32Fs.jpg",
+                releaseDate = "2020-11-20",
+                voteAverage = 5.8,
+            ),
+            adult = false,
+            id = 299534,
+            budget = 356000000,
+            revenue = 2797800564,
+            runtime = 181,
+            homepage = "https://www.marvel.com/movies/avengers-endgame",
+            popularity = 316.692,
+            status = "Released",
+            imdbId = "tt4154796",
+            originalLanguage = "en",
+            productionCompanies = listOf(
+                MovieDetail.ProductionCompany(
+                    id = 420,
+                    logoPath = "/hUzeosd33nzE5MCNsZxCGEKTXaQ.png",
+                    name = "Marvel Studios",
+                    originCountry = "US"
+                )
+            ),
+            title = "Avengers: Endgame",
+            genres = listOf(
+                Genre(12, "Adventure"),
+                Genre(878, "Science Fiction"),
+                Genre(28, "Action")),
+            voteCount = 17032
         )
     }
 
-    fun generateRemoteDummyDetailTvShow(): TvResponse.Result {
-        return TvResponse.Result(
-            "/9ijMGlJKqcslswWUzTEwScm82Gs.jpg",
-            "2019-11-12",
-            listOf(10765, 10759, 37),
-            82856,
-            "The Mandalorian",
-            "After the fall of the Galactic Empire, lawlessness has spread throughout the galaxy. A lone gunfighter makes his way through the outer reaches, earning his keep as a bounty hunter.",
-            "/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg",
-            8.5
+    fun generateDummyTvDetail(): TvDetail {
+        return TvDetail(
+            tv = Tv(
+                backdropPath = "/9ijMGlJKqcslswWUzTEwScm82Gs.jpg",
+                genreIds = "",
+                id = 82856,
+                originalName = "The Mandalorian",
+                firstAirDate = "2019-11-12",
+                overview = "After the fall of the Galactic Empire, lawlessness has spread throughout the galaxy. A lone gunfighter makes his way through the outer reaches, earning his keep as a bounty hunter.",
+                posterPath = "/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg",
+                voteAverage = 8.5
+            ),
+            popularity = 316.692,
+            status = "Released",
+            originalLanguage = "en",
+            voteCount = 17032,
+            genres = listOf(
+                Genre(12, "Adventure"),
+                Genre(878, "Science Fiction"),
+                Genre(28, "Action")),
+            id = 82856,
+            name = "The Mandalorian",
+            productionCompanies = listOf(
+                TvDetail.ProductionCompany(
+                    id = 420,
+                    logoPath = "",
+                    name = "",
+                    originCountry = ""
+                )
+            ),
+            homepage = "",
+            numberOfSeasons = 99,
+            numberOfEpisodes = 99,
+            lastAirDate = ""
+        )
+    }
+
+    fun generateDummyTvDetailResponse(): TvDetailResponse {
+        return TvDetailResponse(
+            backdrop_path = "/9ijMGlJKqcslswWUzTEwScm82Gs.jpg",
+            first_air_date = "2019-11-12",
+            genres = listOf(
+                TvDetailResponse.Genre(12, "Adventure"),
+                TvDetailResponse.Genre(878, "Science Fiction"),
+                TvDetailResponse.Genre(28, "Action")),
+            id = 82856,
+            name = "The Mandalorian",
+            overview = "After the fall of the Galactic Empire, lawlessness has spread throughout the galaxy. A lone gunfighter makes his way through the outer reaches, earning his keep as a bounty hunter.",
+            poster_path = "/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg",
+            vote_average = 8.5
         )
     }
 
@@ -309,14 +418,14 @@ object DataDummy {
         val favMovie = ArrayList<MovieFavorite>()
         favMovie.add(
             MovieFavorite(
-                generateDummyMovies()[0],
-                FavoriteMovieEntity(generateDummyMovies()[0].id)
+                generateDummyListMovieEntity()[0],
+                FavoriteMovieEntity(generateDummyListMovieEntity()[0].id)
             )
         )
         favMovie.add(
             MovieFavorite(
-                generateDummyMovies()[1],
-                FavoriteMovieEntity(generateDummyMovies()[1].id)
+                generateDummyListMovieEntity()[1],
+                FavoriteMovieEntity(generateDummyListMovieEntity()[1].id)
             )
         )
         return favMovie
@@ -326,16 +435,44 @@ object DataDummy {
         val favTv = ArrayList<TvFavorite>()
         favTv.add(
             TvFavorite(
-                generateDummyTvShow()[0],
-                FavoriteTvEntity(generateDummyTvShow()[0].id)
+                generateDummyListTvEntity()[0],
+                FavoriteTvEntity(generateDummyListTvEntity()[0].id)
             )
         )
         favTv.add(
             TvFavorite(
-                generateDummyTvShow()[1],
-                FavoriteTvEntity(generateDummyTvShow()[1].id)
+                generateDummyListTvEntity()[1],
+                FavoriteTvEntity(generateDummyListTvEntity()[1].id)
             )
         )
         return favTv
     }
+
+    fun generateDummyMovieDetailResponse(): MovieDetailResponse =
+        MovieDetailResponse(
+            adult = false,
+            backdrop_path = "/jeAQdDX9nguP6YOX6QSWKDPkbBo.jpg",
+            genres = listOf(
+                MovieDetailResponse.Genre(12, "Adventure"),
+                MovieDetailResponse.Genre(878, "Science Fiction"),
+                MovieDetailResponse.Genre(28, "Action")),
+            id = 299534,
+            title = "Avengers: Endgame",
+            overview = "Every six years, an ancient order of jiu-jitsu fighters joins forces to battle a vicious race of alien invaders. But when a celebrated war hero goes down in defeat, the fate of the planet and mankind hangs in the balance.",
+            poster_path = "/eLT8Cu357VOwBVTitkmlDEg32Fs.jpg",
+            release_date = "2020-11-20",
+            vote_average = 5.8,
+            budget = 356000000,
+            revenue = 2797800564,
+            runtime = 181,
+            homepage = "https://www.marvel.com/movies/avengers-endgame",
+            popularity = 316.692,
+            status = "Released",
+            imdb_id = "tt4154796",
+            original_language = "en",
+            production_companies = listOf(
+                MovieDetailResponse.ProductionCompany(id = 420, logo_path = "/hUzeosd33nzE5MCNsZxCGEKTXaQ.png", name = "Marvel Studios", origin_country = "US")
+            ),
+            vote_count = 17032
+        )
 }

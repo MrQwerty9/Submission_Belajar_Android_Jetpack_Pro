@@ -9,7 +9,6 @@ class DetailViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() 
 
     private var movieTvId = 0
     lateinit var type: DetailData.Type
-    var needFetch = false
 
     fun setSelectedMovieTv(courseId: Int, type: DetailData.Type) {
         this.movieTvId = courseId
@@ -20,7 +19,7 @@ class DetailViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() 
         get() {
             if (field == null) {
                 field = MutableLiveData()
-                field = movieTvUseCase.getMovieDetail(needFetch, movieTvId).asLiveData()
+                field = movieTvUseCase.getMovieDetail(movieTvId).asLiveData()
             }
             return field
         }
@@ -30,7 +29,7 @@ class DetailViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() 
         get() {
             if (field == null) {
                 field = MutableLiveData()
-                field = movieTvUseCase.getTvShowDetail(needFetch, movieTvId).asLiveData()
+                field = movieTvUseCase.getTvShowDetail(movieTvId).asLiveData()
             }
             return field
         }
@@ -103,12 +102,6 @@ class DetailViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() 
             return field
         }
         private set
-
-    fun fetchSimilar() =
-        if (type == DetailData.Type.MOVIE)
-            movieTvUseCase.getSimilarMovie(movieTvId).asLiveData()
-        else
-            movieTvUseCase.getSimilarTv(movieTvId).asLiveData()
 
     var getVideo: LiveData<Resource<List<Video>>>? = null
         get() {

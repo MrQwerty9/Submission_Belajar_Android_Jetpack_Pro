@@ -30,10 +30,10 @@ class TvListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tv_list)
 
         val params = intent.getParcelableExtra<Params.MovieParams>(PARAMS_EXTRA)
-        viewModel.getTv(params)
+        viewModel.setTv(params)
         observeData()
         swipe_layout.setOnRefreshListener {
-            viewModel.getTv(params)
+            viewModel.setTv(params)
             observeData()
             swipe_layout.isRefreshing = false
         }

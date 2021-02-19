@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Movie (
     var backdropPath: String = "",
-    var genreIds: String = "",
+    var genreIds: List<Int> = listOf(),
     var id: Int = 0,
     var originalTitle: String = "",
     var overview: String = "",

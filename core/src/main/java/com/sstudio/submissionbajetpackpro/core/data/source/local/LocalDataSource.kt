@@ -70,4 +70,15 @@ class LocalDataSource constructor(private val mMovieDao: MovieTvDao) {
     suspend fun deleteTvList(listType: ListType) {
         mMovieDao.deleteTvList(listType.toString())
     }
+
+    fun getAllGenreMovie(): Flow<List<MovieGenresEntity>> = mMovieDao.getAllGenreMovie()
+
+    fun getAllGenreTv(): Flow<List<TvGenresEntity>> = mMovieDao.getAllGenreTv()
+
+    suspend fun insertAllGenreMovie(listGenre: List<MovieGenresEntity>) {
+        mMovieDao.insertAllGenreMovie(listGenre)
+    }
+    suspend fun insertAllGenreTv(listGenre: List<TvGenresEntity>){
+        mMovieDao.insertAllGenreTv(listGenre)
+    }
 }

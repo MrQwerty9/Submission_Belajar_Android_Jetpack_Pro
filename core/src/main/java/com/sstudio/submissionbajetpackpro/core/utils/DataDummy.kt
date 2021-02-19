@@ -326,7 +326,7 @@ object DataDummy {
         return MovieDetail(
             movie = Movie(
                 backdropPath = "/jeAQdDX9nguP6YOX6QSWKDPkbBo.jpg",
-                genreIds = "",
+                genreIds = listOf(),
                 id = 299534,
                 originalTitle = "Avengers: Endgame",
                 overview = "Every six years, an ancient order of jiu-jitsu fighters joins forces to battle a vicious race of alien invaders. But when a celebrated war hero goes down in defeat, the fate of the planet and mankind hangs in the balance.",
@@ -365,7 +365,7 @@ object DataDummy {
         return TvDetail(
             tv = Tv(
                 backdropPath = "/9ijMGlJKqcslswWUzTEwScm82Gs.jpg",
-                genreIds = "",
+                genreIds = listOf(),
                 id = 82856,
                 originalName = "The Mandalorian",
                 firstAirDate = "2019-11-12",

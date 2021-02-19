@@ -86,6 +86,6 @@ class FakeMovieTvInteractor(private val fakeMovieTvRepository: FakeMovieTvReposi
         override fun getAllGenreMovie(): Flow<Resource<List<Genre>>> =
             fakeMovieTvRepository.getAllGenreMovie()
 
-        override fun getAllGenreListTv(): Flow<Resource<List<Genre>>> =
+        override fun getAllGenreTv(): Flow<Resource<List<Genre>>> =
             fakeMovieTvRepository.getAllGenreTv()
     }

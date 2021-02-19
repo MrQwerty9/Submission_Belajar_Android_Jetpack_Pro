@@ -15,7 +15,7 @@ object DataMapper {
     fun mapMovieResponseToDomain(response: MovieResponse.Result): Movie =
         Movie(
             backdropPath = response.backdropPath ?: "",
-            genreIds = response.genreIds?.joinToString(separator = ",") ?: "",
+            genreIds = response.genreIds ?: listOf(),
             id = response.id,
             originalTitle = response.originalTitle ?: "",
             overview = response.overview ?: "",
@@ -39,7 +39,7 @@ object DataMapper {
     fun mapMovieEntitiesToDomain(entity: MovieEntity?): Movie =
         Movie(
             backdropPath = entity?.backdrop_path ?: "",
-            genreIds = entity?.genre_ids ?: "",
+            genreIds = entity?.genre_ids?.split(",")?.map { it.toInt() } ?: listOf(),
             id = entity?.id_movie ?: 0,
             originalTitle = entity?.original_title ?: "",
             overview = entity?.overview ?: "",
@@ -51,7 +51,7 @@ object DataMapper {
     fun mapTvResponseToDomain(response: TvResponse.Result): Tv =
         Tv(
             backdropPath = response.backdropPath ?: "",
-            genreIds = response.genreIds?.joinToString(separator = ",") ?: "",
+            genreIds = response.genreIds ?: listOf(),
             id = response.id,
             originalName = response.originalName ?: "",
             overview = response.overview ?: "",
@@ -89,7 +89,7 @@ object DataMapper {
     fun mapTvEntitiesToDomain(entity: TvEntity): Tv =
         Tv(
             backdropPath = entity.backdrop_path ?: "",
-            genreIds = entity.genres_ids ?: "",
+            genreIds = entity.genres_ids?.split(",")?.map { it.toInt() } ?: listOf(),
             id = entity.id_tv,
             originalName = entity.original_name ?: "",
             overview = entity.overview ?: "",
@@ -292,7 +292,7 @@ object DataMapper {
             movie = Movie(
                 backdropPath = entity?.movie?.backdrop_path ?: "",
                 originalTitle = entity?.movie?.original_title ?: "",
-                genreIds = entity?.movie?.genre_ids ?: "",
+                genreIds = entity?.movie?.genre_ids?.split(",")?.map { it.toInt() } ?: listOf(),
                 overview = entity?.movie?.overview ?: "",
                 posterPath = entity?.movie?.poster_path ?: "",
                 releaseDate = entity?.movie?.release_date ?: "",
@@ -321,7 +321,7 @@ object DataMapper {
         TvDetail(
             tv = Tv(
                 backdropPath = entity?.tv?.backdrop_path ?: "",
-                genreIds = entity?.tv?.genres_ids ?: "",
+                genreIds = entity?.tv?.genres_ids?.split(",")?.map { it.toInt() } ?: listOf(),
                 firstAirDate = entity?.tv?.first_air_date ?: "",
                 originalName = entity?.tv?.original_name ?: "",
                 overview = entity?.tv?.overview ?: "",

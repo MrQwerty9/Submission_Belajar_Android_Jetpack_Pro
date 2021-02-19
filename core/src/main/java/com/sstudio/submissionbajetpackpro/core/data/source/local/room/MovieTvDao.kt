@@ -83,4 +83,16 @@ interface MovieTvDao {
 
     @Query("DELETE FROM TvListEntity where listType = :listType")
     suspend fun deleteTvList(listType: String)
+
+    @Query("SELECT * FROM MovieGenresEntity")
+    fun getAllGenreMovie(): Flow<List<MovieGenresEntity>>
+
+    @Query("SELECT * FROM TvGenresEntity")
+    fun getAllGenreTv(): Flow<List<TvGenresEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllGenreMovie(listGenre: List<MovieGenresEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllGenreTv(listGenre: List<TvGenresEntity>)
 }

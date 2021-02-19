@@ -38,5 +38,5 @@ interface MovieTvUseCase {
     fun getSimilarTv(id: Int): Flow<Resource<List<Tv>>>
 
     fun getAllGenreMovie(): Flow<Resource<List<Genre>>>
-    fun getAllGenreListTv(): Flow<Resource<List<Genre>>>
+    fun getAllGenreTv(): Flow<Resource<List<Genre>>>
 }

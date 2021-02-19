@@ -19,10 +19,10 @@
     <string name="message_undo">Batal</string>
     <string name="message_ok">ok</string>
     <string name="title_favorite">Favorite</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search">Cari Film</string>
     <string name="tab_searchMovie">Cari Film</string>
     <string name="tab_searchTv">Cari Acara Tv</string>
     <string name="see_all">Lihat Semua</string>
+
+
 </resources>

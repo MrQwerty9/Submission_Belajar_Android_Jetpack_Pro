@@ -8,7 +8,7 @@ import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.*
 
 @Database(entities = [MovieEntity::class, TvEntity::class, FavoriteMovieEntity::class,
     FavoriteTvEntity::class, MovieListEntity::class, TvListEntity::class,
-                     MovieDetailEntity::class, TvDetailEntity::class],
+                     MovieDetailEntity::class, TvDetailEntity::class, MovieGenresEntity::class, TvGenresEntity::class],
     version = 10,
     exportSchema = false)
 abstract class MovieTvDatabase : RoomDatabase() {

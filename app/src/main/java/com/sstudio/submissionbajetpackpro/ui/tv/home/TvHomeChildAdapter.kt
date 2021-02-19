@@ -10,6 +10,7 @@ import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.BuildConfig
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.core.domain.model.TvHome
+import com.sstudio.submissionbajetpackpro.core.utils.DataTemp
 import kotlinx.android.synthetic.main.item_movie_poster.view.*
 
 class TvHomeChildAdapter : RecyclerView.Adapter<TvHomeChildAdapter.MovieViewHolder>() {
@@ -38,6 +39,11 @@ class TvHomeChildAdapter : RecyclerView.Adapter<TvHomeChildAdapter.MovieViewHold
 
         fun bindItem(tv: Tv) {
             with(itemView) {
+                tv_title.text = tv.originalName
+                tv_rating.text = tv.voteAverage.toString()
+                tv_genre.text = DataTemp.listTvGenre.find {
+                    it.id == tv.genreIds.first()
+                }?.name
                 Glide.with(itemView.context)
                     .load(BuildConfig.POSTER_THUMBNAIL + tv.posterPath)
                     .apply(

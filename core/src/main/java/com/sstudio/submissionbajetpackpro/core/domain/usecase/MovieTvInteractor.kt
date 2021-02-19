@@ -85,6 +85,6 @@ class MovieTvInteractor(private val movieTvRepository: MovieTvRepository): Movie
     override fun getAllGenreMovie(): Flow<Resource<List<Genre>>> =
         movieTvRepository.getAllGenreMovie()
 
-    override fun getAllGenreListTv(): Flow<Resource<List<Genre>>> =
+    override fun getAllGenreTv(): Flow<Resource<List<Genre>>> =
         movieTvRepository.getAllGenreTv()
 }

@@ -6,11 +6,14 @@ import androidx.paging.PagedList
 import com.sstudio.submissionbajetpackpro.core.data.source.local.LocalDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteMovieEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.FavoriteTvEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.MovieGenresEntity
+import com.sstudio.submissionbajetpackpro.core.data.source.local.entity.TvGenresEntity
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.ApiResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RemoteDataSource
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.RepoResult
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.paging.movie.MovieBoundaryCallback
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.paging.tv.TvBoundaryCallback
+import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.GenresResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.MovieDetailResponse
 import com.sstudio.submissionbajetpackpro.core.data.source.remote.response.TvDetailResponse
 import com.sstudio.submissionbajetpackpro.core.domain.model.*
@@ -60,33 +63,33 @@ class MovieTvRepository constructor(
             //network
             repeat(typeListTotal) { times ->
                 val mListType = listTypeMovieHome(times)
-                    when (val remote =
-                        remoteDataSource.getAllMovie(Params.MovieParams(listType = mListType))) {
-                        is ApiResponse.Success -> {
-                            movieList[times] = Resource.Success(
-                                MovieHome(
-                                    listType = mListType,
-                                    listMovie = remote.data.results.map { movieResponseResult ->
-                                        DataMapper.mapMovieResponseToDomain(movieResponseResult)
-                                    } as ArrayList<Movie>))
+                when (val remote =
+                    remoteDataSource.getAllMovie(Params.MovieParams(listType = mListType))) {
+                    is ApiResponse.Success -> {
+                        movieList[times] = Resource.Success(
+                            MovieHome(
+                                listType = mListType,
+                                listMovie = remote.data.results.map { movieResponseResult ->
+                                    DataMapper.mapMovieResponseToDomain(movieResponseResult)
+                                } as ArrayList<Movie>))
 
-                            localDataSource.deleteMovieList(mListType)
-                            localDataSource.insertMovieListType(remote.data.results.map { movieResponseResult ->
-                                DataMapper.mapMovieResponseToEntities(movieResponseResult)
-                            }, mListType)
-                        }
-                        is ApiResponse.Empty -> {
-                            movieList[times] = Resource.Success(
-                                MovieHome(
-                                    listType = mListType,
-                                    listMovie = arrayListOf()
-                                )
-                            )
-                        }
-                        is ApiResponse.Failed -> {
-                            movieList[times] = Resource.Error(remote.errorMessage)
-                        }
+                        localDataSource.deleteMovieList(mListType)
+                        localDataSource.insertMovieListType(remote.data.results.map { movieResponseResult ->
+                            DataMapper.mapMovieResponseToEntities(movieResponseResult)
+                        }, mListType)
                     }
+                    is ApiResponse.Empty -> {
+                        movieList[times] = Resource.Success(
+                            MovieHome(
+                                listType = mListType,
+                                listMovie = arrayListOf()
+                            )
+                        )
+                    }
+                    is ApiResponse.Failed -> {
+                        movieList[times] = Resource.Error(remote.errorMessage)
+                    }
+                }
                 emit(movieList)
             }
         }
@@ -141,7 +144,13 @@ class MovieTvRepository constructor(
 
             override suspend fun saveCallResult(data: MovieDetailResponse) {
                 if (data.id == movieId) {
-                    localDataSource.insertAllMovie(listOf(DataMapper.mapMovieDetailResponseToMovieEntity(data)))
+                    localDataSource.insertAllMovie(
+                        listOf(
+                            DataMapper.mapMovieDetailResponseToMovieEntity(
+                                data
+                            )
+                        )
+                    )
                     localDataSource.insertMovieDetail(
                         DataMapper.mapMovieDetailResponseToEntities(data)
                     )
@@ -276,7 +285,7 @@ class MovieTvRepository constructor(
         return object : NetworkBoundResource<TvDetail, TvDetailResponse>(appExecutors) {
             override fun loadFromDB(): Flow<TvDetail> =
                 localDataSource.getTvDetail(tvShowId).map {
-                        DataMapper.mapTvDetailEntitiesToDomain(it)
+                    DataMapper.mapTvDetailEntitiesToDomain(it)
                 }
 
             override fun shouldFetch(data: TvDetail?): Boolean =
@@ -287,7 +296,13 @@ class MovieTvRepository constructor(
 
             override suspend fun saveCallResult(data: TvDetailResponse) {
                 if (data.id == tvShowId) {
-                    localDataSource.insertAllTv(listOf(DataMapper.mapTvDetailResponseToTvEntities(data)))
+                    localDataSource.insertAllTv(
+                        listOf(
+                            DataMapper.mapTvDetailResponseToTvEntities(
+                                data
+                            )
+                        )
+                    )
                     localDataSource.insertTvDetail(
                         DataMapper.mapTvDetailResponseToEntities(data)
                     )
@@ -331,7 +346,8 @@ class MovieTvRepository constructor(
     }
 
     override fun setFavoriteMovie(id: Int) {
-        appExecutors.diskIO().execute { localDataSource.insertMovieFavorite(FavoriteMovieEntity(id)) }
+        appExecutors.diskIO()
+            .execute { localDataSource.insertMovieFavorite(FavoriteMovieEntity(id)) }
     }
 
     override fun getFavoriteMovieById(id: Int): Flow<List<FavoriteMovieEntity>> =
@@ -358,9 +374,11 @@ class MovieTvRepository constructor(
             emit(Resource.Loading())
             when (val apiResponse = data.first()) {
                 is ApiResponse.Success -> {
-                    emit(Resource.Success(
+                    emit(
+                        Resource.Success(
                             DataMapper.mapCreditsResponseToDomain(apiResponse.data)
-                    ))
+                        )
+                    )
                 }
                 is ApiResponse.Empty -> {
                     emit(Resource.Success(Credits()))
@@ -378,9 +396,11 @@ class MovieTvRepository constructor(
             emit(Resource.Loading())
             when (val apiResponse = data.first()) {
                 is ApiResponse.Success -> {
-                    emit(Resource.Success(
-                        DataMapper.mapCreditsResponseToDomain(apiResponse.data)
-                    ))
+                    emit(
+                        Resource.Success(
+                            DataMapper.mapCreditsResponseToDomain(apiResponse.data)
+                        )
+                    )
                 }
                 is ApiResponse.Empty -> {
                     emit(Resource.Success(Credits()))
@@ -475,45 +495,49 @@ class MovieTvRepository constructor(
             }
         }
 
-    override fun getAllGenreMovie(): Flow<Resource<List<Genre>>> =
-        flow {
-            val data = remoteDataSource.getAllGenreMovie()
-            emit(Resource.Loading())
-            when (val apiResponse = data.first()) {
-                is ApiResponse.Success -> {
-                    emit(Resource.Success(
-                        apiResponse.data.genres.map {
-                            DataMapper.mapGenreResponseToDomain(it)
-                        }
-                    ))
+    override fun getAllGenreMovie(): Flow<Resource<List<Genre>>> {
+        return object : NetworkBoundResource<List<Genre>, GenresResponse>(appExecutors) {
+            override fun loadFromDB(): Flow<List<Genre>> =
+                localDataSource.getAllGenreMovie().map { list ->
+                    list.map {
+                        Genre(id = it.id, name = it.name)
+                    }
                 }
-                is ApiResponse.Empty -> {
-                    emit(Resource.Success(listOf(Genre())))
-                }
-                is ApiResponse.Failed -> {
-                    emit(Resource.Error<List<Genre>>(apiResponse.errorMessage))
-                }
-            }
-        }
 
-    override fun getAllGenreTv(): Flow<Resource<List<Genre>>> =
-        flow {
-            val data = remoteDataSource.getAllGenreTv()
-            emit(Resource.Loading())
-            when (val apiResponse = data.first()) {
-                is ApiResponse.Success -> {
-                    emit(Resource.Success(
-                        apiResponse.data.genres.map {
-                            DataMapper.mapGenreResponseToDomain(it)
-                        }
-                    ))
-                }
-                is ApiResponse.Empty -> {
-                    emit(Resource.Success(listOf(Genre())))
-                }
-                is ApiResponse.Failed -> {
-                    emit(Resource.Error<List<Genre>>(apiResponse.errorMessage))
-                }
+            override fun shouldFetch(data: List<Genre>?): Boolean =
+                data.isNullOrEmpty()
+
+            override suspend fun createCall(): Flow<ApiResponse<GenresResponse>> =
+                remoteDataSource.getAllGenreMovie()
+
+            override suspend fun saveCallResult(data: GenresResponse) {
+                localDataSource.insertAllGenreMovie(data.genres.map {
+                    MovieGenresEntity(id = it.id, name = it.name)
+                })
             }
-        }
+        }.asFlow()
+    }
+
+    override fun getAllGenreTv(): Flow<Resource<List<Genre>>> {
+        return object : NetworkBoundResource<List<Genre>, GenresResponse>(appExecutors) {
+            override fun loadFromDB(): Flow<List<Genre>> =
+                localDataSource.getAllGenreTv().map { list ->
+                    list.map {
+                        Genre(id = it.id, name = it.name)
+                    }
+                }
+
+            override fun shouldFetch(data: List<Genre>?): Boolean =
+                data.isNullOrEmpty()
+
+            override suspend fun createCall(): Flow<ApiResponse<GenresResponse>> =
+                remoteDataSource.getAllGenreTv()
+
+            override suspend fun saveCallResult(data: GenresResponse) {
+                localDataSource.insertAllGenreTv(data.genres.map {
+                    TvGenresEntity(id = it.id, name = it.name)
+                })
+            }
+        }.asFlow()
+    }
 }

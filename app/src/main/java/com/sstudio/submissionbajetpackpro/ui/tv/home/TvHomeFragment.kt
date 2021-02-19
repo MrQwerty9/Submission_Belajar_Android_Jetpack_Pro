@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sstudio.submissionbajetpackpro.R
 import com.sstudio.submissionbajetpackpro.core.data.Resource
+import com.sstudio.submissionbajetpackpro.core.utils.DataTemp
 import com.sstudio.submissionbajetpackpro.core.utils.Params
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailActivity
 import com.sstudio.submissionbajetpackpro.ui.detail.DetailData
@@ -88,6 +89,14 @@ class TvHomeFragment : Fragment() {
                     resource.data
                 }
                 homeParentAdapter.updateList(listTvHome)
+            }
+        }
+
+        viewModel.listAllGenre?.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    resource.data?.let { DataTemp.listTvGenre = it}
+                }
             }
         }
     }

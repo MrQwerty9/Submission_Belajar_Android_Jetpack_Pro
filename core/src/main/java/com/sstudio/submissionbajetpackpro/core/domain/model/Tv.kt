@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 data class Tv(
     var backdropPath: String = "",
     var firstAirDate: String = "",
-    var genreIds: String = "",
+    var genreIds: List<Int> = listOf(),
     var id: Int = 0,
     var originalName: String = "",
     var overview: String = "",

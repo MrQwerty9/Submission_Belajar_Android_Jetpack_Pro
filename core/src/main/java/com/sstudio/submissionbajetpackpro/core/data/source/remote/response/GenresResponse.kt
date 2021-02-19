@@ -4,7 +4,7 @@ data class GenresResponse (
     val genres: List<Genre>
 ) {
     data class Genre(
-        var id: Int? = null,
+        var id: Int = 0,
         var name: String = ""
     )
 }

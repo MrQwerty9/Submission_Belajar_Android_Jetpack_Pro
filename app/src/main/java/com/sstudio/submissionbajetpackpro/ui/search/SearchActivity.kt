@@ -5,18 +5,17 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.sstudio.submissionbajetpackpro.R
 import kotlinx.android.synthetic.main.activity_search_movie.*
-import kotlinx.android.synthetic.main.fragment_search_movie.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
 @FlowPreview
@@ -24,7 +23,8 @@ import kotlinx.coroutines.launch
 class SearchActivity : AppCompatActivity() {
 
     companion object{
-        var queryChannel: MutableLiveData<String> = MutableLiveData()
+//        var queryChannel: MutableLiveData<String> = MutableLiveData()
+        var queryChannel = BroadcastChannel<String>(Channel.CONFLATED)
     }
 
     private lateinit var searchViewModel: SearchViewModel
@@ -63,18 +63,18 @@ class SearchActivity : AppCompatActivity() {
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
                 override fun onQueryTextSubmit(mQuery: String): Boolean {
-                    progress_bar.visibility = View.VISIBLE
-                        queryChannel.value = mQuery
+                    lifecycleScope.launch {
+                        queryChannel.send(mQuery)
+                    }
                     searchViewModel.query = mQuery
                     return true
                 }
 
                 override fun onQueryTextChange(mQuery: String): Boolean {
                     if (mQuery.isNotEmpty()) {
-                        progress_bar.visibility = View.VISIBLE
                         lifecycleScope.launch {
                             Log.d("mytag", "query $mQuery")
-                            queryChannel.value = (mQuery)
+                            queryChannel.send(mQuery)
                         }
                             searchViewModel.query = mQuery
                     }

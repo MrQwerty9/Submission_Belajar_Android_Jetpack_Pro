@@ -2,7 +2,6 @@ package com.sstudio.submissionbajetpackpro.ui.search.tv
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
@@ -16,14 +15,15 @@ import kotlinx.coroutines.flow.*
 @ExperimentalCoroutinesApi
 class SearchTvViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
 
-    var listSearchTv: LiveData<Resource<List<Tv>>> = SearchActivity.queryChannel.asFlow()
+    suspend fun listSearchTv(): LiveData<Resource<List<Tv>>> =
+        SearchActivity.queryChannel.asFlow()
         .debounce(300)
         .distinctUntilChanged()
         .filter {
             it.trim().isNotEmpty()
         }
         .mapLatest {
-            movieTvUseCase.getSearchTv(it).first()
+            movieTvUseCase.getSearchTv(it).asLiveData()
         }
-        .asLiveData()
+        .first()
 }

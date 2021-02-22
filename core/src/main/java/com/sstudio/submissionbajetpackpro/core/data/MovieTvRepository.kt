@@ -1,5 +1,6 @@
 package com.sstudio.submissionbajetpackpro.core.data
 
+import android.util.Log
 import androidx.lifecycle.asFlow
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -173,8 +174,9 @@ class MovieTvRepository constructor(
 
     override fun getSearchMovie(query: String): Flow<Resource<List<Movie>>> {
         val data = remoteDataSource.getSearchMovie(query)
+        Log.d("mytag", "repo search")
         return flow {
-            emit(Resource.Loading())
+//            emit(Resource.Loading())
             when (val apiResponse = data.first()) {
                 is ApiResponse.Success -> {
                     emit(Resource.Success(

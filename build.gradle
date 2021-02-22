@@ -55,6 +55,6 @@ ext {
     pagingVersion = '2.1.2'
 
     kotlin_coroutines_version = '1.4.2-native-mt'
-    lifecycle_version = "2.2.0"
+    lifecycle_version = '2.3.0'
     ext.koin_version = "2.1.6"
 }

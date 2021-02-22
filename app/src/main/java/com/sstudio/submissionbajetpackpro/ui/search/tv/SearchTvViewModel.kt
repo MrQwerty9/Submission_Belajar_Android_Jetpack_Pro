@@ -1,19 +1,29 @@
 package com.sstudio.submissionbajetpackpro.ui.search.tv
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
 import com.sstudio.submissionbajetpackpro.core.data.Resource
 import com.sstudio.submissionbajetpackpro.core.domain.model.Tv
 import com.sstudio.submissionbajetpackpro.core.domain.usecase.MovieTvUseCase
 import com.sstudio.submissionbajetpackpro.ui.search.SearchActivity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class SearchTvViewModel(private val movieTvUseCase: MovieTvUseCase) : ViewModel() {
 
-    var listSearchTv: LiveData<Resource<List<Tv>>> = Transformations.switchMap(SearchActivity.query){ query ->
-        if (SearchActivity.query.value != "") {
-            movieTvUseCase.getSearchTv(query).asLiveData()
-        }else{
-            val emptyData: LiveData<Resource<List<Tv>>> = MutableLiveData()
-            emptyData
+    var listSearchTv: LiveData<Resource<List<Tv>>> = SearchActivity.queryChannel.asFlow()
+        .debounce(300)
+        .distinctUntilChanged()
+        .filter {
+            it.trim().isNotEmpty()
         }
-    }
+        .mapLatest {
+            movieTvUseCase.getSearchTv(it).first()
+        }
+        .asLiveData()
 }
